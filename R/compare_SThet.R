@@ -112,15 +112,16 @@ spatial_stat_plot_gene = function(meta_df=NULL, samplemeta=NULL, color_by=NULL, 
 
   if(any(!is.na(meta_df[['moran']]))){
     res_plots[['moran']] <- ggplot(data=meta_df, aes(x=moran, y=.data[[samplemeta]], color=.data[[color_by]])) +
-      geom_point(size=ptsize)
-    #ggrepel::geom_text_repel(aes(x=moran, y=.data[[samplemeta]], label=.data[[color_by]])) +
-    res_plots[['moran']] <- res_plots[['moran']] + ggtitle(paste0('Moran\'s I and ', samplemeta))
-    res_plots[['moran']] <- res_plots[['moran']] + xlab('Moran\'s I')
-    res_plots[['moran']] <- res_plots[['moran']] + ylab(samplemeta)
-    res_plots[['moran']] <- res_plots[['moran']] + facet_wrap(~gene)
-
+      geom_point(size=ptsize) +
+      ggtitle(paste0('Moran\'s I and ', samplemeta)) +
+      xlab('Moran\'s I') +
+      ylab(samplemeta) +
+      facet_wrap(~gene) +
+      theme_light() +
+      theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1))
+    
     if(is.numeric(meta_df[[color_by]])){
-      res_plots[['moran']] <- res_plots[['moran']] + scale_color_gradientn(colors=as.vector(cat_cols), # SHOULD PRBABLY CHANGE COLOR_PARSE FUNCTION TO OUPUT MIN/MID/MAX COLORS WHEN CONTINUOUS
+      res_plots[['moran']] <- res_plots[['moran']] + scale_color_gradientn(colors=as.vector(cat_cols),
                               guide=guide_legend(label.theme=element_text(angle=0),
                                                  override.aes=list(size=2)))
     } else{
@@ -128,23 +129,20 @@ spatial_stat_plot_gene = function(meta_df=NULL, samplemeta=NULL, color_by=NULL, 
                            guide=guide_legend(label.theme=element_text(angle=0),
                                               override.aes=list(size=2)))
     }
-
-    res_plots[['moran']] <- res_plots[['moran']] + theme_light()
-    res_plots[['moran']] <- res_plots[['moran']] + theme(#legend.title=element_blank(),
-        axis.text.x=element_text(angle=45, vjust=1, hjust=1))
   }
 
   if(any(!is.na(meta_df[['geary']]))){
     res_plots[['geary']] <- ggplot(data=meta_df, aes(x=geary, y=.data[[samplemeta]], color=.data[[color_by]])) +
-      geom_point(size=ptsize)
-    #ggrepel::geom_text_repel(aes(x=moran, y=.data[[samplemeta]], label=.data[[color_by]])) +
-    res_plots[['geary']] <- res_plots[['geary']] + ggtitle(paste0('Geary\'s C and ', samplemeta))
-    res_plots[['geary']] <- res_plots[['geary']] + xlab('Geary\'s C')
-    res_plots[['geary']] <- res_plots[['geary']] + ylab(samplemeta)
-    res_plots[['geary']] <- res_plots[['geary']] + facet_wrap(~gene)
-
+      geom_point(size=ptsize) +
+      ggtitle(paste0('Geary\'s C and ', samplemeta)) +
+      xlab('Geary\'s C') +
+      ylab(samplemeta) +
+      facet_wrap(~gene) +
+      theme_light() +
+      theme(axis.text.x=element_text(angle=45, vjust=1, hjust=1))
+    
     if(is.numeric(meta_df[[color_by]])){
-      res_plots[['geary']] <- res_plots[['geary']] + scale_color_gradientn(colors=as.vector(cat_cols), # SHOULD PRBABLY CHANGE COLOR_PARSE FUNCTION TO OUPUT MIN/MID/MAX COLORS WHEN CONTINUOUS
+      res_plots[['geary']] <- res_plots[['geary']] + scale_color_gradientn(colors=as.vector(cat_cols),
                               guide=guide_legend(label.theme=element_text(angle=0),
                                                  override.aes=list(size=2)))
     } else{
@@ -152,10 +150,6 @@ spatial_stat_plot_gene = function(meta_df=NULL, samplemeta=NULL, color_by=NULL, 
                            guide=guide_legend(label.theme=element_text(angle=0),
                                               override.aes=list(size=2)))
     }
-
-    res_plots[['geary']] <- res_plots[['geary']] + theme_light()
-    res_plots[['geary']] <- res_plots[['geary']] + theme(#legend.title=element_blank(),
-        axis.text.x=element_text(angle=45, vjust=1, hjust=1))
   }
 
   # Print plot.

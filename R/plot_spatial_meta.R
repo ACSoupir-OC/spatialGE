@@ -163,11 +163,12 @@ plot_spatial_meta = function(x, samples=NULL, ks='dtc', ws=NULL, deepSplit=NULL,
 
       # Create plot
       p <- ggplot(data=df_tmp2, aes(x=xpos, y=ypos, color=meta)) +
-        geom_point(size=ptsize)
+        geom_point(size=ptsize) +
+        scale_color_manual(values=master_col_pal[[metacol]]) +
+        labs(color=title_leg, title=title_p) +
+        theme_void()
       # Assign color palette to plot for categorical or numerical variable
-      if(is.factor(df_tmp2[['meta']])){
-        p <- p + scale_color_manual(values=master_col_pal[[metacol]])
-      } else{
+      if(!is.factor(df_tmp2[['meta']])){
         if(!is.null(color_pal)){
           # Get color palette and number of colors needed.
           # Get names of Khroma colors.
@@ -181,20 +182,16 @@ plot_spatial_meta = function(x, samples=NULL, ks='dtc', ws=NULL, deepSplit=NULL,
         }
       }
 
-      #p = p + ggplot2::ggtitle(title_p) + ggplot2::theme_void() # MAY 09, 2023 PUT META DATA NAME ON LEGEND TITLE, NOT PLOT TITLE
-
       if(!is.numeric(df_tmp2[['meta']])){ # Test if it's not numeric and make legend spots/dots larger
         p <- p +
           guides(color=guide_legend(override.aes=list(size=ptsize+1)))
       }
-      p <- p + labs(color=title_leg, title=title_p) + theme_void()
 
       if(visium){
         p <- p + scale_y_reverse() + coord_fixed(ratio=1)
       } else{
         p <- p + coord_fixed(ratio=1)
       }
-      #p = p + ggplot2::theme(legend.title=ggplot2::element_blank()) # MAY 09, 2023 PUT META DATA NAME ON LEGEND TITLE, NOT PLOT TITLE
       p <- p + theme(legend.title=element_text(size=txsize),
                              plot.title=element_text(size=txsize+2))
 

@@ -91,8 +91,7 @@ plot_image = function(x=NULL, samples=NULL){
         img_obj = image_tmp
       }
 
-      p <- ggplot2::ggplot()
-      p <- p + ggplot2::annotation_custom(img_obj)
+      p <- ggplot() + annotation_custom(img_obj)
       rp_list[[paste0('image_', i)]] = p
     }
   }

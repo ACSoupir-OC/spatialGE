@@ -36,7 +36,8 @@ quilt_p <- function(data_f=NULL, color_pal="BuRd", leg_name='', title_name='', m
     xlab("X Position") +
     ylab("Y Position") +
     labs(color=leg_name, title=title_name) +
-    theme_void()
+    theme_void() +
+    theme(legend.position="right")
     #ggplot2::theme_classic()
 
   if(visium){
@@ -44,7 +45,7 @@ quilt_p <- function(data_f=NULL, color_pal="BuRd", leg_name='', title_name='', m
     # scale_y_reverse() + coord_fixed(ratio=1.7)
   }
 
-  p <- p + coord_equal() + theme(legend.position="right")
+  p <- p + coord_equal()
 
   return(p)
 }
@@ -93,22 +94,15 @@ krige_p <- function(data_f=NULL, mask=NULL, color_pal="YlOrBr", leg_name='',
   #mask_df <- ggplot2::fortify(mask)
 
   # Create plot.
-  p <- ggplot2::ggplot(data=data_f, ggplot2::aes(x=x_pos, y=y_pos)) +
-    ggplot2::geom_raster(ggplot2::aes(fill=krige), interpolate=F) +
-    ggplot2::scale_fill_gradientn(colors=p_palette, limits=c(minvalue, maxvalue), oob=scales::squish) +
-    ggplot2::xlab("X Position") +
-    ggplot2::ylab("Y Position") +
-    ggplot2::labs(fill=leg_name, title=title_name) +
-    ggplot2::geom_sf(data=mask, color='white', fill="white", linewidth=2, inherit.aes=F) +
-    ggplot2::theme_void()
-
-  # if(visium){
-  #   p <- p + ggplot2::scale_y_reverse() #+ scale_x_reverse() +
-  #     #coord_fixed(ratio=1.7)
-  # }
-
-  p <- p + #ggplot2::coord_equal() +
-    ggplot2::theme(legend.position="right")
+  p <- ggplot(data=data_f, aes(x=x_pos, y=y_pos)) +
+    geom_raster(aes(fill=krige), interpolate=F) +
+    scale_fill_gradientn(colors=p_palette, limits=c(minvalue, maxvalue), oob=scales::squish) +
+    xlab("X Position") +
+    ylab("Y Position") +
+    labs(fill=leg_name, title=title_name) +
+    geom_sf(data=mask, color='white', fill="white", linewidth=2, inherit.aes=F) +
+    theme_void() +
+    theme(legend.position="right")
 
   return(p)
 }
