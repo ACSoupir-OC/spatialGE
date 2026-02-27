@@ -122,8 +122,9 @@ plot_spatial_geneset = function(x=NULL, genes=NULL, samples=NULL, color_pal='BuR
 
     if(image && !is.null(x@misc[['sp_images']][[i]])){
       img_obj = grid::rasterGrob(x@misc[['sp_images']][[i]])
-      qp_list[[paste0('image', names(counts[i]))]] = ggplot() +
-        annotation_custom(img_obj)
+      p <- ggplot2::ggplot()
+      p <- p + ggplot2::annotation_custom(img_obj)
+      qp_list[[paste0('image', names(counts[i]))]] = p
     }
   }
 

@@ -1,5 +1,6 @@
 
 test_that("Interpolation functions work", {
+library(spatialGE)
   # Load data
   data_dir <- file.path("data", "melanoma_thrane")
   counts <- list.files(data_dir, pattern = "counts", full.names = TRUE)[1:2]

@@ -30,21 +30,21 @@ quilt_p <- function(data_f=NULL, color_pal="BuRd", leg_name='', title_name='', m
   p_palette = color_parse(color_pal)
 
   # Create plot.
-  p <- ggplot2::ggplot(data=data_f, ggplot2::aes(x=xpos, y=ypos, color=values)) +
-    ggplot2::geom_point(size=ptsize) +
-    ggplot2::scale_color_gradientn(colours=p_palette, limits=c(minvalue, maxvalue)) +
-    ggplot2::xlab("X Position") +
-    ggplot2::ylab("Y Position") +
-    ggplot2::labs(color=leg_name, title=title_name) +
-    ggplot2::theme_void()
+  p <- ggplot(data=data_f, aes(x=xpos, y=ypos, color=values)) +
+    geom_point(size=ptsize) +
+    scale_color_gradientn(colours=p_palette, limits=c(minvalue, maxvalue)) +
+    xlab("X Position") +
+    ylab("Y Position") +
+    labs(color=leg_name, title=title_name) +
+    theme_void()
     #ggplot2::theme_classic()
 
   if(visium){
-    p <- p + ggplot2::scale_y_reverse()
+    p <- p + scale_y_reverse()
     # scale_y_reverse() + coord_fixed(ratio=1.7)
   }
 
-  p <- p + ggplot2::coord_equal() + theme(legend.position="right")
+  p <- p + coord_equal() + theme(legend.position="right")
 
   return(p)
 }

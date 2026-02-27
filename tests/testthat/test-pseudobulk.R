@@ -1,5 +1,6 @@
 
 test_that("Pseudobulk functions work with real data", {
+library(spatialGE)
   # Use TNBC Bassiouni dataset (Visium) which has > 4 samples
   data_dir <- file.path("data", "tnbc_bassiouni")
   skip_if_not(dir.exists(data_dir), "TNBC data not found")

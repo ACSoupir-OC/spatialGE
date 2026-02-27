@@ -1,5 +1,6 @@
 # Helper script to download test data if not present
 # This script is automatically sourced by testthat before running tests
+library(spatialGE)
 
 setup_test_data <- function() {
   data_dir <- testthat::test_path("data")

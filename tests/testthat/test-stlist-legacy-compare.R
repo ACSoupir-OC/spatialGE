@@ -1,5 +1,6 @@
 
 source(testthat::test_path("helper-regression.R"))
+library(spatialGE)
 
 test_that("Refactor Comparison: List of DataFrames", {
   # Mock list of dfs

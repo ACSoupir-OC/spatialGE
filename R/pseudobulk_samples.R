@@ -253,22 +253,23 @@ pseudobulk_dim_plot = function(x=NULL, color_pal='muted', plot_meta=NULL, dim='p
   }
 
   # Make plot
-  pca_p = ggplot2::ggplot(pca_tbl) +
-    ggplot2::geom_point(ggplot2::aes(x=.data[[pcx]], y=.data[[pcy]], color=.data[[plot_meta]]), size=ptsize) +
-    ggrepel::geom_text_repel(ggplot2::aes(x=.data[[pcx]], y=.data[[pcy]], label=pca_labs)) +
-    ggplot2::xlab(pcx_lab) +
-    ggplot2::ylab(pcy_lab)
+  p <- ggplot2::ggplot()
+  p <- p + ggplot2::geom_point(data=pca_tbl, aes(x=.data[[pcx]], y=.data[[pcy]], color=.data[[plot_meta]]), size=ptsize)
+  p <- p + ggrepel::geom_text_repel(data=pca_tbl, aes(x=.data[[pcx]], y=.data[[pcy]], label=pca_labs))
+  p <- p + ggplot2::xlab(pcx_lab)
+  p <- p + ggplot2::ylab(pcy_lab)
 
   if(plot_meta == 'pca_labs'){
-    pca_p = pca_p + ggplot2::labs(color='Sample')
+    p <- p + ggplot2::labs(color='Sample')
   }
 
-  pca_p = pca_p +
-    ggplot2::scale_color_manual(values=cat_cols) +
-    #scale_shape_manual(values=cat_shapes) +
-    ggplot2::ggtitle(paste0(title, ' of "pseudobulk" samples')) +
-    ggplot2::coord_fixed() +
-    ggplot2::theme_bw()
+  p <- p + ggplot2::scale_color_manual(values=cat_cols)
+  #scale_shape_manual(values=cat_shapes) +
+  p <- p + ggplot2::ggtitle(paste0(title, ' of "pseudobulk" samples'))
+  p <- p + ggplot2::coord_fixed()
+  p <- p + ggplot2::theme_bw()
+  
+  pca_p = p
 
   return(pca_p)
 }

@@ -124,38 +124,44 @@ plot_counts = function(x=NULL, samples=NULL, data_type='tr', plot_type='density'
       return(bw)
     }))), 2)
 
-    d_plot[['density']] = ggplot2::ggplot(df_tmp, ggplot2::aes(x=expr_values, fill=sample_name)) +
+    p <- ggplot(data=df_tmp, aes(x=expr_values, fill=sample_name)) +
 #      ggplot2::geom_density(alpha=cvalpha) +
-      ggplot2::stat_density(color='gray30', alpha=cvalpha, bw=bandw, position="identity") +
-      ggplot2::xlab(ax_title) +
-      ggplot2::ylab(paste0('Density (Bandwidth=', bandw, ')')) +
-      ggplot2::ggtitle(p_title) +
-      ggplot2::labs(fill='Sample') +
-      ggplot2::scale_fill_manual(values=meta_cols) +
-      ggplot2::theme(panel.border=ggplot2::element_rect(fill=NA, color='black'))
+      stat_density(color='gray30', alpha=cvalpha, bw=bandw, position="identity") +
+      xlab(ax_title) +
+      ylab(paste0('Density (Bandwidth=', bandw, ')')) +
+      ggtitle(p_title) +
+      labs(fill='Sample') +
+      scale_fill_manual(values=meta_cols) +
+      theme(panel.border=element_rect(fill=NA, color='black'))
+    
+    d_plot[['density']] = p
   }
   if(any(grepl('violin', plot_type))){
-    d_plot[['violin']] = ggplot2::ggplot(df_tmp, ggplot2::aes(y=expr_values, x=sample_name, fill=sample_name)) +
-      ggplot2::geom_violin() +
-      #ggforce::geom_sina(size=0.1) +
-      ggplot2::ggtitle(p_title) +
-      ggplot2::ylab(ax_title) +
-      ggplot2::xlab(NULL) +
-      ggplot2::labs(fill='Sample') +
-      ggplot2::scale_fill_manual(values=meta_cols) +
-      ggplot2::theme(panel.border=ggplot2::element_rect(fill=NA, color='black'),
+    p <- ggplot2::ggplot()
+    p <- p + ggplot2::geom_violin(data=df_tmp, aes(y=expr_values, x=sample_name, fill=sample_name))
+    #ggforce::geom_sina(size=0.1) +
+    p <- p + ggplot2::ggtitle(p_title)
+    p <- p + ggplot2::ylab(ax_title)
+    p <- p + ggplot2::xlab(NULL)
+    p <- p + ggplot2::labs(fill='Sample')
+    p <- p + ggplot2::scale_fill_manual(values=meta_cols)
+    p <- p + ggplot2::theme(panel.border=ggplot2::element_rect(fill=NA, color='black'),
                      axis.text.x=ggplot2::element_text(angle=30, vjust=1, hjust=0.8))
+    
+    d_plot[['violin']] = p
   }
   if(any(grepl('box', plot_type))){
-    d_plot[['boxplot']] = ggplot2::ggplot(df_tmp, ggplot2::aes(y=expr_values, x=sample_name, fill=sample_name)) +
-      ggplot2::geom_boxplot() +
-      ggplot2::ggtitle(p_title) +
-      ggplot2::ylab(ax_title) +
-      ggplot2::xlab(NULL) +
-      ggplot2::labs(fill='Sample') +
-      ggplot2::scale_fill_manual(values=meta_cols) +
-      ggplot2::theme(panel.border=ggplot2::element_rect(fill=NA, color='black'),
+    p <- ggplot2::ggplot()
+    p <- p + ggplot2::geom_boxplot(data=df_tmp, aes(y=expr_values, x=sample_name, fill=sample_name))
+    p <- p + ggplot2::ggtitle(p_title)
+    p <- p + ggplot2::ylab(ax_title)
+    p <- p + ggplot2::xlab(NULL)
+    p <- p + ggplot2::labs(fill='Sample')
+    p <- p + ggplot2::scale_fill_manual(values=meta_cols)
+    p <- p + ggplot2::theme(panel.border=ggplot2::element_rect(fill=NA, color='black'),
                      axis.text.x=ggplot2::element_text(angle=30, vjust=1, hjust=0.8))
+    
+    d_plot[['boxplot']] = p
   }
 
   return(d_plot)

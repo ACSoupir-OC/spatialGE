@@ -107,15 +107,15 @@ STdiff_volcano = function(x=NULL, samples=NULL, clusters=NULL, pval_thr=0.05, co
         }
       }
 
-      plist[[pl_name]] = ggplot2::ggplot(df_plot, aes(x=avg_log2fc, y=-log10(plot_pval))) +
-        ggplot2::geom_point(aes(color=signif)) +
-        ggrepel::geom_text_repel(aes(label=gene), size=3, verbose=F, force=0, max.iter=100, max.overlaps=1, nudge_x=0.2) +
-        ggplot2::xlab('Average log fold-change') +
-        ggplot2::ylab(paste0('-log10(nominal p-value)\n', testname)) +
-        labs(color='FDR\nsignif.') +
-        ggplot2::ggtitle(pl_title) +
-        ggplot2::scale_color_manual(values=cat_cols[ names(cat_cols) %in% unique(df_plot[['signif']]) ]) +
-        ggplot2::theme(panel.background=element_rect(color='black', fill=NULL))
+      plist[[pl_name]] <- ggplot(data=df_plot, aes(x=avg_log2fc, y=-log10(plot_pval), color=signif)) +
+        geom_point()
+      ggrepel::geom_text_repel(aes(label=gene), size=3, verbose=F, force=0, max.iter=100, max.overlaps=1, nudge_x=0.2)
+      plist[[pl_name]] <- plist[[pl_name]] + xlab('Average log fold-change')
+      plist[[pl_name]] <- plist[[pl_name]] + ylab(paste0('-log10(nominal p-value)\n', testname))
+      plist[[pl_name]] <- plist[[pl_name]] + labs(color='FDR\nsignif.')
+      plist[[pl_name]] <- plist[[pl_name]] + ggtitle(pl_title)
+      plist[[pl_name]] <- plist[[pl_name]] + scale_color_manual(values=cat_cols[ names(cat_cols) %in% unique(df_plot[['signif']]) ])
+      plist[[pl_name]] <- plist[[pl_name]] + theme(panel.background=element_rect(color='black', fill=NULL))
 
       rm(list=grep("df_plot|cl1|cl2|pl_name|pl_title|testname|pval_col", ls(), value=T)) # Clean env
     }

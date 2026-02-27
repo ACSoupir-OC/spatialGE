@@ -1,5 +1,6 @@
 test_that("Analysis functions (STclust, SThet) run without error", {
   skip_if_not_installed("spatialGE")
+  library(spatialGE)
   
   data_dir <- test_path("data/melanoma_thrane")
   skip_if_not(dir.exists(data_dir), "Melanoma data not found")

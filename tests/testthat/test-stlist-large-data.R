@@ -1,5 +1,6 @@
 
 test_that("STlist Ingests Large Seurat Data (Soupir et al)", {
+library(spatialGE)
   seurat_path <- testthat::test_path("data/soupir_etal_seurat/seurat_object.Rds")
   skip_if_not(file.exists(seurat_path), "Large Seurat data not found")
   

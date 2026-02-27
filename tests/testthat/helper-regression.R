@@ -1,5 +1,6 @@
 
 # Helper to create mock Visium MEX directory
+library(spatialGE)
 create_mock_visium_mex <- function(dir_path, sample_name="sample1") {
   # Dir structure: sample/spatial/tissue_positions_list.csv (or .parquet)
   #                sample/filtered_feature_bc_matrix/matrix.mtx.gz

@@ -1,5 +1,6 @@
 
 source(testthat::test_path("helper-regression.R"))
+library(spatialGE)
 
 test_that("STList_legacy handles Xenium MEX input correctly (Legacy Fail Expectation)", {
   # This tests the LEGACY behavior, which is expected to fail or be fragile on Xenium MEX

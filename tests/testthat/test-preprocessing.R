@@ -1,5 +1,6 @@
 test_that("Data preprocessing (filtering, transform) works", {
   skip_if_not_installed("spatialGE")
+library(spatialGE)
   
   # Setup minimal STlist (mock or real)
   data_dir <- test_path("data/melanoma_thrane")

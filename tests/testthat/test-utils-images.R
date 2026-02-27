@@ -1,5 +1,6 @@
 
 test_that("load_images and plot_image work with real data", {
+library(spatialGE)
   # Use TNBC Bassiouni dataset if available (it has images)
   data_dir <- file.path("data", "tnbc_bassiouni")
   skip_if_not(dir.exists(data_dir), "TNBC data not found")

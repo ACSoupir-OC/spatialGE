@@ -162,11 +162,11 @@ plot_spatial_meta = function(x, samples=NULL, ks='dtc', ws=NULL, deepSplit=NULL,
       }
 
       # Create plot
-      p = ggplot2::ggplot(df_tmp2) +
-        ggplot2::geom_point(ggplot2::aes(x=xpos, y=ypos, color=meta), size=ptsize)
+      p <- ggplot(data=df_tmp2, aes(x=xpos, y=ypos, color=meta)) +
+        geom_point(size=ptsize)
       # Assign color palette to plot for categorical or numerical variable
       if(is.factor(df_tmp2[['meta']])){
-        p = p + ggplot2::scale_color_manual(values=master_col_pal[[metacol]])
+        p <- p + scale_color_manual(values=master_col_pal[[metacol]])
       } else{
         if(!is.null(color_pal)){
           # Get color palette and number of colors needed.
@@ -174,9 +174,9 @@ plot_spatial_meta = function(x, samples=NULL, ks='dtc', ws=NULL, deepSplit=NULL,
           khroma_cols = khroma::info()
           khroma_cols = khroma_cols$palette
           if(color_pal %in% khroma_cols){
-            p = p + khroma::scale_color_picker(palette=color_pal)
+            p <- p + khroma::scale_color_picker(palette=color_pal)
           } else{
-            p = p + ggplot2::scale_color_distiller(palette=color_pal)
+            p <- p + scale_color_distiller(palette=color_pal)
           }
         }
       }
@@ -184,19 +184,19 @@ plot_spatial_meta = function(x, samples=NULL, ks='dtc', ws=NULL, deepSplit=NULL,
       #p = p + ggplot2::ggtitle(title_p) + ggplot2::theme_void() # MAY 09, 2023 PUT META DATA NAME ON LEGEND TITLE, NOT PLOT TITLE
 
       if(!is.numeric(df_tmp2[['meta']])){ # Test if it's not numeric and make legend spots/dots larger
-        p = p +
-          ggplot2::guides(color=ggplot2::guide_legend(override.aes=list(size=ptsize+1)))
+        p <- p +
+          guides(color=guide_legend(override.aes=list(size=ptsize+1)))
       }
-      p = p + ggplot2::labs(color=title_leg, title=title_p) + ggplot2::theme_void()
+      p <- p + labs(color=title_leg, title=title_p) + theme_void()
 
       if(visium){
-        p = p + ggplot2::scale_y_reverse() + ggplot2::coord_fixed(ratio=1)
+        p <- p + scale_y_reverse() + coord_fixed(ratio=1)
       } else{
-        p = p + ggplot2::coord_fixed(ratio=1)
+        p <- p + coord_fixed(ratio=1)
       }
       #p = p + ggplot2::theme(legend.title=ggplot2::element_blank()) # MAY 09, 2023 PUT META DATA NAME ON LEGEND TITLE, NOT PLOT TITLE
-      p = p + ggplot2::theme(legend.title=ggplot2::element_text(size=txsize),
-                             plot.title=ggplot2::element_text(size=txsize+2))
+      p <- p + theme(legend.title=element_text(size=txsize),
+                             plot.title=element_text(size=txsize+2))
 
       plot_list[[paste0(s, '_', metacol)]] = p
     }

@@ -1,5 +1,6 @@
 
 test_that("Utility and QC functions work", {
+library(spatialGE)
   # Load data
   data_dir <- file.path("data", "melanoma_thrane")
   counts <- list.files(data_dir, pattern = "counts", full.names = TRUE)
