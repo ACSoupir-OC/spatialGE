@@ -1,5 +1,7 @@
 #' Ingest Xenium Data
+#' @description Dispatches to appropriate Xenium reader based on file format (H5 or MEX)
 #' @param source InputSource object of type 'xenium'
+#' @return list containing counts sparse matrix and coords dataframe
 #' @export
 dispatch_ingest.source_xenium <- function(source) {
   path <- source$rna
@@ -28,6 +30,14 @@ dispatch_ingest.source_xenium <- function(source) {
 }
 
 #' Internal Xenium H5 Reader
+#' @description Reads 10X Xenium H5 files and extracts count matrix and coordinates
+#' @details Extracts sparse matrix components from H5 structure, locates cells.parquet
+#'   or cells.csv coordinate files, and maps cell_id to barcode format.
+#' @param h5_path Path to cell_feature_matrix.h5
+#' @param coords_path Optional path to cells.parquet or cells.csv file
+#' @param sample_name Optional sample identifier
+#' @return list with counts (sparse matrix) and coords (dataframe with barcode, ypos, xpos)
+#' @keywords internal
 ingest_xenium_h5 <- function(h5_path, coords_path=NULL, sample_name=NULL) {
   if (!requireNamespace("hdf5r", quietly = TRUE)) stop("hdf5r required")
   
@@ -107,6 +117,15 @@ ingest_xenium_h5 <- function(h5_path, coords_path=NULL, sample_name=NULL) {
 }
 
 #' Internal Xenium MEX Directory Reader
+#' @description Reads Xenium MEX (tar.gz or directory) Matrix Market format files
+#' @details Extracts matrix.mtx, features.tsv, barcodes.tsv, and locates cells.parquet
+#'   or cells.csv coordinate files. Handles both compressed and uncompressed formats.
+#' @param mex_dir Path to cell_feature_matrix directory
+#' @param coords_path Optional path to cells.parquet or cells.csv file
+#' @param sample_name Optional sample identifier
+#' @param original_root Original root path for coordinate lookup (used with tar extraction)
+#' @return list with counts (sparse matrix) and coords (dataframe with barcode, ypos, xpos)
+#' @keywords internal
 ingest_xenium_mex_dir <- function(mex_dir, coords_path=NULL, sample_name=NULL, original_root=NULL) {
   # Logic: Read matrix.mtx, features.tsv, barcodes.tsv
   # Same as Visium MEX but possibly different feature file structure?

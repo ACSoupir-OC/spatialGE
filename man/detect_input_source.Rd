@@ -6,6 +6,21 @@
 \usage{
 detect_input_source(rnacounts = NULL, spotcoords = NULL, samples = NULL)
 }
+\arguments{
+\item{rnacounts}{RNA count data (object, file paths, or directories)}
+
+\item{spotcoords}{Spatial coordinates (object or file paths)}
+
+\item{samples}{Sample names or metadata}
+}
+\value{
+list of InputSource objects, one per sample/source to process
+}
 \description{
 Analyzes arguments to determine the Input Source strategy
 }
+\details{
+Converts old-style detect_input() logic into modern modular InputSource objects
+that can be dispatched to platform-specific ingestors.
+}
+\keyword{internal}

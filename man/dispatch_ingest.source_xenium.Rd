@@ -9,6 +9,9 @@
 \arguments{
 \item{source}{InputSource object of type 'xenium'}
 }
+\value{
+list containing counts sparse matrix and coords dataframe
+}
 \description{
-Ingest Xenium Data
+Dispatches to appropriate Xenium reader based on file format (H5 or MEX)
 }

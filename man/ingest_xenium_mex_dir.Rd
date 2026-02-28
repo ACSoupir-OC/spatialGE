@@ -11,6 +11,23 @@ ingest_xenium_mex_dir(
   original_root = NULL
 )
 }
-\description{
-Internal Xenium MEX Directory Reader
+\arguments{
+\item{mex_dir}{Path to cell_feature_matrix directory}
+
+\item{coords_path}{Optional path to cells.parquet or cells.csv file}
+
+\item{sample_name}{Optional sample identifier}
+
+\item{original_root}{Original root path for coordinate lookup (used with tar extraction)}
 }
+\value{
+list with counts (sparse matrix) and coords (dataframe with barcode, ypos, xpos)
+}
+\description{
+Reads Xenium MEX (tar.gz or directory) Matrix Market format files
+}
+\details{
+Extracts matrix.mtx, features.tsv, barcodes.tsv, and locates cells.parquet
+or cells.csv coordinate files. Handles both compressed and uncompressed formats.
+}
+\keyword{internal}

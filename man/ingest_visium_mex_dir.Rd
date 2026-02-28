@@ -11,6 +11,23 @@ ingest_visium_mex_dir(
   original_root = NULL
 )
 }
-\description{
-Internal MEX Directory Reader
+\arguments{
+\item{mex_dir}{Path to filtered_feature_bc_matrix or raw_feature_bc_matrix directory}
+
+\item{coords_path}{Optional path to tissue positions CSV file}
+
+\item{sample_name}{Optional sample identifier}
+
+\item{original_root}{Original root path for coordinate lookup (used with tar extraction)}
 }
+\value{
+list with counts (sparse matrix) and coords (dataframe with barcode, imagerow, imagecol)
+}
+\description{
+Reads Visium MEX (tar.gz or directory) Matrix Market format files
+}
+\details{
+Extracts matrix.mtx, features.tsv, barcodes.tsv, and locates tissue
+positions CSV. Handles both compressed and uncompressed formats.
+}
+\keyword{internal}

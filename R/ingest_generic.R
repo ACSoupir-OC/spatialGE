@@ -1,5 +1,10 @@
 #' Ingest Generic Data (DataFrames, Lists, Text Files)
+#' @description Dispatches to appropriate reader for generic tabular data (CSV/TSV)
+#' @details Reads delimited text files, converts to sparse matrices, and handles
+#'   basic barcode matching with coordinate files. Supports both single samples
+#'   and batch processing.
 #' @param source InputSource object of type 'generic' or 'list'
+#' @return list containing counts sparse matrix and coords dataframe
 #' @export
 dispatch_ingest.source_generic <- function(source) {
   # Text files (csv/tsv)
@@ -118,6 +123,14 @@ dispatch_ingest.source_generic <- function(source) {
 }
 
 #' @export
+#' Ingest List of DataFrames
+#' @title Ingest List of DataFrames
+#' @description Handles named list of dataframes with counts and coordinates
+#' @details Processes named list inputs where each element contains gene expression
+#'   dataframes. Sorts and aligns count and coordinate dataframes.
+#' @param source InputSource object of type 'list'
+#' @return list containing counts list and coords list (one per sample)
+#' @export
 dispatch_ingest.source_list <- function(source) {
    # source$rna is a list of data frames (counts)
    # source$coords is a list of data frames (coords) (optional)
@@ -174,6 +187,13 @@ dispatch_ingest.source_list <- function(source) {
 
 #' Ingest Seurat Object
 #' @param source InputSource object of type 'seurat'
+#' @export
+#' Ingest Seurat Object
+#' @description Converts Seurat spatial object to STlist format
+#' @details Extracts counts from Spatial assay and coordinates from images slot,
+#'   supporting multiple slices from a single Seurat object.
+#' @param source InputSource object of type 'seurat'
+#' @return list containing counts list and coords list (one per slice)
 #' @export
 dispatch_ingest.source_seurat <- function(source) {
   obj <- source$rna

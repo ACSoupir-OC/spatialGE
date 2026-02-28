@@ -6,6 +6,17 @@
 \usage{
 dispatch_ingest(source)
 }
+\arguments{
+\item{source}{InputSource object with type, format, rna, coords, and samples fields}
+}
+\value{
+list containing counts matrix and coords dataframe for the input
+}
 \description{
 Generic function to dispatch parsing logic based on InputSource class
 }
+\details{
+Uses R's S3 method dispatch to route to platform-specific ingestors based on
+the InputSource object type.
+}
+\keyword{internal}

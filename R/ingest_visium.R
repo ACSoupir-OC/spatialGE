@@ -1,5 +1,7 @@
 #' Ingest Visium Data
+#' @description Dispatches to appropriate Visium reader based on file format (H5 or MEX)
 #' @param source InputSource object of type 'visium'
+#' @return list containing counts sparse matrix and coords dataframe
 #' @export
 dispatch_ingest.source_visium <- function(source) {
   path <- source$rna
@@ -45,7 +47,11 @@ dispatch_ingest.source_visium <- function(source) {
 }
 
 #' Ingest Generic H5 Details (Visium or Xenium or 10x)
+#' @description Dispatches to appropriate H5 reader based on file format heuristics
+#' @details Uses coordinate file patterns and filename heuristics to distinguish
+#'   between Visium and Xenium H5 files. Falls back to Visium as default.
 #' @param source InputSource object of type 'h5_10x'
+#' @return list containing counts sparse matrix and coords dataframe
 #' @export
 dispatch_ingest.source_h5_10x <- function(source) {
   path <- source$rna
@@ -86,6 +92,14 @@ dispatch_ingest.source_h5_10x <- function(source) {
 }
 
 #' Internal H5 Reader
+#' @description Reads 10X Visium H5 files and extracts count matrix and coordinates
+#' @details Extracts sparse matrix components from H5 structure, locates tissue
+#'   positions CSV files, and aligns barcodes between counts and coordinates.
+#' @param h5_path Path to filtered_feature_bc_matrix.h5 or raw_feature_bc_matrix.h5
+#' @param coords_path Optional path to tissue positions CSV file
+#' @param sample_name Optional sample identifier
+#' @return list with counts (sparse matrix) and coords (dataframe with barcode, imagerow, imagecol)
+#' @keywords internal
 ingest_visium_h5 <- function(h5_path, coords_path=NULL, sample_name=NULL) {
   # Logic adapted from import_visium_h5
   if (!requireNamespace("hdf5r", quietly = TRUE)) stop("hdf5r required")
@@ -193,6 +207,15 @@ ingest_visium_h5 <- function(h5_path, coords_path=NULL, sample_name=NULL) {
 }
 
 #' Internal MEX Directory Reader
+#' @description Reads Visium MEX (tar.gz or directory) Matrix Market format files
+#' @details Extracts matrix.mtx, features.tsv, barcodes.tsv, and locates tissue
+#'   positions CSV. Handles both compressed and uncompressed formats.
+#' @param mex_dir Path to filtered_feature_bc_matrix or raw_feature_bc_matrix directory
+#' @param coords_path Optional path to tissue positions CSV file
+#' @param sample_name Optional sample identifier
+#' @param original_root Original root path for coordinate lookup (used with tar extraction)
+#' @return list with counts (sparse matrix) and coords (dataframe with barcode, imagerow, imagecol)
+#' @keywords internal
 ingest_visium_mex_dir <- function(mex_dir, coords_path=NULL, sample_name=NULL, original_root=NULL) {
   # Matrix::readMM for matrix.mtx
   mtx_path <- file.path(mex_dir, "matrix.mtx")

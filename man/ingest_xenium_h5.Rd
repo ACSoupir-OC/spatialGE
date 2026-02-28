@@ -6,6 +6,21 @@
 \usage{
 ingest_xenium_h5(h5_path, coords_path = NULL, sample_name = NULL)
 }
-\description{
-Internal Xenium H5 Reader
+\arguments{
+\item{h5_path}{Path to cell_feature_matrix.h5}
+
+\item{coords_path}{Optional path to cells.parquet or cells.csv file}
+
+\item{sample_name}{Optional sample identifier}
 }
+\value{
+list with counts (sparse matrix) and coords (dataframe with barcode, ypos, xpos)
+}
+\description{
+Reads 10X Xenium H5 files and extracts count matrix and coordinates
+}
+\details{
+Extracts sparse matrix components from H5 structure, locates cells.parquet
+or cells.csv coordinate files, and maps cell_id to barcode format.
+}
+\keyword{internal}

@@ -29,3 +29,4 @@ list with class attribute set
 \description{
 Constructor for InputSource
 }
+\keyword{internal}

@@ -6,6 +6,10 @@
 \usage{
 \method{dispatch_ingest}{default}(source)
 }
+\arguments{
+\item{source}{InputSource object}
+}
 \description{
 Default dispatch logic
 }
+\keyword{internal}

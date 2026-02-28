@@ -11,6 +11,7 @@ NULL
 #' @param coords object or path for coordinates
 #' @param samples object or path for samples metadata
 #' @return list with class attribute set
+#' @keywords internal
 new_input_source <- function(type, format=NULL, rna=NULL, coords=NULL, samples=NULL) {
   structure(
     list(
@@ -26,6 +27,13 @@ new_input_source <- function(type, format=NULL, rna=NULL, coords=NULL, samples=N
 
 #' @title Detect Input Source
 #' @description Analyzes arguments to determine the Input Source strategy
+#' @details Converts old-style detect_input() logic into modern modular InputSource objects
+#'   that can be dispatched to platform-specific ingestors.
+#' @param rnacounts RNA count data (object, file paths, or directories)
+#' @param spotcoords Spatial coordinates (object or file paths)
+#' @param samples Sample names or metadata
+#' @return list of InputSource objects, one per sample/source to process
+#' @keywords internal
 detect_input_source <- function(rnacounts=NULL, spotcoords=NULL, samples=NULL) {
   
   # 1. Seurat Object
@@ -98,17 +106,28 @@ detect_input_source <- function(rnacounts=NULL, spotcoords=NULL, samples=NULL) {
 
 #' @title Dispatch Ingest
 #' @description Generic function to dispatch parsing logic based on InputSource class
+#' @details Uses R's S3 method dispatch to route to platform-specific ingestors based on
+#'   the InputSource object type.
+#' @param source InputSource object with type, format, rna, coords, and samples fields
+#' @return list containing counts matrix and coords dataframe for the input
+#' @keywords internal
 dispatch_ingest <- function(source) {
   UseMethod("dispatch_ingest", source)
 }
 
 #' Default dispatch logic
+#' @param source InputSource object
+#' @keywords internal
 dispatch_ingest.default <- function(source) {
   stop("No ingestor defined for input type: ", source$type)
 }
 
 #' Safe Matrix Reader
 #' @description Robustly reads Matrix market files, handling .gz via temp expansion
+#' @details Decompresses gzip files to temporary location before reading, ensuring
+#'   proper handling of compressed Matrix Market format files.
+#' @param path Path to matrix.mtx or matrix.mtx.gz file
+#' @return CsparseMatrix from Matrix package
 #' @keywords internal
 read_mtx_safe <- function(path) {
   if (grepl("\\.gz$", path)) {

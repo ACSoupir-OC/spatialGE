@@ -9,6 +9,13 @@
 \arguments{
 \item{source}{InputSource object of type 'seurat'}
 }
+\value{
+list containing counts list and coords list (one per slice)
+}
 \description{
-Ingest Seurat Object
+Converts Seurat spatial object to STlist format
+}
+\details{
+Extracts counts from Spatial assay and coordinates from images slot,
+supporting multiple slices from a single Seurat object.
 }

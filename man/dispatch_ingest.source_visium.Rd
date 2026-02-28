@@ -9,6 +9,9 @@
 \arguments{
 \item{source}{InputSource object of type 'visium'}
 }
+\value{
+list containing counts sparse matrix and coords dataframe
+}
 \description{
-Ingest Visium Data
+Dispatches to appropriate Visium reader based on file format (H5 or MEX)
 }

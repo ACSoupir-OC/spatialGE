@@ -9,6 +9,14 @@
 \arguments{
 \item{source}{InputSource object of type 'generic' or 'list'}
 }
+\value{
+list containing counts sparse matrix and coords dataframe
+}
 \description{
-Ingest Generic Data (DataFrames, Lists, Text Files)
+Dispatches to appropriate reader for generic tabular data (CSV/TSV)
+}
+\details{
+Reads delimited text files, converts to sparse matrices, and handles
+basic barcode matching with coordinate files. Supports both single samples
+and batch processing.
 }
