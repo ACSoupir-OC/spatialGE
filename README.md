@@ -46,6 +46,16 @@ https://fridleylab.github.io/spatialGE/
 The code for `spatialGE` can be found here:
 https://github.com/FridleyLab/spatialGE
 
+## Function naming (v2.0.0)
+
+In version 2.0.0, the package refactored its input handling with a modular architecture. 
+The primary function is now `STlist` (lowercase 'l'). The legacy function `STList_legacy` 
+has been preserved for reproducibility of older workflows but is superseded and deprecated.
+
+**New recommended function:** `STlist` - modular, extensible implementation with platform-specific ingestors.
+
+**Deprecated but still available:** `STList_legacy` - monolithic implementation preserved for backward compatibility.
+
 ## [spatialGE-Web](https://spatialge.moffitt.org)
 
 A point-and-click web application that allows using spatialGE without coding/scripting is 
