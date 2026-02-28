@@ -142,19 +142,27 @@ SThet = function(x=NULL, genes=NULL, samples=NULL, method='moran', k=NULL, overw
 }
 
 
-# Helpers ----------------------------------------------------------------------
-
 ##
-# @title gene_moran_i_dist
-# @description Calculates Moran's I from ST data.
+# @title calc_spatial_autocorr
+# @description Calculate Moran's I or Geary's C spatial autocorrelation statistics
+# @details Shared helper that extracts common logic from gene_moran_i_notest and gene_geary_c_notest
+#          to reduce code duplication. Dispatches to spdep::moran() or spdep::geary() based on stat_type,
+#          extracts the appropriate result field, and stores it in the correct column.
 #
-# @param x an STlist with normalized gene counts.
-# @param combo a table with combinations of samples and genes to calculate statistics
-# @return x a STlist including the calculated Moran's I
+# @param x an STlist with normalized gene counts
+# @param combo a tibble with combinations of samples and genes to calculate statistics
+# @param stat_type character: 'moran' or 'geary'
+# @param overwrite logical indicating if previous statistics should be overwritten
+# @param cores integer indicating the number of cores to use during parallelization
+# @return x an STlist with the calculated spatial autocorrelation statistics stored in gene_meta
 #
-#
-gene_moran_i_notest = function(x=NULL, combo=NULL, overwrite=T, cores=NULL){
-  # Define cores available ### PARALLEL
+calc_spatial_autocorr = function(x=NULL, combo=NULL, stat_type='moran', overwrite=T, cores=NULL){
+  # Validate input
+  if(!stat_type %in% c('moran', 'geary')){
+    stop('stat_type must be "moran" or "geary"')
+  }
+  
+  # Define cores available - Windows-compatible parallelization
   if(.Platform$OS.type == 'windows'){
     cores = 1
   }
@@ -166,131 +174,100 @@ gene_moran_i_notest = function(x=NULL, combo=NULL, overwrite=T, cores=NULL){
       stop('Could not recognize number of cores requested')
     }
   }
-
-  # Use method to compute autocorrelation described in tutorial of https://rspatial.org/
-  # Loop through combinations of samples x genes
-  #stat_list = parallel::mclapply(seq_along(1:nrow(combo)), function(i_combo){ ### PARALLEL
-  #stat_list = list()   #### WHEN NOT USING PARALLEL
-  #for(i_combo in 1:nrow(combo)){   #### WHEN NOT USING PARALLEL
-  stat_list = parallel::mclapply(seq_along(1:length(unique(as.vector(unlist(combo[[1]]))))), function(i_combo){
-    i = unique(as.vector(unlist(combo[[1]])))[i_combo]
-    genes_tmp = unique(as.vector(unlist(combo[[2]][combo[[1]] == i])))
-    stat_list_tmp = list()
-    for(j in genes_tmp){
-
-      #j = as.vector(unlist(combo[i_combo, 2]))
-
-      # Extract expression data for a given gene.
-      gene_expr = x@tr_counts[[i]][j, ]
-
-      # Estimate statistic.
-      stat_est = spdep::moran(x=gene_expr,
-                              listw=x@misc[['sthet']][['listws']][[i]],
-                              n=length(x@misc[['sthet']][['listws']][[i]]$neighbours),
-                              S0=spdep::Szero(x@misc[['sthet']][['listws']][[i]]))
-
-      #stat_list[[i_combo]] = stat_est
-      stat_list_tmp[[j]] = stat_est
-      #stat_list[[paste(i, j, sep='&&')]] = stat_est
-      #return(stat_est) ### PARALLEL
-    }
-    return(stat_list_tmp)
-  }, mc.cores=cores, mc.preschedule=F) ### PARALLEL
-
-  #}
-  #names(stat_list) = paste(combo[[1]], combo[[2]], sep='&&')
+  
+  # Determine result column name based on stat_type
+  result_col = if(stat_type == 'moran') 'moran_i' else 'geary_c'
+  
+  # Compute autocorrelation using parallel processing
+  stat_list = parallel::mclapply(
+    seq_along(1:length(unique(as.vector(unlist(combo[[1]]))))),
+    function(i_combo){
+      i = unique(as.vector(unlist(combo[[1]])))[i_combo]
+      genes_tmp = unique(as.vector(unlist(combo[[2]][combo[[1]] == i])))
+      stat_list_tmp = list()
+      
+      for(j in genes_tmp){
+        gene_expr = x@tr_counts[[i]][j, ]
+        
+        if(stat_type == 'moran'){
+          stat_est = spdep::moran(
+            x = gene_expr,
+            listw = x@misc[['sthet']][['listws']][[i]],
+            n = length(x@misc[['sthet']][['listws']][[i]]$neighbours),
+            S0 = spdep::Szero(x@misc[['sthet']][['listws']][[i]])
+          )
+        } else {
+          stat_est = spdep::geary(
+            x = gene_expr,
+            listw = x@misc[['sthet']][['listws']][[i]],
+            n = length(x@misc[['sthet']][['listws']][[i]]$neighbours),
+            n1 = length(x@misc[['sthet']][['listws']][[i]]$neighbours) - 1,
+            S0 = spdep::Szero(x@misc[['sthet']][['listws']][[i]])
+          )
+        }
+        
+        stat_list_tmp[[j]] = stat_est
+      }
+      
+      return(stat_list_tmp)
+    },
+    mc.cores = cores,
+    mc.preschedule = FALSE
+  )
+  
   names(stat_list) = unique(as.vector(unlist(combo[[1]])))
-
-  # Store kriging results in STList.
-  #for(i in 1:nrow(combo)){
+  
+  # Store results in STlist gene_meta
   for(i in names(stat_list)){
     for(j in names(stat_list[[i]])){
-      #combo_name = unlist(strsplit(names(stat_list)[i], split = '&&'))
       combo_name = c(i, j)
-      if(overwrite | is.na(as.vector(x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'moran_i']))){
-        # x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'moran_i'] = as.vector(stat_list[[i]]$estimate[1])
-        #x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'moran_i'] = as.vector(stat_list[[i]][[j]][['estimate']][1])
-        x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'moran_i'] = as.vector(stat_list[[i]][[j]][['I']])
-        #print(as.vector(stat_list[[i]]$estimate[1]))
+      
+      if(overwrite | is.na(as.vector(
+        x@gene_meta[[combo_name[1]]][
+          x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2],
+          result_col
+        ]
+      ))){
+        result_value = if(stat_type == 'moran') {
+          as.vector(stat_list[[i]][[j]][['I']])
+        } else {
+          as.vector(stat_list[[i]][[j]][['C']])
+        }
+        
+        x@gene_meta[[combo_name[1]]][
+          x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2],
+          result_col
+        ] = result_value
       }
     }
   }
+  
   return(x)
 }
 
 
 ##
-# @title gene_geary_c_dist
-# @description Calculates Geary's C from ST data.
-#
+# @title gene_moran_i_notest
+# @description Calculates Moran's I from ST data (wrapper for calc_spatial_autocorr)
 # @param x an STlist with normalized gene counts.
 # @param combo a table with combinations of samples and genes to calculate statistics
-# @return x a STlist including the calculated Geary's I
+# @return x a STlist including the calculated Moran's I
+# @note Wrapper for backward compatibility
 #
+gene_moran_i_notest = function(x=NULL, combo=NULL, overwrite=T, cores=NULL){
+  calc_spatial_autocorr(x = x, combo = combo, stat_type = 'moran', overwrite = overwrite, cores = cores)
+}
+
+
+##
+# @title gene_geary_c_notest
+# @description Calculates Geary's C from ST data (wrapper for calc_spatial_autocorr)
+# @param x an STlist with normalized gene counts.
+# @param combo a table with combinations of samples and genes to calculate statistics
+# @return x a STlist including the calculated Geary's C
+# @note Wrapper for backward compatibility
 #
 gene_geary_c_notest = function(x=NULL, combo=NULL, overwrite=T, cores=NULL){
-  # Define cores available ### PARALLEL
-  if(.Platform$OS.type == 'windows'){
-    cores = 1
-  }
-  if(is.null(cores)){
-    cores = count_cores(length(x@spatial_meta))
-  } else{
-    cores = as.integer(cores)
-    if(is.na(cores)){
-      stop('Could not recognize number of cores requested')
-    }
-  }
-
-  # Use method to compute autocorrelation described in tutorial of https://rspatial.org/
-  # Loop through combinations of samples x genes
-  #stat_list = parallel::mclapply(seq_along(1:nrow(combo)), function(i_combo){ ### PARALLEL
-  #stat_list = list()   #### WHEN NOT USING PARALLEL
-  #for(i_combo in 1:nrow(combo)){   #### WHEN NOT USING PARALLEL
-  stat_list = parallel::mclapply(seq_along(1:length(unique(as.vector(unlist(combo[[1]]))))), function(i_combo){
-    i = unique(as.vector(unlist(combo[[1]])))[i_combo]
-    genes_tmp = unique(as.vector(unlist(combo[[2]][combo[[1]] == i])))
-    stat_list_tmp = list()
-    for(j in genes_tmp){
-
-      #j = as.vector(unlist(combo[i_combo, 2]))
-
-      # Extract expression data for a given gene.
-      gene_expr = x@tr_counts[[i]][j, ]
-
-      # Estimate statistic.
-      stat_est = spdep::geary(x=gene_expr,
-                              listw=x@misc[['sthet']][['listws']][[i]],
-                              n=length(x@misc[['sthet']][['listws']][[i]]$neighbours),
-                              n1=length(x@misc[['sthet']][['listws']][[i]]$neighbours)-1,
-                              S0=spdep::Szero(x@misc[['sthet']][['listws']][[i]]))
-
-      #stat_list[[i_combo]] = stat_est
-      stat_list_tmp[[j]] = stat_est
-      #stat_list[[paste(i, j, sep='&&')]] = stat_est
-      #return(stat_est) ### PARALLEL
-    }
-    return(stat_list_tmp)
-  }, mc.cores=cores, mc.preschedule=F) ### PARALLEL
-
-  #}
-  #names(stat_list) = paste(combo[[1]], combo[[2]], sep='&&')
-  names(stat_list) = unique(as.vector(unlist(combo[[1]])))
-
-  # Store kriging results in STList.
-  #for(i in 1:nrow(combo)){
-  for(i in names(stat_list)){
-    for(j in names(stat_list[[i]])){
-      #combo_name = unlist(strsplit(names(stat_list)[i], split = '&&'))
-      combo_name = c(i, j)
-      if(overwrite | is.na(as.vector(x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'geary_c']))){
-        # x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'moran_i'] = as.vector(stat_list[[i]]$estimate[1])
-        #x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'geary_c'] = as.vector(stat_list[[i]][[j]][['estimate']][1])
-        x@gene_meta[[combo_name[1]]][x@gene_meta[[combo_name[1]]][['gene']] == combo_name[2], 'geary_c'] = as.vector(stat_list[[i]][[j]][['C']])
-        #print(as.vector(stat_list[[i]]$estimate[1]))
-      }
-    }
-  }
-  return(x)
+  calc_spatial_autocorr(x = x, combo = combo, stat_type = 'geary', overwrite = overwrite, cores = cores)
 }
 
