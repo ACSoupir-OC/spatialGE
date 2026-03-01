@@ -1,33 +1,75 @@
 
-test_that("Enrichment and Gradient functions work", {
+test_that("STenrich (new implementation) works", {
 library(spatialGE)
+  
   # Load data
   data_dir <- file.path("data", "melanoma_thrane")
   counts <- list.files(data_dir, pattern = "counts", full.names = TRUE)
   coords <- list.files(data_dir, pattern = "mapping", full.names = TRUE)
-  #clinical <- file.path(data_dir, "thrane_clinical.csv")
-
   clinical <- file.path(data_dir, "thrane_clinical.csv")
+  
   st_obj <- STlist(rnacounts = counts, spotcoords = coords, samples = clinical)
   st_obj <- transform_data(st_obj)
   
-  # --- STenrich Test ---
   # Mock gene sets
-  # Get some gene names from first sample
   genes <- rownames(st_obj@tr_counts[[1]])
   gene_sets <- list(
     GS1 = genes[1:5],
     GS2 = genes[6:10]
   )
   
-  # Run STenrich
-  # Using domain=NULL to run on all spots
-  # annot=NULL
+  # Run new STenrich
   res_enrich <- STenrich(st_obj, gene_sets = gene_sets, samples = 1, reps = 10, verbose = FALSE)
   
   expect_type(res_enrich, "list")
   expect_true(length(res_enrich) > 0)
   expect_s3_class(res_enrich[[1]], "data.frame")
+  expect_true("p_value" %in% colnames(res_enrich[[1]]))
+  expect_true("adj_p_value" %in% colnames(res_enrich[[1]]))
+})
+
+
+test_that("STenrich_legacy produces same results as new implementation", {
+library(spatialGE)
+  
+  # Load data
+  data_dir <- file.path("data", "melanoma_thrane")
+  counts <- list.files(data_dir, pattern = "counts", full.names = TRUE)
+  coords <- list.files(data_dir, pattern = "mapping", full.names = TRUE)
+  clinical <- file.path(data_dir, "thrane_clinical.csv")
+  
+  st_obj <- STlist(rnacounts = counts, spotcoords = coords, samples = clinical)
+  st_obj <- transform_data(st_obj)
+  
+  # Mock gene sets
+  genes <- rownames(st_obj@tr_counts[[1]])
+  gene_sets <- list(
+    GS1 = genes[1:5],
+    GS2 = genes[6:10]
+  )
+  
+  # Run both implementations with same seed
+  res_new <- STenrich(st_obj, gene_sets = gene_sets, samples = 1, reps = 10, seed = 12345, verbose = FALSE)
+  res_legacy <- STenrich_legacy(st_obj, gene_sets = gene_sets, samples = 1, reps = 10, seed = 12345, verbose = FALSE)
+  
+  # Results should be identical
+  expect_equal(res_new[[1]][['p_value']], res_legacy[[1]][['p_value']])
+  expect_equal(res_new[[1]][['adj_p_value']], res_legacy[[1]][['adj_p_value']])
+  expect_equal(res_new[[1]][['prop_size_test']], res_legacy[[1]][['prop_size_test']])
+})
+
+
+test_that("Enrich and Gradient functions work", {
+library(spatialGE)
+  
+  # Load data
+  data_dir <- file.path("data", "melanoma_thrane")
+  counts <- list.files(data_dir, pattern = "counts", full.names = TRUE)
+  coords <- list.files(data_dir, pattern = "mapping", full.names = TRUE)
+  clinical <- file.path(data_dir, "thrane_clinical.csv")
+  
+  st_obj <- STlist(rnacounts = counts, spotcoords = coords, samples = clinical)
+  st_obj <- transform_data(st_obj)
   
   # --- STgradient Test ---
   # Needs clustering
@@ -38,7 +80,6 @@ library(spatialGE)
   ref_cluster <- "1" # Assuming clusters are 1, 2...
   
   # Run STgradient
-  # topgenes=50 for speed
   res_grad <- STgradient(st_obj, samples = 1, annot = annot_col, ref = ref_cluster, topgenes = 50, verbose = FALSE)
   
   expect_type(res_grad, "list")
