@@ -17,4 +17,3 @@ a list of weighted distance matrices, one for each ws value
 \description{
 Combine scaled expression and spatial distance matrices using user-specified weights
 }
-\keyword{internal}

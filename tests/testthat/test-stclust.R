@@ -4,14 +4,7 @@
 
 test_that("STclust basic clustering works", {
   # Load local package for STlist class and functions
-  devtools::load_all('../../.', export_all=FALSE)
-  
-  # Source helper files that aren't loaded by load_all
-  source('../../R/utils.R')
-  source('../../R/seurat_helpers.R')
-  source('../../R/STclust_helpers.R')
-  source('../../R/STclust_core.R')
-  source('../../R/STclust_legacy.R')
+  devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
   data_dir <- test_path("data/melanoma_thrane")
@@ -36,14 +29,7 @@ test_that("STclust basic clustering works", {
 
 test_that("STclust DTC clustering works", {
   # Load local package for STlist class and functions
-  devtools::load_all('../../.', export_all=FALSE)
-  
-  # Source helper files that aren't loaded by load_all
-  source('../../R/utils.R')
-  source('../../R/seurat_helpers.R')
-  source('../../R/STclust_helpers.R')
-  source('../../R/STclust_core.R')
-  source('../../R/STclust_legacy.R')
+  devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
   data_dir <- test_path("data/melanoma_thrane")
@@ -68,14 +54,7 @@ test_that("STclust DTC clustering works", {
 
 test_that("STclust fixed k clustering works", {
   # Load local package for STlist class and functions
-  devtools::load_all('../../.', export_all=FALSE)
-  
-  # Source helper files that aren't loaded by load_all
-  source('../../R/utils.R')
-  source('../../R/seurat_helpers.R')
-  source('../../R/STclust_helpers.R')
-  source('../../R/STclust_core.R')
-  source('../../R/STclust_legacy.R')
+  devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
   data_dir <- test_path("data/melanoma_thrane")
@@ -100,14 +79,7 @@ test_that("STclust fixed k clustering works", {
 
 test_that("STclust() produces identical results to STclust_legacy()", {
   # Load local package for STlist class and functions
-  devtools::load_all('../../.', export_all=FALSE)
-  
-  # Source helper files that aren't loaded by load_all
-  source('../../R/utils.R')
-  source('../../R/seurat_helpers.R')
-  source('../../R/STclust_helpers.R')
-  source('../../R/STclust_core.R')
-  source('../../R/STclust_legacy.R')
+  devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
   data_dir <- test_path("data/melanoma_thrane")
@@ -146,12 +118,7 @@ test_that("STclust() produces identical results to STclust_legacy()", {
 
 test_that("STclust helper functions work correctly", {
   # Load local package for STlist class and functions
-  devtools::load_all('../../.', export_all=FALSE)
-  
-  # Source helper files that aren't loaded by load_all
-  source('../../R/utils.R')
-  source('../../R/seurat_helpers.R')
-  source('../../R/STclust_helpers.R')
+  devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
   data_dir <- test_path("data/melanoma_thrane")
@@ -212,13 +179,7 @@ test_that("STclust helper functions work correctly", {
 
 test_that("STclust error handling works", {
   # Load local package for STlist class and functions
-  devtools::load_all('../../.', export_all=FALSE)
-  
-  # Source helper files that aren't loaded by load_all
-  source('../../R/utils.R')
-  source('../../R/seurat_helpers.R')
-  source('../../R/STclust_helpers.R')
-  source('../../R/STclust_core.R')
+  devtools::load_all('../../.', export_all=TRUE)
   
   # Test invalid input
   expect_error(STclust(), "input must be a STlist")

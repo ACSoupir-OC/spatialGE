@@ -26,4 +26,3 @@ a list of data frames with spot/cell cluster assignments for each weight
 \description{
 Perform hierarchical clustering followed by DynamicTreeCut for adaptive cluster detection
 }
-\keyword{internal}

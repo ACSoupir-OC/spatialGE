@@ -11,12 +11,12 @@
 #' @param dist_metric character string indicating distance metric (e.g., 'euclidean')
 #' @return a list with two matrices: `scale_exp` (scaled expression distances) and 
 #' `scale_coord` (scaled coordinate distances)
-#' @keywords internal
 #' @importFrom Matrix t
 #' @importFrom dplyr %>%
 #' @importFrom tibble column_to_rownames
 #' @importFrom wordspace dist.matrix
 #' @importFrom stats dist as.matrix
+#' @export
 calculate_dist_matrices = function(expr_dat=NULL, coord_dat=NULL, dist_metric=NULL){
   a = Matrix::t(expr_dat)
   b = coord_dat[, c('libname', 'xpos', 'ypos')] %>% tibble::column_to_rownames(var='libname')
@@ -44,8 +44,8 @@ calculate_dist_matrices = function(expr_dat=NULL, coord_dat=NULL, dist_metric=NU
 #' @param scaled_dists a list with two matrices: scaled expression and spatial distance matrices
 #' @param ws vector of spatial weights (0-1) to apply to spatial distances
 #' @return a list of weighted distance matrices, one for each ws value
-#' @keywords internal
 #' @importFrom utils combn
+#' @export
 calculate_weighted_dist = function(scaled_dists=NULL, ws=NULL){
   weight_mtx_ls = lapply(1:length(ws), function(w){
     weight_d = ws[w]
@@ -73,11 +73,11 @@ calculate_weighted_dist = function(scaled_dists=NULL, ws=NULL){
 #' @param deepSplit a logical or integer (1-4) for cutreeDynamic deepSplit parameter
 #' @param linkage a string with the linkage method for hclust (e.g., 'ward.D2')
 #' @return a list of data frames with spot/cell cluster assignments for each weight
-#' @keywords internal
 #' @importFrom dplyr %>%
 #' @importFrom tibble tibble add_column
 #' @importFrom dynamicTreeCut cutreeDynamic
 #' @importFrom stats as.dist hclust
+#' @export
 get_hier_clusters_dtc = function(weighted_dists=NULL, ws=NULL, deepSplit=NULL, linkage=NULL){
   grp_df_ls = lapply(1:length(ws), function(w){
     # Construct column name to be put in `spatial_meta` based on weight and deepSplit
@@ -117,10 +117,10 @@ get_hier_clusters_dtc = function(weighted_dists=NULL, ws=NULL, deepSplit=NULL, l
 #' @param ks a vector with k values for cluster detection
 #' @param linkage a string with the linkage method for hclust (e.g., 'ward.D2')
 #' @return a list of data frames with spot/cell cluster assignments for each weight
-#' @keywords internal
 #' @importFrom dplyr %>%
 #' @importFrom tibble tibble add_column
 #' @importFrom stats as.dist hclust cutree
+#' @export
 get_hier_clusters_ks = function(weighted_dists=NULL, ws=NULL, ks=NULL, linkage=NULL){
 
   # To prevent NOTES in R CMD check

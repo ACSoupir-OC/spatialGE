@@ -21,4 +21,3 @@ a list with two matrices: \code{scale_exp} (scaled expression distances) and
 Calculate Euclidean distance matrices for gene expression and spatial coordinates,
 then scale both to \link{0,1} range
 }
-\keyword{internal}
