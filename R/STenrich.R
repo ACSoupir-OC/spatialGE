@@ -168,7 +168,7 @@ STenrich = function(x, samples=NULL, gene_sets=NULL, score_type='avg', reps=1000
     if(!user_cores){
       cores = count_cores(length(gene_sets))
     }
-    result_df = STenrich_calculate_gs_gsva_score(delayed_x, combo, pw_genes, gene_sets, min_genes, cores, verbose)
+    result_df = STenrich_calculate_gs_gsva_score(delayed_x, pw_genes, gene_sets, min_genes, cores, verbose)
   }
   
   # Perform permutation testing

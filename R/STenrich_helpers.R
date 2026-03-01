@@ -235,6 +235,7 @@ STenrich_calculate_gs_gsva_score = function(x, pw_genes, gene_sets, min_genes, c
 #' @description Calculate observed distances and perform random permutations
 #' @param result_df list of data frames with expression scores
 #' @param coords_df list of coordinate matrices for each sample
+#' @param combo data frame with combinations of samples and gene sets
 #' @param pw_genes list of available genes per gene set
 #' @param samples a vector with sample names to run analysis
 #' @param gene_sets a named list of gene sets to test
@@ -246,7 +247,7 @@ STenrich_calculate_gs_gsva_score = function(x, pw_genes, gene_sets, min_genes, c
 #' @param verbose verbosity level
 #' @return list of data frames with p-values per sample
 #' @keywords internal
-STenrich_permutation_test = function(result_df, coords_df, pw_genes, samples, gene_sets, num_sds, min_units, reps, seed, cores, verbose){
+STenrich_permutation_test = function(result_df, coords_df, combo, pw_genes, samples, gene_sets, num_sds, min_units, reps, seed, cores, verbose){
   
   pval_res = parallel::mclapply(1:nrow(combo), function(i){
     sample_tmp = as.vector(combo[i, 1])

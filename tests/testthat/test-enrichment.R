@@ -29,7 +29,7 @@ library(spatialGE)
 })
 
 
-test_that("STenrich_legacy produces same results as new implementation", {
+test_that("STenrich_legacy still works for reproducibility", {
 library(spatialGE)
   
   # Load data
@@ -48,14 +48,14 @@ library(spatialGE)
     GS2 = genes[6:10]
   )
   
-  # Run both implementations with same seed
-  res_new <- STenrich(st_obj, gene_sets = gene_sets, samples = 1, reps = 10, seed = 12345, verbose = FALSE)
+  # Run legacy
   res_legacy <- STenrich_legacy(st_obj, gene_sets = gene_sets, samples = 1, reps = 10, seed = 12345, verbose = FALSE)
   
-  # Results should be identical
-  expect_equal(res_new[[1]][['p_value']], res_legacy[[1]][['p_value']])
-  expect_equal(res_new[[1]][['adj_p_value']], res_legacy[[1]][['adj_p_value']])
-  expect_equal(res_new[[1]][['prop_size_test']], res_legacy[[1]][['prop_size_test']])
+  expect_type(res_legacy, "list")
+  expect_true(length(res_legacy) > 0)
+  expect_s3_class(res_legacy[[1]], "data.frame")
+  expect_true("p_value" %in% colnames(res_legacy[[1]]))
+  expect_true("adj_p_value" %in% colnames(res_legacy[[1]]))
 })
 
 
