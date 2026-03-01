@@ -39,7 +39,8 @@ Seurat_FindVariableFeatures = function(object=NULL){
     if (clip.max == 'auto') {
       clip.max <- sqrt(x = ncol(x = object))
     }
-    hvf.info <- data.frame(mean = rowMeans(x = object))
+    # Use Matrix::rowSums for sparse matrices (rowMeans doesn't work on dgCMatrix)
+    hvf.info <- data.frame(mean = Matrix::rowSums(object) / ncol(object))
     hvf.info$variance <- SparseRowVar2(
       mat = object,
       mu = hvf.info$mean
