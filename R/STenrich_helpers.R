@@ -108,6 +108,8 @@ STenrich_prepare_data = function(x, samples, gene_sets, annot, domain, min_units
     if(length(tissue_spots) > 0){
       df_tmp = df_tmp[df_tmp[['libname']] %in% tissue_spots[[i]], ]
     }
+    # Reset rownames and convert libname to rownames
+    rownames(df_tmp) <- NULL
     df_tmp = df_tmp %>% tibble::column_to_rownames(var='libname')
     as.matrix(df_tmp)
   })

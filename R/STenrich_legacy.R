@@ -111,6 +111,8 @@ STenrich_legacy = function(x=NULL, samples=NULL, gene_sets=NULL, score_type='avg
     if(length(tissue_spots) > 0){
       df_tmp = df_tmp[df_tmp[['libname']] %in% tissue_spots[[i]], ]
     }
+    # Reset rownames and convert libname to rownames
+    rownames(df_tmp) <- NULL
     df_tmp = df_tmp %>% tibble::column_to_rownames(var='libname')
     df_tmp = as.matrix(df_tmp)
 
