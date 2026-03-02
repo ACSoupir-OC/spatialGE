@@ -1,6 +1,6 @@
 
 test_that("STenrich (new implementation) works", {
-library(spatialGE)
+  # Don't load spatialGE - will use devtools::load_all() or sourced files
   
   # Load data
   data_dir <- file.path("data", "melanoma_thrane")

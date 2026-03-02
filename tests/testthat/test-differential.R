@@ -53,7 +53,7 @@ source('../../R/STdiff_legacy.R')
 
 # Test: STdiff() and STdiff_legacy() produce identical results
 test_that("STdiff() produces identical results to STdiff_legacy()", {
-library(spatialGE)
+  # Don't load spatialGE - will use devtools::load_all() or sourced files
   # Load data
   data_dir <- file.path("data", "melanoma_thrane")
   counts <- list.files(data_dir, pattern = "counts", full.names = TRUE)

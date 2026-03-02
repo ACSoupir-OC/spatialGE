@@ -3,7 +3,11 @@
 # Tests for the refactored STclust modular implementation
 
 test_that("STclust basic clustering works", {
-  # Load local package for STlist class and functions
+  # Unload installed package to avoid conflicts
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  # Load local development version
   devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
@@ -28,7 +32,11 @@ test_that("STclust basic clustering works", {
 
 
 test_that("STclust DTC clustering works", {
-  # Load local package for STlist class and functions
+  # Unload installed package to avoid conflicts
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  # Load local development version
   devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
@@ -53,7 +61,11 @@ test_that("STclust DTC clustering works", {
 
 
 test_that("STclust fixed k clustering works", {
-  # Load local package for STlist class and functions
+  # Unload installed package to avoid conflicts
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  # Load local development version
   devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
@@ -78,7 +90,11 @@ test_that("STclust fixed k clustering works", {
 
 
 test_that("STclust() produces identical results to STclust_legacy()", {
-  # Load local package for STlist class and functions
+  # Unload installed package to avoid conflicts
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  # Load local development version
   devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
@@ -117,7 +133,11 @@ test_that("STclust() produces identical results to STclust_legacy()", {
 
 
 test_that("STclust helper functions work correctly", {
-  # Load local package for STlist class and functions
+  # Unload installed package to avoid conflicts
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  # Load local development version
   devtools::load_all('../../.', export_all=TRUE)
   
   # Load data
@@ -178,7 +198,11 @@ test_that("STclust helper functions work correctly", {
 
 
 test_that("STclust error handling works", {
-  # Load local package for STlist class and functions
+  # Unload installed package to avoid conflicts
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  # Load local development version
   devtools::load_all('../../.', export_all=TRUE)
   
   # Test invalid input

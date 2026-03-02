@@ -2,7 +2,8 @@
 
 suppressPackageStartupMessages({
   library(testthat)
-  library(spatialGE)
+  # Don't load spatialGE here - individual tests use devtools::load_all()
+  # to load the development version
 })
 
 # Run all tests and capture results
