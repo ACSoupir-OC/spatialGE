@@ -167,7 +167,11 @@ STgradient_summarize_distances = function(dist_tmp, nonref_tmp, ref_tmp, nbs_kee
   # Select spots in analysis (non reference in rows, reference in columns)
   dists_nonref_tmp = as.data.table(dist_tmp[nonref_tmp, ref_tmp, drop=F])
   # Remove columns corresponding to spots without enough neighbors
-  dists_nonref_tmp = dists_nonref_tmp[, ..nbs_keep]
+  if(length(nbs_keep) > 0){
+    dists_nonref_tmp = dists_nonref_tmp[, nbs_keep, with=FALSE]
+  } else{
+    dists_nonref_tmp = data.table::data.table()
+  }
 
   # Check that distances are available for the comparison
   # Number of rows larger than 1, because cannot compute variable genes with a single non-reference spot
