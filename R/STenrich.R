@@ -10,14 +10,6 @@
 # @importFrom dplyr mutate select
 #
 
-# Source helper functions
-helper_path <- system.file('R', 'STenrich_helpers.R', package='spatialGE', mustWork=FALSE)
-if(helper_path == '' || !file.exists(helper_path)){
-  source('R/STenrich_helpers.R')
-} else {
-  source(helper_path)
-}
-
 ##
 #' @title STenrich: Test for spatial enrichment of gene expression sets
 #' @description Test for spatial enrichment of gene expression sets in spatial transcriptomics data

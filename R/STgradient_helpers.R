@@ -2,6 +2,10 @@
 # STgradient Core Modular Functions
 # Helper functions for spatial gradient analysis
 
+# Load required packages
+library(dplyr)
+library(tibble)
+
 ##
 #' @title STgradient_validate_input: Validate input parameters
 #' @description Validate sample names, annotation columns, reference clusters, and other parameters
@@ -102,13 +106,15 @@ STgradient_validate_input = function(x, samples, topgenes, annot, ref, exclude, 
 #' @keywords internal
 STgradient_prepare_distances = function(x, sample_name, annot, ref, exclude){
   # Calculate euclidean distances
-  coords_tmp = x@spatial_meta[[sample_name]] %>%
-    dplyr::select(c('libname', 'ypos', 'xpos')) %>% tibble::column_to_rownames('libname')
-  dist_tmp = as.matrix(stats::dist(coords_tmp, method='euclidean'))
+  # Need to keep annotation column for filtering
+  coords_df = x@spatial_meta[[sample_name]][, c('libname', 'ypos', 'xpos', annot), drop=FALSE]
+  rownames(coords_df) = coords_df$libname
+  coords_mat = coords_df[, c('xpos', 'ypos'), drop=FALSE]
+  dist_tmp = as.matrix(stats::dist(coords_mat, method='euclidean'))
 
   # Save spots in the different categories (ref, nonref, excl)
-  ref_tmp = x@spatial_meta[[sample_name]][['libname']][x@spatial_meta[[sample_name]][[annot]] == ref]
-  nonref_tmp = x@spatial_meta[[sample_name]][['libname']][!(x@spatial_meta[[sample_name]][[annot]] %in% c(ref, exclude))]
+  ref_tmp = coords_df[['libname']][coords_df[[annot]] == ref]
+  nonref_tmp = coords_df[['libname']][!(coords_df[[annot]] %in% c(ref, exclude))]
 
   return(list(
     dist_tmp = dist_tmp,
@@ -155,43 +161,51 @@ STgradient_filter_neighbors = function(dist_tmp, ref_tmp, min_nb, nb_dist_thr){
 #' @param nbs_keep barcodes of reference spots with enough neighbors
 #' @param distsumm distance summary method ('min' or 'avg')
 #' @param limit optional distance limit
-#' @return tibble with barcode and distance to reference
+#' @return data.frame with barcode and distance to reference
 #' @keywords internal
 STgradient_summarize_distances = function(dist_tmp, nonref_tmp, ref_tmp, nbs_keep, distsumm, limit){
   # Get summarized distances from the reference for each spot in the non-reference
   # Select spots in analysis (non reference in rows, reference in columns)
   dists_nonref_tmp = as.data.frame(dist_tmp[nonref_tmp, ref_tmp, drop=F])
+  
   # Remove columns corresponding to spots without enough neighbors
-  dists_nonref_tmp = dists_nonref_tmp[, colnames(dists_nonref_tmp) %in% nbs_keep, drop=F]
+  if(length(nbs_keep) > 0){
+    dists_nonref_tmp = dists_nonref_tmp[, nbs_keep, drop=FALSE]
+  } else{
+    dists_nonref_tmp = data.frame()
+  }
 
   # Check that distances are available for the comparison
   # Number of rows larger than 1, because cannot compute variable genes with a single non-reference spot
   if(nrow(dists_nonref_tmp) > 1 & ncol(dists_nonref_tmp) > 0){
-    if(distsumm == 'avg'){ # Summarize non-reference spots using minimun or mean distance
-      dists_summ_tmp = tibble::tibble(barcode=rownames(dists_nonref_tmp),
-                                      dist2ref=apply(dists_nonref_tmp, 1, mean))
+    if(distsumm == 'avg'){ # Summarize non-reference spots using minimum or mean distance
+      dists_summ_tmp = data.frame(
+        barcode = rownames(dists_nonref_tmp),
+        dist2ref = rowMeans(dists_nonref_tmp)
+      )
     } else{
-      dists_summ_tmp = tibble::tibble(barcode=rownames(dists_nonref_tmp),
-                                      dist2ref=apply(dists_nonref_tmp, 1, min))
+      dists_summ_tmp = data.frame(
+        barcode = rownames(dists_nonref_tmp),
+        dist2ref = do.call(pmin, c(dists_nonref_tmp, na.rm = TRUE))
+      )
     }
   } else{
-    dists_summ_tmp = tibble::tibble()
+    dists_summ_tmp = data.frame()
   }
 
   # Remove distances if outside user-specified limit
   if(!is.null(limit) & nrow(dists_summ_tmp) > 1){
     # Get lower and upper distance limits
     # If lower limit is higher than user limit, then set lower limit as upper limit
-    if(!all(is.na(dists_summ_tmp[['dist2ref']]))){
-      dist2reflower = min(dists_summ_tmp[['dist2ref']], na.rm=T)
+    if(!all(is.na(dists_summ_tmp$dist2ref))){
+      dist2reflower = min(dists_summ_tmp$dist2ref, na.rm=T)
       if(dist2reflower > limit){
         dist2refupper = dist2reflower
       } else{
         dist2refupper = limit
       }
       # Make NA the distances outside range
-      dists_summ_tmp = dists_summ_tmp %>%
-        dplyr::mutate(dist2ref=dplyr::case_when(dist2ref <= dist2refupper ~ as.numeric(dist2ref)))
+      dists_summ_tmp$dists2ref[dists_summ_tmp$dist2ref > dist2refupper] = NA
     }
   }
 
@@ -204,7 +218,7 @@ STgradient_summarize_distances = function(dist_tmp, nonref_tmp, ref_tmp, nbs_kee
 #' @description Identify top genes by variance using VST method
 #' @param x an STlist object
 #' @param sample_name name of sample to process
-#' @param dists_summ tibble with distance data
+#' @param dists_summ data.frame with distance data
 #' @param topgenes number of top genes to select
 #' @return vector of gene names
 #' @keywords internal
@@ -215,17 +229,16 @@ STgradient_identify_variable_genes = function(x, sample_name, dists_summ, topgen
   raw_cts = x@counts[[sample_name]]
   # Get spots that have at least 1 distance value
   # However, if only one spot, then sample will be removed from analysis as cannot detect variable genes from single spot
-  raw_cts = raw_cts[, dists_summ[['barcode']][ !is.na(dists_summ[['dist2ref']]) ], drop=F]
+  valid_barcodes = dists_summ[['barcode']][ !is.na(dists_summ[['dist2ref']]) ]
+  raw_cts = raw_cts[, valid_barcodes, drop=F]
 
   # Number of rows larger than 1, because cannot compute variable genes with a single non-reference spot
   # Variable genes in minimum distance range
   if(ncol(raw_cts) > 1){
-    vargenes = calculate_vst(x=raw_cts) %>%
-      dplyr::arrange(dplyr::desc(vst.variance.standardized)) %>%
-      dplyr::select(gene) %>%
-      unlist() %>%
-      as.vector()
-    vargenes = vargenes[1:topgenes] # Get number of genes defined by user
+    vargenes_df = calculate_vst(x=raw_cts)
+    # Sort by variance descending (use backticks for column names with dots)
+    vargenes_df = vargenes_df[order(-vargenes_df$`vst.variance.standardized`), ]
+    vargenes = vargenes_df$gene[1:min(topgenes, nrow(vargenes_df))]
   } else{
     vargenes = c()
   }
@@ -240,27 +253,48 @@ STgradient_identify_variable_genes = function(x, sample_name, dists_summ, topgen
 #' @param x an STlist object
 #' @param sample_name name of sample to process
 #' @param vargenes vector of variable gene names
-#' @param dists_summ tibble with barcode and distance
-#' @return data frame with expression data and distances
+#' @param dists_summ data.frame with barcode and distance
+#' @return data.frame with expression data and distances
 #' @keywords internal
 STgradient_extract_expression = function(x, sample_name, vargenes, dists_summ){
   if(length(vargenes) > 0){
+    # Step 1: Extract expression for variable genes (sparse matrix)
     vargenes_expr = expandSparse(x@tr_counts[[sample_name]])
-    vargenes_expr = vargenes_expr[(rownames(vargenes_expr) %in% vargenes), , drop=F] %>%
-      t() %>%
-      as.data.frame() %>%
-      tibble::rownames_to_column(var='barcode') %>%
-      dplyr::left_join(dists_summ, ., by='barcode') %>%
-      dplyr::filter(barcode %in% colnames(vargenes_expr)) %>%
-      dplyr::right_join(x@spatial_meta[[sample_name]] %>%
-                          tibble::rownames_to_column(var='barcode') %>%
-                          dplyr::select(barcode=libname, ypos, xpos), ., by='barcode') %>%
-      tibble::column_to_rownames('barcode')
-
+    vargenes_expr = vargenes_expr[(rownames(vargenes_expr) %in% vargenes), , drop=FALSE]
+    
+    # Step 2: Transpose and convert to data.frame
+    vargenes_expr = t(vargenes_expr)
+    vargenes_expr_df = as.data.frame(vargenes_expr)
+    vargenes_expr_df$barcode = rownames(vargenes_expr_df)
+    
+    # Step 3: Prepare distance data
+    dists_summ_df = dists_summ
+    
+    # Step 4: Left join expression with distance data
+    joined_df = merge(vargenes_expr_df, dists_summ_df, by='barcode', all.x=TRUE)
+    
+    # Step 5: Filter to only keep gene columns (and barcode, dist2ref)
+    gene_cols = vargenes
+    joined_df = joined_df[, c('barcode', 'dist2ref', gene_cols), drop=FALSE]
+    
+    # Step 6: Prepare spatial metadata
+    meta_df = x@spatial_meta[[sample_name]][, c('libname', 'ypos', 'xpos'), drop = FALSE]
+    
+    # Step 7: Rename barcode in joined data and join with metadata
+    names(joined_df)[names(joined_df) == 'barcode'] = 'libname'
+    vargenes_expr = merge(joined_df, meta_df, by='libname', all.x=TRUE)
+    
+    # Remove rows where join failed
+    vargenes_expr = vargenes_expr[!is.na(vargenes_expr$libname), ]
+    
+    # Step 8: Set rownames and keep libname column for later use
+    # rownames(vargenes_expr) = vargenes_expr$libname
+    # DO NOT remove libname column - calculate_correlations needs it for outlier removal
+    
   } else{
-    vargenes_expr = tibble::tibble()
+    vargenes_expr = data.frame()
   }
-
+  
   return(vargenes_expr)
 }
 
@@ -268,27 +302,32 @@ STgradient_extract_expression = function(x, sample_name, vargenes, dists_summ){
 ##
 #' @title STgradient_detect_outliers: Detect expression outliers
 #' @description Identify outlier spots using IQR-based method for each gene
-#' @param vargenes_expr data frame with expression and distance data
+#' @param vargenes_expr data.frame with expression and distance data
 #' @param out_rm logical whether to detect outliers
 #' @return list with outlier barcodes per gene
 #' @keywords internal
 STgradient_detect_outliers = function(vargenes_expr, out_rm){
   if(out_rm){
     outs_dist2ref = list()
-    dfdist2ref = vargenes_expr[!is.na(vargenes_expr[['dist2ref']]), ] %>%
-      dplyr::select(-c('ypos', 'xpos', 'dist2ref'))
+    # Filter to rows with valid dist2ref
+    dfdist2ref = vargenes_expr[!is.na(vargenes_expr$dist2ref), ]
+    
+    # Remove spatial and distance columns for outlier detection
+    dfgenes = dfdist2ref[, !c('ypos', 'xpos', 'dist2ref'), drop=FALSE]
 
-    for(gene in colnames(dfdist2ref)){
+    for(gene in colnames(dfgenes)){
       # Calculate gene expression quartiles
-      quarts = stats::quantile(dfdist2ref[[gene]], probs=c(0.25, 0.75))
+      quarts = stats::quantile(dfgenes[[gene]], probs=c(0.25, 0.75))
       # Calculate inter-quartile range
-      iqr_dist2ref = stats::IQR(dfdist2ref[[gene]])
+      iqr_dist2ref = stats::IQR(dfgenes[[gene]])
       # Calculate distribution lower and upper limits
       low_up_limits = c((quarts[1]-1.5*iqr_dist2ref),
                         (quarts[2]+1.5*iqr_dist2ref))
 
       # Save outliers (barcodes)
-      outs_dist2ref[[gene]] = rownames(dfdist2ref)[ dfdist2ref[[gene]] < low_up_limits[1] | dfdist2ref[[gene]] > low_up_limits[2] ]
+      outlier_mask = dfgenes[[gene]] < low_up_limits[1] | dfgenes[[gene]] > low_up_limits[2]
+      outlier_barcodes = dfdist2ref[outlier_mask, 'libname']
+      outs_dist2ref[[gene]] = as.character(outlier_barcodes)
     }
   } else{
     outs_dist2ref = list()
@@ -301,45 +340,40 @@ STgradient_detect_outliers = function(vargenes_expr, out_rm){
 ##
 #' @title STgradient_calculate_correlations: Calculate linear models and Spearman correlations
 #' @description For each gene, fit linear models and calculate Spearman correlations with distance
-#' @param vargenes_expr data frame with expression and distance data
+#' @param vargenes_expr data.frame with expression and distance data
 #' @param outs_dist2ref list of outlier barcodes per gene
 #' @param robust logical whether to use robust regression
 #' @param log_dist logical whether to log-transform distances
 #' @param sample_name name of sample
-#' @return data frame with correlation results
+#' @return data.frame with correlation results
 #' @keywords internal
 STgradient_calculate_correlations = function(vargenes_expr, outs_dist2ref, robust, log_dist, sample_name){
-  # Initialize data frame to store results
-  dist_cor = tibble::tibble(sample_name=character(),
-                            gene=character(),
-                            lm_coef=numeric(),
-                            lm_pval=numeric(),
-                            spearman_r=numeric(),
-                            spearman_r_pval=numeric(),
-                            pval_comment=character())
+  # Initialize data.frame to store results
+  dist_cor = data.frame(
+    sample_name = character(),
+    gene = character(),
+    lm_coef = numeric(),
+    lm_pval = numeric(),
+    spearman_r = numeric(),
+    spearman_r_pval = numeric(),
+    pval_comment = character(),
+    stringsAsFactors = FALSE
+  )
 
   # CORRELATIONS DISTANCE TO REFERENCE CLUSTER
-  genes_sample = colnames(vargenes_expr %>% dplyr::select(-c('ypos', 'xpos', 'dist2ref')))
+  genes_sample = setdiff(colnames(vargenes_expr), c('ypos', 'xpos', 'dist2ref'))
 
   for(gene in genes_sample){
-    tibble_tmp = tibble::tibble(sample_name=character(),
-                                gene=character(),
-                                lm_coef=numeric(),
-                                lm_pval=numeric(),
-                                spearman_r=numeric(),
-                                spearman_r_pval=numeric(),
-                                pval_comment=character())
-
-    df_gene = vargenes_expr %>% dplyr::select(dist2ref, !!!gene)
+    # Select columns for this gene (keep original column name)
+    df_gene = vargenes_expr[, c('libname', 'dist2ref', gene), drop=FALSE]
 
     lm_res = list(estimate=NA, estimate_p=NA)
     cor_res = list(estimate=NA, p.value=NA)
 
     if(length(outs_dist2ref) > 0 && gene %in% names(outs_dist2ref) & !robust){ # Regular linear models after removal of outliers
-      # Remove outliers
+      # Remove outliers (use rownames for barcode matching)
       if(length(outs_dist2ref[[gene]]) > 0){
-        df_gene_outrm = df_gene %>%
-          dplyr::filter( !(rownames(.) %in% outs_dist2ref[[gene]]) )
+        df_gene_outrm = df_gene[!(rownames(df_gene) %in% outs_dist2ref[[gene]]), ]
       } else{
         df_gene_outrm = df_gene
       }
@@ -347,11 +381,11 @@ STgradient_calculate_correlations = function(vargenes_expr, outs_dist2ref, robus
       if(nrow(df_gene_outrm) > 1){
         # log-transform distances if selected by user
         if(log_dist){
-          df_gene_outrm[['dist2ref']] = log(df_gene_outrm[['dist2ref']] + 1e-200)
+          df_gene_outrm$dist2ref = log(df_gene_outrm$dist2ref + 1e-200)
         }
 
         # Run linear model and get summary
-        lm_tmp = lm(df_gene_outrm[[gene]] ~ df_gene_outrm[['dist2ref']])
+        lm_tmp = lm(as.formula(paste(gene, "~ dist2ref")), data=df_gene_outrm)
         lm_summ_tmp = summary(lm_tmp)[['coefficients']]
         if(nrow(lm_summ_tmp) > 1){ # Test a linear model could be run
           lm_res = list(estimate=lm_summ_tmp[2,1],
@@ -377,11 +411,11 @@ STgradient_calculate_correlations = function(vargenes_expr, outs_dist2ref, robus
 
           # log-transform distances if selected by user
           if(log_dist){
-            df_gene_range[['dist2ref']] = log(df_gene_range[['dist2ref']] + 1e-200)
+            df_gene_range$dist2ref = log(df_gene_range$dist2ref + 1e-200)
           }
 
           # Run robust linear model and get summary
-          lm_tmp = MASS::rlm(df_gene_range[[gene]] ~ df_gene_range[['dist2ref']], maxit=100)
+          lm_tmp = MASS::rlm(as.formula(paste(gene, "~ dist2ref")), data=df_gene_range, maxit=100)
           if(lm_tmp[['converged']] & lm_tmp[['coefficients']][2] != 0){ # Check the model converged and an effect was estimated
             # Run Wald test (MASS::rlm does not provide a p-value)
             lm_test_tmp = sfsmisc::f.robftest(lm_tmp)
@@ -406,10 +440,10 @@ STgradient_calculate_correlations = function(vargenes_expr, outs_dist2ref, robus
 
           # log-transform distances if selected by user
           if(log_dist){
-            df_gene_range[['dist2ref']] = log(df_gene_range[['dist2ref']] + 1e-200)
+            df_gene_range$dist2ref = log(df_gene_range$dist2ref + 1e-200)
           }
 
-          lm_tmp = lm(df_gene_range[[gene]] ~ df_gene_range[['dist2ref']])
+          lm_tmp = lm(as.formula(paste(gene, "~ dist2ref")), data=df_gene_range)
           lm_summ_tmp = summary(lm_tmp)[['coefficients']]
           if(nrow(lm_summ_tmp) > 1){ # Test a linear model could be run
             lm_res = list(estimate=lm_summ_tmp[2,1],
@@ -430,17 +464,20 @@ STgradient_calculate_correlations = function(vargenes_expr, outs_dist2ref, robus
     }
 
     # Create row with results
-    tibble_tmp = tibble::tibble(sample_name=sample_name,
-                                gene=gene,
-                                lm_coef=lm_res[['estimate']],
-                                lm_pval=lm_res[['estimate_p']],
-                                spearman_r=as.vector(cor_res[['estimate']]),
-                                spearman_r_pval=cor_res[['p.value']],
-                                pval_comment=pval_warn)
+    tibble_tmp = data.frame(
+      sample_name = sample_name,
+      gene = gene,
+      lm_coef = lm_res[['estimate']],
+      lm_pval = lm_res[['estimate_p']],
+      spearman_r = as.vector(cor_res[['estimate']]),
+      spearman_r_pval = cor_res[['p.value']],
+      pval_comment = pval_warn,
+      stringsAsFactors = FALSE
+    )
 
     # Add row to result table if there is one row with results
     if(nrow(tibble_tmp) == 1){
-      dist_cor = dplyr::bind_rows(dist_cor, tibble_tmp)
+      dist_cor = rbind(dist_cor, tibble_tmp)
     }
   }
 
@@ -451,20 +488,36 @@ STgradient_calculate_correlations = function(vargenes_expr, outs_dist2ref, robus
 ##
 #' @title STgradient_format_results: Format results with p-value adjustment
 #' @description Adjust p-values and rename columns with distance summary prefix
-#' @param dist_cor data frame with correlation results
+#' @param dist_cor data.frame with correlation results
 #' @param distsumm distance summary metric ('min' or 'avg')
-#' @return formatted data frame with adjusted p-values
+#' @return formatted data.frame with adjusted p-values
 #' @keywords internal
 STgradient_format_results = function(dist_cor, distsumm){
   if(nrow(dist_cor) > 0){
     # Adjust p-values for multiple comparison
-    dist_cor[['spearman_r_pval_adj']] = p.adjust(dist_cor[['spearman_r_pval']], method='BH')
-    dist_cor = dist_cor %>%
-      dplyr::relocate(spearman_r_pval_adj, .after=spearman_r_pval) %>%
-      dplyr::arrange(spearman_r_pval_adj)
-
+    dist_cor$spearman_r_pval_adj = p.adjust(dist_cor$spearman_r_pval, method='BH')
+    
+    # Sort by adjusted p-value
+    dist_cor = dist_cor[order(dist_cor$spearman_r_pval_adj), ]
+    
+    # Add pval_comment column if not present
+    if(!'pval_comment' %in% colnames(dist_cor)){
+      dist_cor$pval_comment = NA_character_
+    }
+    
+    # Create new column names with distsumm prefix
+    old_names = c('sample_name', 'gene', 'lm_coef', 'lm_pval', 'spearman_r', 'spearman_r_pval', 'pval_comment')
+    new_names = c('sample_name', 'gene', paste0(distsumm, '_lm_coef'), paste0(distsumm, '_lm_pval'),
+                  paste0(distsumm, '_spearman_r'), paste0(distsumm, '_spearman_r_pval'), paste0(distsumm, '_pval_comment'))
+    
     # Rename columns
-    colnames(dist_cor) = c('sample_name', 'gene', paste0(distsumm, '_', colnames(dist_cor[, -c(1,2)])))
+    names(dist_cor)[names(dist_cor) %in% old_names] = new_names
+    
+    # Rearrange: move spearman_r_pval_adj to end (after spearman_r_pval)
+    dist_cor = dist_cor[, c('sample_name', 'gene', 
+                            paste0(distsumm, '_lm_coef'), paste0(distsumm, '_lm_pval'),
+                            paste0(distsumm, '_spearman_r'), paste0(distsumm, '_spearman_r_pval'),
+                            'spearman_r_pval_adj', paste0(distsumm, '_pval_comment')), drop=FALSE]
   }
 
   return(dist_cor)
@@ -474,7 +527,7 @@ STgradient_format_results = function(dist_cor, distsumm){
 ##
 #' @title STgradient_cleanup: Remove empty samples and report timing
 #' @description Clean results by removing samples with no output and report completion time
-#' @param results_ls list of results data frames
+#' @param results_ls list of results data.frames
 #' @param zero_t start time
 #' @param verbose verbosity level
 #' @return cleaned list of results
