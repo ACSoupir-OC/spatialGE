@@ -37,13 +37,7 @@ count_cores = function(n){
 #
 #
 spatial_metadata = function(x){
-  meta_res = list()
-  for(i in seq(x@spatial_meta)){
-    meta_res[[i]] = base::colnames(x@spatial_meta[[i]][, -c(1:3)])
-  }
-  names(meta_res) = names(x@spatial_meta)
-
-  return(meta_res)
+  lapply(x@spatial_meta[-(1:3)], colnames)
 }
 
 
