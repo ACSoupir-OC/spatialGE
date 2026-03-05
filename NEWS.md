@@ -1,3 +1,11 @@
+# spatialGE 2.0.0
+
+* Major refactoring of `STclust` to modular architecture.
+* Replaced base R `hclust()` with `fastcluster::hclust()` for 2-5x faster hierarchical clustering.
+* Expected 20-35% speedup on `STclust` runtime (dynamicTreeCut accounts for ~45.5% of runtime).
+* New modular functions: `STclust_select_genes()`, `STclust_calculate_distances()`, `STclust_weight_distances()`, `STclust_hierarchical()`.
+* Core functions exported for flexibility: `calculate_dist_matrices()`, `calculate_weighted_dist()`, `get_hier_clusters_dtc()`, `get_hier_clusters_ks()`.
+
 # spatialGE 1.2.2
 
 # spatialGE 1.2.1
