@@ -8,7 +8,7 @@ suppressPackageStartupMessages({
 
 # Run all tests and capture results
 results <- test_dir(
-  "/home/node/.openclaw/workspace/spatialGE/tests/testthat",
+  "tests/testthat",
   reporter = SummaryReporter$new()
 )
 
