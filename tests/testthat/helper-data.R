@@ -49,3 +49,14 @@ setup_test_data <- function() {
 
 # Run setup
 setup_test_data()
+
+# Helper function to load melanoma_thrane data
+load_melanoma_thrane <- function() {
+  data_dir <- testthat::test_path("data/melanoma_thrane")
+  count_files <- list.files(data_dir, full.names=TRUE, pattern='counts')
+  coord_files <- list.files(data_dir, full.names=TRUE, pattern='mapping')
+  clin_file <- list.files(data_dir, full.names=TRUE, pattern='clinical')
+  melanoma <- STlist(rnacounts = count_files[1], spotcoords = coord_files[1], samples = clin_file)
+  melanoma <- transform_data(melanoma)
+  return(melanoma)
+}
