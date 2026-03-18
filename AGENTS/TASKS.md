@@ -24,11 +24,11 @@
 | Task | Status | Target | Current |
 |------|--------|--------|---------|
 | Core functions (STlist, SThet, STclust) | ✅ Done | 80% | ~75% |
-| STdiff (all test types) | 📋 Planned | 80% | ~40% |
+| STdiff (all test types) | ✅ Done | 80% | ~75% |
 | STenrich (GSVA + avg paths) | 📋 Planned | 80% | ~30% |
 | STgradient (all modes) | ✅ Done | 80% | ~70% |
 | Plotting functions | 📋 Planned | 60% | ~20% |
-| **Overall Coverage** | 🏃 In Progress | **>75%** | **~50%** |
+| **Overall Coverage** | 🏃 In Progress | **>75%** | **~60%** |
 
 ### Priority 3: Performance Optimization (Q3 2026)
 
