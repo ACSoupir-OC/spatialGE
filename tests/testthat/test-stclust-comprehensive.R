@@ -197,3 +197,576 @@ test_that("Helper function isolation - Each helper callable independently", {
   expect_length(ws_0, 1)
   expect_length(ws_1, 1)
 })
+
+
+# =============================================================================
+# SECTION 2: STclust_hierarchical() - Clustering Methods and Parameters
+# Tests for hierarchical clustering functionality with various methods and parameters
+# Test data: melanoma_thrane dataset (Thrane et al.)
+# =============================================================================
+
+test_that("STclust_hierarchical() - Clustering methods (DTC, fixed k, ks range)", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # Select genes first (required before clustering)
+  melanoma_prepared <- STclust_select_genes(x=melanoma, samples=samples, topgenes=1000, cores=1)
+  
+  # Calculate distances with default parameters
+  scaled_dists <- STclust_calculate_distances(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean'
+  )
+  weighted_dists <- STclust_weight_distances(scaled_dists=scaled_dists, ws=0.025)
+  
+  # --------------------------------------------------------------
+  # Test 1: DTC method (Dynamic Tree Cut) - adaptive k detection
+  # DTC automatically determines number of clusters based on tree structure
+  # --------------------------------------------------------------
+  dtc_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='DTC',
+    ks='dtc',
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Verify DTC produces valid clustering result
+  expect_type(dtc_result, "list")
+  expect_true("cluster_assignment" %in% names(dtc_result))
+  expect_true("x" %in% names(dtc_result))
+  
+  # Verify cluster assignments are integers
+  expect_type(dtc_result$cluster_assignment, "integer")
+  expect_true(all(dtc_result$cluster_assignment >= 1))
+  
+  # Verify correct length (one assignment per spot)
+  n_spots <- nrow(melanoma@spatial_meta[[1]])
+  expect_equal(length(dtc_result$cluster_assignment), n_spots)
+  
+  # Verify number of clusters is reasonable (should be at least 2, less than n_spots)
+  n_clusters_dtc <- max(dtc_result$cluster_assignment)
+  expect_true(n_clusters_dtc >= 2)
+  expect_true(n_clusters_dtc < n_spots)
+  cat(sprintf("DTC method produced %d clusters\n", n_clusters_dtc))
+  
+  # --------------------------------------------------------------
+  # Test 2: Fixed k method - ks=2 (exactly 2 clusters)
+  # Fixed k method uses specified number of clusters
+  # --------------------------------------------------------------
+  fixed_k2_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=2,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  expect_type(fixed_k2_result, "list")
+  expect_type(fixed_k2_result$cluster_assignment, "integer")
+  expect_true(all(fixed_k2_result$cluster_assignment >= 1))
+  
+  # Verify exactly 2 clusters produced
+  n_clusters_k2 <- max(fixed_k2_result$cluster_assignment)
+  expect_equal(n_clusters_k2, 2)
+  
+  # Verify all spots assigned to either cluster 1 or 2
+  expect_true(all(fixed_k2_result$cluster_assignment %in% c(1, 2)))
+  
+  # --------------------------------------------------------------
+  # Test 3: Fixed k method - ks=3 (exactly 3 clusters)
+  # --------------------------------------------------------------
+  fixed_k3_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  expect_type(fixed_k3_result, "list")
+  expect_type(fixed_k3_result$cluster_assignment, "integer")
+  
+  # Verify exactly 3 clusters produced
+  n_clusters_k3 <- max(fixed_k3_result$cluster_assignment)
+  expect_equal(n_clusters_k3, 3)
+  
+  # Verify all spots assigned to clusters 1, 2, or 3
+  expect_true(all(fixed_k3_result$cluster_assignment %in% c(1, 2, 3)))
+  
+  # --------------------------------------------------------------
+  # Test 4: Fixed k method - ks=5 (exactly 5 clusters)
+  # --------------------------------------------------------------
+  fixed_k5_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=5,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  expect_type(fixed_k5_result, "list")
+  expect_type(fixed_k5_result$cluster_assignment, "integer")
+  
+  # Verify exactly 5 clusters produced
+  n_clusters_k5 <- max(fixed_k5_result$cluster_assignment)
+  expect_equal(n_clusters_k5, 5)
+  
+  # Verify all spots assigned to clusters 1-5
+  expect_true(all(fixed_k5_result$cluster_assignment %in% 1:5))
+  
+  # --------------------------------------------------------------
+  # Test 5: ks range - ks=2:5 produces multiple clusterings
+  # When ks is a vector, should return list of clusterings for each value
+  # --------------------------------------------------------------
+  ks_range_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=2:5,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Verify range produces list of clusterings
+  expect_type(ks_range_result, "list")
+  expect_length(ks_range_result, 4)  # 2, 3, 4, 5
+  
+  # Verify each element has cluster_assignment
+  for(i in 1:4) {
+    expect_true("cluster_assignment" %in% names(ks_range_result[[i]]))
+    expect_type(ks_range_result[[i]]$cluster_assignment, "integer")
+  }
+  
+  # Verify each clustering has correct number of clusters
+  expect_equal(max(ks_range_result[[1]]$cluster_assignment), 2)  # ks=2
+  expect_equal(max(ks_range_result[[2]]$cluster_assignment), 3)  # ks=3
+  expect_equal(max(ks_range_result[[3]]$cluster_assignment), 4)  # ks=4
+  expect_equal(max(ks_range_result[[4]]$cluster_assignment), 5)  # ks=5
+  
+  # Verify different ks values produce different clusterings
+  expect_false(all(ks_range_result[[1]]$cluster_assignment == ks_range_result[[2]]$cluster_assignment))
+  expect_false(all(ks_range_result[[2]]$cluster_assignment == ks_range_result[[3]]$cluster_assignment))
+  
+  cat("Fixed k method tests passed: ks=2, 3, 5 and ks range (2:5)\n")
+})
+
+
+test_that("STclust_hierarchical() - Linkage methods (ward.D2, average, complete)", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # Select genes first
+  melanoma_prepared <- STclust_select_genes(x=melanoma, samples=samples, topgenes=1000, cores=1)
+  
+  # Calculate distances
+  scaled_dists <- STclust_calculate_distances(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean'
+  )
+  
+  # --------------------------------------------------------------
+  # Test 1: ward.D2 (default) - minimizes within-cluster variance
+  # Produces compact, spherical clusters
+  # --------------------------------------------------------------
+  ward_d2_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  expect_type(ward_d2_result, "list")
+  expect_type(ward_d2_result$cluster_assignment, "integer")
+  expect_true(all(ward_d2_result$cluster_assignment >= 1))
+  
+  n_clusters_ward <- max(ward_d2_result$cluster_assignment)
+  expect_equal(n_clusters_ward, 3)
+  expect_true(all(ward_d2_result$cluster_assignment %in% 1:3))
+  
+  # --------------------------------------------------------------
+  # Test 2: average linkage (UPGMA) - average distance between clusters
+  # More flexible than ward.D2, can produce elongated clusters
+  # --------------------------------------------------------------
+  average_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='average',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  expect_type(average_result, "list")
+  expect_type(average_result$cluster_assignment, "integer")
+  expect_true(all(average_result$cluster_assignment >= 1))
+  
+  n_clusters_average <- max(average_result$cluster_assignment)
+  expect_equal(n_clusters_average, 3)
+  expect_true(all(average_result$cluster_assignment %in% 1:3))
+  
+  # --------------------------------------------------------------
+  # Test 3: complete linkage - maximum distance between clusters
+  # Produces compact clusters, sensitive to outliers
+  # --------------------------------------------------------------
+  complete_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='complete',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  expect_type(complete_result, "list")
+  expect_type(complete_result$cluster_assignment, "integer")
+  expect_true(all(complete_result$cluster_assignment >= 1))
+  
+  n_clusters_complete <- max(complete_result$cluster_assignment)
+  expect_equal(n_clusters_complete, 3)
+  expect_true(all(complete_result$cluster_assignment %in% 1:3))
+  
+  # --------------------------------------------------------------
+  # Test 4: Verify different methods produce different results
+  # While all produce 3 clusters, cluster assignments should differ
+  # --------------------------------------------------------------
+  # ward.D2 vs average
+  different_ward_avg <- !all(ward_d2_result$cluster_assignment == average_result$cluster_assignment)
+  expect_true(different_ward_avg, "ward.D2 and average linkage should produce different clusterings")
+  
+  # ward.D2 vs complete
+  different_ward_complete <- !all(ward_d2_result$cluster_assignment == complete_result$cluster_assignment)
+  expect_true(different_ward_complete, "ward.D2 and complete linkage should produce different clusterings")
+  
+  # average vs complete
+  different_avg_complete <- !all(average_result$cluster_assignment == complete_result$cluster_assignment)
+  expect_true(different_avg_complete, "average and complete linkage should produce different clusterings")
+  
+  # --------------------------------------------------------------
+  # Test 5: Verify all methods produce valid cluster assignments
+  # All should have same number of clusters (3), same length, integers >= 1
+  # --------------------------------------------------------------
+  expect_equal(length(ward_d2_result$cluster_assignment), length(average_result$cluster_assignment))
+  expect_equal(length(ward_d2_result$cluster_assignment), length(complete_result$cluster_assignment))
+  
+  expect_type(ward_d2_result$cluster_assignment, "integer")
+  expect_type(average_result$cluster_assignment, "integer")
+  expect_type(complete_result$cluster_assignment, "integer")
+  
+  expect_true(all(ward_d2_result$cluster_assignment >= 1))
+  expect_true(all(average_result$cluster_assignment >= 1))
+  expect_true(all(complete_result$cluster_assignment >= 1))
+  
+  cat("Linkage method tests passed: ward.D2, average, complete\n")
+})
+
+
+test_that("STclust_hierarchical() - deepSplit parameter (FALSE, 2, 3)", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # Select genes first
+  melanoma_prepared <- STclust_select_genes(x=melanoma, samples=samples, topgenes=1000, cores=1)
+  
+  # Calculate distances
+  scaled_dists <- STclust_calculate_distances(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean'
+  )
+  
+  # --------------------------------------------------------------
+  # Test 1: deepSplit=FALSE (standard) - conservative splitting
+  # Produces fewer, broader clusters
+  # deepSplit parameter only applies to DTC method
+  # --------------------------------------------------------------
+  deepSplit_false_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='DTC',
+    ks='dtc',
+    linkage='ward.D2',
+    deepSplit=FALSE,
+    minClusterSize=10
+  )
+  
+  expect_type(deepSplit_false_result, "list")
+  expect_type(deepSplit_false_result$cluster_assignment, "integer")
+  expect_true(all(deepSplit_false_result$cluster_assignment >= 1))
+  
+  n_clusters_false <- max(deepSplit_false_result$cluster_assignment)
+  cat(sprintf("deepSplit=FALSE produced %d clusters\n", n_clusters_false))
+  
+  # --------------------------------------------------------------
+  # Test 2: deepSplit=2 (moderate splitting) - intermediate granularity
+  # Should produce more clusters than deepSplit=FALSE
+  # --------------------------------------------------------------
+  deepSplit_2_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='DTC',
+    ks='dtc',
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  expect_type(deepSplit_2_result, "list")
+  expect_type(deepSplit_2_result$cluster_assignment, "integer")
+  expect_true(all(deepSplit_2_result$cluster_assignment >= 1))
+  
+  n_clusters_2 <- max(deepSplit_2_result$cluster_assignment)
+  cat(sprintf("deepSplit=2 produced %d clusters\n", n_clusters_2))
+  
+  # Verify deepSplit=2 produces more clusters than FALSE
+  expect_true(n_clusters_2 >= n_clusters_false,
+              "deepSplit=2 should produce >= clusters than deepSplit=FALSE")
+  
+  # --------------------------------------------------------------
+  # Test 3: deepSplit=3 (aggressive splitting) - fine-grained clusters
+  # Should produce most clusters, potentially smaller cluster sizes
+  # --------------------------------------------------------------
+  deepSplit_3_result <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='DTC',
+    ks='dtc',
+    linkage='ward.D2',
+    deepSplit=3,
+    minClusterSize=10
+  )
+  
+  expect_type(deepSplit_3_result, "list")
+  expect_type(deepSplit_3_result$cluster_assignment, "integer")
+  expect_true(all(deepSplit_3_result$cluster_assignment >= 1))
+  
+  n_clusters_3 <- max(deepSplit_3_result$cluster_assignment)
+  cat(sprintf("deepSplit=3 produced %d clusters\n", n_clusters_3))
+  
+  # --------------------------------------------------------------
+  # Test 4: Verify deepSplit increases number of clusters
+  # deepSplit=3 >= deepSplit=2 >= deepSplit=FALSE
+  # --------------------------------------------------------------
+  expect_true(n_clusters_3 >= n_clusters_2,
+              "deepSplit=3 should produce >= clusters than deepSplit=2")
+  expect_true(n_clusters_2 >= n_clusters_false,
+              "deepSplit=2 should produce >= clusters than deepSplit=FALSE")
+  
+  # --------------------------------------------------------------
+  # Test 5: Verify all methods produce valid cluster assignments
+  # All should have integers >= 1, same length
+  # --------------------------------------------------------------
+  expect_equal(length(deepSplit_false_result$cluster_assignment),
+               length(deepSplit_2_result$cluster_assignment))
+  expect_equal(length(deepSplit_false_result$cluster_assignment),
+               length(deepSplit_3_result$cluster_assignment))
+  
+  expect_true(all(deepSplit_false_result$cluster_assignment >= 1))
+  expect_true(all(deepSplit_2_result$cluster_assignment >= 1))
+  expect_true(all(deepSplit_3_result$cluster_assignment >= 1))
+  
+  # --------------------------------------------------------------
+  # Test 6: Verify different deepSplit values produce different clusterings
+  # --------------------------------------------------------------
+  different_false_2 <- !all(deepSplit_false_result$cluster_assignment == deepSplit_2_result$cluster_assignment)
+  expect_true(different_false_2, "deepSplit=FALSE and deepSplit=2 should produce different clusterings")
+  
+  different_2_3 <- !all(deepSplit_2_result$cluster_assignment == deepSplit_3_result$cluster_assignment)
+  expect_true(different_2_3, "deepSplit=2 and deepSplit=3 should produce different clusterings")
+  
+  cat("deepSplit parameter tests passed: FALSE < 2 < 3 (increasing clusters)\n")
+})
+
+
+test_that("STclust_hierarchical() - Multiple samples integration", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data (has multiple samples)
+  data_dir <- test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  skip_if(length(samples) < 2, "Need at least 2 samples for multi-sample test")
+  
+  # --------------------------------------------------------------
+  # Test 1: Cluster multiple samples together
+  # Each sample gets independent clustering, spatial_meta columns added
+  # --------------------------------------------------------------
+  multi_sample_result <- STclust_hierarchical(
+    trcounts_df=list(
+      melanoma@tr_counts[[1]],
+      melanoma@tr_counts[[2]]
+    ),
+    coord_dat=list(
+      melanoma@spatial_meta[[1]],
+      melanoma@spatial_meta[[2]]
+    ),
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Verify result is list with clustering for each sample
+  expect_type(multi_sample_result, "list")
+  expect_length(multi_sample_result, 2)  # One per sample
+  
+  # --------------------------------------------------------------
+  # Test 2: Verify each sample gets independent clustering
+  # Each should have its own cluster_assignment
+  # --------------------------------------------------------------
+  for(i in 1:2) {
+    expect_true("cluster_assignment" %in% names(multi_sample_result[[i]]))
+    expect_type(multi_sample_result[[i]]$cluster_assignment, "integer")
+    expect_true(all(multi_sample_result[[i]]$cluster_assignment >= 1))
+    
+    # Verify correct length for each sample
+    n_spots_i <- nrow(melanoma@spatial_meta[[i]])
+    expect_equal(length(multi_sample_result[[i]]$cluster_assignment), n_spots_i)
+    
+    # Verify exactly 3 clusters (ks=3)
+    expect_equal(max(multi_sample_result[[i]]$cluster_assignment), 3)
+    expect_true(all(multi_sample_result[[i]]$cluster_assignment %in% 1:3))
+  }
+  
+  # --------------------------------------------------------------
+  # Test 3: Verify spatial_meta columns added correctly
+  # Should add cluster_assignment column to spatial_meta
+  # --------------------------------------------------------------
+  expect_true("x" %in% names(multi_sample_result))
+  expect_true(inherits(multi_sample_result$x, "STlist"))
+  
+  # Check that spatial_meta has cluster_assignment column
+  for(i in 1:2) {
+    expect_true("cluster_assignment" %in% colnames(multi_sample_result$x@spatial_meta[[i]]))
+    
+    # Verify spatial_meta values match cluster_assignment
+    meta_clusters <- multi_sample_result$x@spatial_meta[[i]]$cluster_assignment
+    expect_equal(as.integer(meta_clusters), multi_sample_result[[i]]$cluster_assignment)
+  }
+  
+  # --------------------------------------------------------------
+  # Test 4: Test sample-specific cluster labels
+  # Sample 1 and Sample 2 should have independent cluster numbering
+  # (cluster 1 in sample 1 is independent of cluster 1 in sample 2)
+  # --------------------------------------------------------------
+  sample1_clusters <- multi_sample_result[[1]]$cluster_assignment
+  sample2_clusters <- multi_sample_result[[2]]$cluster_assignment
+  
+  # Both should have clusters 1, 2, 3 (independent numbering)
+  expect_true(all(c(1, 2, 3) %in% sample1_clusters))
+  expect_true(all(c(1, 2, 3) %in% sample2_clusters))
+  
+  # Verify they are truly independent (not forced to be identical)
+  # (This is expected since clustering is independent per sample)
+  expect_true(any(sample1_clusters != sample2_clusters),
+              "Sample cluster assignments should be independent")
+  
+  # --------------------------------------------------------------
+  # Test 5: Test with 3 samples if available
+  # --------------------------------------------------------------
+  if(length(samples) >= 3) {
+    multi_sample_3result <- STclust_hierarchical(
+      trcounts_df=list(
+        melanoma@tr_counts[[1]],
+        melanoma@tr_counts[[2]],
+        melanoma@tr_counts[[3]]
+      ),
+      coord_dat=list(
+        melanoma@spatial_meta[[1]],
+        melanoma@spatial_meta[[2]],
+        melanoma@spatial_meta[[3]]
+      ),
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    )
+    
+    expect_type(multi_sample_3result, "list")
+    expect_length(multi_sample_3result, 3)
+    
+    for(i in 1:3) {
+      expect_true("cluster_assignment" %in% names(multi_sample_3result[[i]]))
+      expect_type(multi_sample_3result[[i]]$cluster_assignment, "integer")
+      expect_equal(max(multi_sample_3result[[i]]$cluster_assignment), 3)
+      expect_true("cluster_assignment" %in% colnames(multi_sample_3result$x@spatial_meta[[i]]))
+    }
+    
+    cat("3-sample clustering test passed\n")
+  }
+  
+  cat("Multi-sample integration tests passed: independent clustering per sample\n")
+})
