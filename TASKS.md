@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-19 20:05 UTC  
+**Last Updated**: 2026-03-19 20:23 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -14,6 +14,7 @@
 |------|---------|-----------|----------|--------|
 | SThet: Create legacy baseline tests | 2026-03-19 19:57 UTC | 2026-03-19 20:02 UTC | 5 min | ✅ Complete |
 | SThet: Create SThet_legacy.R | 2026-03-19 20:02 UTC | 2026-03-19 20:03 UTC | 1 min | ✅ Complete |
+| SThet: Refactor core module | 2026-03-19 20:16 UTC | 2026-03-19 20:22 UTC | 7 min | ✅ Complete |
 | STgradient: Fix correlation bugs | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
 | STenrich: Create core module | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
 | Test suites: Update with inline data | - | 2026-03-19 19:41 UTC | - | ✅ Complete |
@@ -66,10 +67,10 @@
 **5. SThet** - Spatial heterogeneity (Priority 1 - NEXT)
 - ✅ `R/SThet_legacy.R` - Legacy implementation (COMPLETE - 2026-03-19 20:03 UTC)
 - ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests (COMPLETE - 2026-03-19 20:02 UTC)
-- 📄 `R/SThet.R` - Public interface (pending refactoring)
+- ✅ `R/SThet_core.R` - Core implementation (COMPLETE - 2026-03-19 20:22 UTC)
+- ✅ `R/SThet.R` - Public interface (COMPLETE - calls core)
 - 📄 `R/SThet_invdist_test.R` - Distance-based tests (pending refactoring)
-- ❌ **Missing**: `R/SThet_core.R` - Core implementation (modular)
-- ❌ **Missing**: `R/SThet_helpers.R` - Helper functions
+- ❌ **Missing**: Comprehensive test suite for modern SThet
 
 **6. STplot** - Spatial plotting (Priority 2)
 - 📄 `R/STplot.R` - Basic plotting
@@ -83,25 +84,20 @@
 
 ### Priority 1: Refactor SThet 🔴 CRITICAL (NEXT)
 
-**Status**: Legacy tests and SThet_legacy.R complete ✅
+**Status**: Core refactoring complete ✅
 
-**Completed** (2026-03-19 19:57-20:03 UTC, 6 min total):
-- ✅ `R/SThet_legacy.R` - Legacy implementation with both distance-based and invdist_test variants
-- ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests, all passing
+**Completed** (2026-03-19 19:57-20:22 UTC, 25 min total):
+- ✅ `R/SThet_legacy.R` - Legacy implementation (5 min)
+- ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests (1 min)
+- ✅ `R/SThet_core.R` - Core implementation (7 min)
+- ✅ `R/SThet.R` - Public interface updated (included in 7 min)
+- ✅ Verification: Modern matches legacy exactly (MLANA, TP53, CD37 all match)
 
 **Remaining Deliverables**:
-- [ ] Create `R/SThet_core.R`
-  - Core implementation with `SThet_core()` main function
-  - `SThet_validate_input()` - Input validation
-  - `SThet_prepare_data()` - Extract samples, coordinates, genes
-  - `SThet_calculate_moran()` - Moran's I calculation (no test)
-  - `SThet_calculate_geary()` - Geary's C calculation (no test)
-  - `SThet_format_results()` - Results formatting
-- [ ] Create `R/SThet_helpers.R` - Helper functions (create_listw_from_dist, etc.)
-- [ ] Update `R/SThet.R` - Public interface to call core
-- [ ] Verify backward compatibility (compare with SThet_legacy output)
+- [ ] Refactor `R/SThet_invdist_test.R` to use modular pattern (optional)
+- [ ] Create comprehensive test suite for modern SThet (compare with legacy)
 
-**Timeline**: ~2-3 days
+**Timeline**: ~1 day remaining (tests)
 
 ---
 
@@ -202,12 +198,12 @@
 
 | Metric | Current | Target | Status |
 |--------|---------|--------|--------|
-| Refactored functions | 4/7 (STclust, STdiff, STenrich, STgradient) | 7/7 (100%) | 🏃 57% |
-| Test coverage | ~60% (STclust + test suites created) | >80% | 🏃 In Progress |
+| Refactored functions | 5/7 (STclust, STdiff, STenrich, STgradient, SThet) | 7/7 (100%) | 🏃 71% |
+| Test coverage | ~65% (STclust + SThet baseline + test suites created) | >80% | 🏃 In Progress |
 | Vignettes | 0 | 5+ | ⏳ Pending |
 | Documentation | Basic | Comprehensive | ⏳ Pending |
 | Performance | Baseline | Optimized | ⏳ Pending |
-| Backward compatibility | Verified (STclust, STdiff, STenrich, STgradient) | All functions | ✅ 57% |
+| Backward compatibility | Verified (STclust, STdiff, STenrich, STgradient, SThet) | All functions | ✅ 71% |
 
 ---
 
