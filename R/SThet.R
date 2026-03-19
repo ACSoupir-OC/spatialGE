@@ -68,69 +68,40 @@ SThet = function(x=NULL, genes=NULL, samples=NULL, method='moran', k=NULL, overw
     cat(paste0('SThet started.\n'))
   }
 
-  # Select sample names if NULL or if number entered
-  if (is.null(samples)){
-    samples = names(x@tr_counts)
-  } else{
-    if(is.numeric(samples)){
-      samples = names(x@tr_counts)[samples]
-    }
+  # Validate inputs and call core
+  if (is.null(x) || !methods::is(x, "STlist")) {
+    stop('Input x must be an STlist object')
   }
-
-  # Check that genes have been input
-  if(is.null(genes)){
+  
+  if (is.null(genes)) {
     stop('Please enter one or more genes to calculate statistics.')
   }
-
-  # Generate combination of sample x gene to for.
-  combo = tibble::tibble()
-  for(i in samples){
-    # Check if gene names are in the data set
-    subsetgenes = genes[genes %in% rownames(x@tr_counts[[i]])]
-    combo = dplyr::bind_rows(combo, expand.grid(i, subsetgenes))
-
-    # Get genes not present.
-    notgenes = genes[!(genes %in% rownames(x@tr_counts[[i]]))]
-
-    if(!rlang::is_empty(notgenes)){
-      message(paste0(paste(notgenes, collapse=', '), ": Not present in the transformed counts for sample ", i), ".\n")
-    }
-
-    rm(subsetgenes, notgenes) # Clean env
-
-    # Add columns in gene meta data if not already present
-    if(!('moran_i' %in% colnames(x@gene_meta[[i]]))){
-      x@gene_meta[[i]][['moran_i']] = NA
-    }
-    if(!('geary_c' %in% colnames(x@gene_meta[[i]]))){
-      x@gene_meta[[i]][['geary_c']] = NA
-    }
+  
+  # Convert numeric sample indices to names
+  if (!is.null(samples) && is.numeric(samples)) {
+    samples = names(x@tr_counts)[samples]
   }
-
-  # Check whether or not a list of weights have been created
-  if(overwrite | is.null(x@misc[['sthet']][['listws']])){
-    if(verbose){
-      cat(paste("\tCalculating spatial weights...\n")) ## Mostly added to make sure calculation is happening only when needed.
-    }
-    if(!is.null(k)){
-      k = as.integer(k)
-      if(!is.na(k) & k > 0){
-        x@misc[['sthet']][['listws']] = create_listw_from_knn(x, ks=k)
-      } else{
-        stop("If using k nearest-neighbors, please input a positive integer for k.")
+  
+  # Report genes not present in samples
+  if (!is.null(samples)) {
+    for (i in samples) {
+      notgenes = genes[!(genes %in% rownames(x@tr_counts[[i]]))]
+      if (!rlang::is_empty(notgenes)) {
+        message(paste0(paste(notgenes, collapse=', '), ": Not present in the transformed counts for sample ", i), ".\n")
       }
-    } else{
-      x@misc[['sthet']][['listws']] = create_listw_from_dist(x, cores=cores)
     }
   }
-
-  # Perform calculations
-  if('moran' %in% method){
-    x = gene_moran_i_notest(x=x, combo=combo, overwrite=overwrite, cores=cores)
-  }
-  if('geary' %in% method){
-    x = gene_geary_c_notest(x=x, combo=combo, overwrite=overwrite, cores=cores)
-  }
+  
+  # Call core implementation
+  result = SThet_core(
+    x = x,
+    genes = genes,
+    samples = samples,
+    method = method,
+    k = k,
+    overwrite = overwrite,
+    cores = cores
+  )
 
   # Print time
   end_t = difftime(Sys.time(), zero_t, units='min')
@@ -138,7 +109,7 @@ SThet = function(x=NULL, genes=NULL, samples=NULL, method='moran', k=NULL, overw
     cat(paste0('SThet completed in ', round(end_t, 2), ' min.\n'))
   }
 
-  return(x)
+  return(result)
 }
 
 
