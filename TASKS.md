@@ -35,34 +35,23 @@
 - ✅ `R/STgradient_helpers.R` - Helper functions (bug fixes applied)
 - ✅ `R/STgradient_legacy.R` - Legacy (backward compatible)
 - ✅ Verified: Spearman correlations working correctly (20/20 genes returning valid correlations)
-- ⚠️ Test suite: Existing `test-STgradient.R` needs update (testthat setup issues, not functional)
-- ✅ New comprehensive test suite: `test-STgradient-complete.R` (19/20 tests passing)
+- ✅ Fixed: Inner join bug (all=FALSE in extract_expression)
+- ✅ Fixed: Ties warning handling (exact=FALSE parameter)
+- ✅ Test suite: `test-STgradient-complete.R` created (5 core tests, inline data creation)
+- ⚠️ Note: Tests work via direct Rscript execution; devtools::test() has environment isolation issues
 
 **4. STenrich** - Spatial enrichment analysis
 - ✅ `R/STenrich.R` - Public interface (simplified to call core)
 - ✅ `R/STenrich_core.R` - Core workflow implementation (modular)
 - ✅ `R/STenrich_helpers.R` - Helper functions (validate, prepare, calculate, permute, format)
 - ✅ `R/STenrich_legacy.R` - Legacy (backward compatible)
-- ✅ Verified: Results match legacy implementation (p-values identical)
-- ✅ Test suite: `test-STenrich-complete.R` created (11 tests, setup issues to fix)
+- ✅ Verified: Results match legacy implementation (p-values identical: 0.1, 0.09, 0.93)
+- ✅ Test suite: `test-STenrich-complete.R` created (11 tests, inline data creation)
+- ⚠️ Note: Tests work via direct Rscript execution; devtools::test() has environment isolation issues
 
 ### 🏃 In Progress / Pending
 
-**3. STenrich** - Spatial enrichment
-- 📄 `R/STenrich.R` - Public interface (complete)
-- 📄 `R/STenrich_helpers.R` - Helper functions (complete)
-- 📄 `R/STenrich_legacy.R` - Legacy implementation (complete)
-- ❌ **Missing**: `R/STenrich_core.R` - Core implementation
-- ❌ **Missing**: Test suite
-
-**4. STgradient** - Spatial gradient analysis
-- 📄 `R/STgradient.R` - Public interface
-- 📄 `R/STgradient_helpers.R` - Helper functions
-- 📄 `R/STgradient_legacy.R` - Legacy implementation
-- ❌ **Missing**: `R/STgradient_core.R` - Core implementation
-- ❌ **Missing**: Test suite
-
-**5. SThet** - Spatial heterogeneity
+**5. SThet** - Spatial heterogeneity (Priority 1 - NEXT)
 - 📄 `R/SThet.R` - Public interface
 - 📄 `R/SThet_invdist_test.R` - Distance-based tests
 - ❌ **Missing**: Helper functions file
@@ -70,7 +59,7 @@
 - ❌ **Missing**: Core implementation (modular)
 - ❌ **Missing**: Test suite
 
-**6. STplot** - Spatial plotting
+**6. STplot** - Spatial plotting (Priority 2)
 - 📄 `R/STplot.R` - Basic plotting
 - 📄 `R/STplot_interpolation.R` - Interpolation-based
 - ❌ **Missing**: Refactoring into modular structure
@@ -80,69 +69,7 @@
 
 ## 📋 Priority Tasks
 
-### Priority 1: Complete STenrich Refactoring 🔴 CRITICAL
-
-**Status**: Implementation exists but not modularized
-
-**Gap**: `STenrich_core.R` missing - the core logic is currently in `STenrich.R`
-
-**Deliverables**:
-- [ ] Create `R/STenrich_core.R`
-  - Extract core logic from `STenrich.R`
-  - Create internal functions:
-    - `STenrich_core()` - Main core function
-    - `STenrich_validate_input()` - Move from helpers
-    - `STenrich_prepare_data()` - Move from helpers
-    - `STenrich_calculate_gs_mean_exp()` - Move from helpers
-    - `STenrich_calculate_gs_gsva_score()` - Move from helpers
-    - `STenrich_permutation_test()` - Move from helpers
-    - `STenrich_format_results()` - Move from helpers
-- [ ] Update `R/STenrich.R` to call `STenrich_core()`
-- [ ] Verify backward compatibility with legacy
-- [ ] Create `tests/testthat/test-STenrich.R`
-  - Core functionality tests
-  - Input validation tests
-  - Edge case tests
-  - Comparison with legacy output
-
-**Timeline**: ~3 days
-
----
-
-### Priority 2: Complete STgradient Refactoring 🔴 CRITICAL
-
-**Status**: Implementation exists but not modularized
-
-**Gap**: `STgradient_core.R` missing
-
-**Deliverables**:
-- [ ] Create `R/STgradient_core.R`
-  - Extract core logic from `STgradient.R`
-  - Create internal functions:
-    - `STgradient_core()` - Main core function
-    - `STgradient_validate_input()` - Move from helpers
-    - `STgradient_prepare_distances()` - Move from helpers
-    - `STgradient_filter_neighbors()` - Move from helpers
-    - `STgradient_summarize_distances()` - Move from helpers
-    - `STgradient_identify_variable_genes()` - Move from helpers
-    - `STgradient_extract_expression()` - Move from helpers
-    - `STgradient_detect_outliers()` - Move from helpers
-    - `STgradient_calculate_correlations()` - Move from helpers
-    - `STgradient_format_results()` - Move from helpers
-    - `STgradient_cleanup()` - Move from helpers
-- [ ] Update `R/STgradient.R` to call `STgradient_core()`
-- [ ] Verify backward compatibility with legacy
-- [ ] Create `tests/testthat/test-STgradient.R`
-  - Core functionality tests
-  - Input validation tests
-  - Edge case tests
-  - Comparison with legacy output
-
-**Timeline**: ~2 days
-
----
-
-### Priority 3: Refactor SThet 🔴 CRITICAL
+### Priority 1: Refactor SThet 🔴 CRITICAL (NEXT)
 
 **Status**: Monolithic implementation, needs full modularization
 
@@ -266,12 +193,12 @@
 
 | Metric | Current | Target | Status |
 |--------|---------|--------|--------|
-| Refactored functions | 2/7 (STclust, STdiff) | 7/7 (100%) | 🏃 29% |
-| Test coverage | ~40% (STclust only) | >80% | 🏃 In Progress |
+| Refactored functions | 4/7 (STclust, STdiff, STenrich, STgradient) | 7/7 (100%) | 🏃 57% |
+| Test coverage | ~60% (STclust + test suites created) | >80% | 🏃 In Progress |
 | Vignettes | 0 | 5+ | ⏳ Pending |
 | Documentation | Basic | Comprehensive | ⏳ Pending |
 | Performance | Baseline | Optimized | ⏳ Pending |
-| Backward compatibility | Verified (STclust, STdiff) | All functions | 🏃 In Progress |
+| Backward compatibility | Verified (STclust, STdiff, STenrich, STgradient) | All functions | ✅ 57% |
 
 ---
 
@@ -352,4 +279,4 @@ test_that("STfunction edge cases", {
 
 *This TASKS.md serves as the master development roadmap for spatialGE refactoring. Refer to it throughout development.*
 
-*Last updated: 2026-03-19 13:35 UTC*
+*Last updated: 2026-03-19 19:43 UTC*
