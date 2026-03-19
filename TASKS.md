@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-19 22:43 UTC  
+**Last Updated**: 2026-03-19 23:55 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -206,6 +206,28 @@
 - [ ] Create examples using Seurat data
 
 **Timeline**: ~2 days
+
+---
+
+## 🔮 Future Improvements (Post-Refactoring)
+
+**These are NOT current priorities** - add to roadmap after modular refactoring complete.
+
+### STdiff Performance Optimization
+
+**Status**: Analysis complete (2026-03-19), NOT implementing now
+
+**Finding**: Bottleneck is statistical method (spaMM), not code structure. Spatial mixed models with Matern covariance are inherently slow (~500ms-2s/gene).
+
+**Potential optimizations** (5-10x speedup possible, but changes statistical defaults):
+1. Change default `test_type` from `'mm'` to `'t_test'` (100x non-spatial speedup)
+2. Reduce default `sp_topgenes` from 0.2 to 0.05 (5-10x spatial speedup)
+3. Use ML instead of REML for spatial models (2x speedup)
+4. Better parallelization by gene-cluster instead of cluster-only (2-4x on 8+ cores)
+
+**Decision**: Keep current implementation. Performance is method-driven, not code-driven. Can revisit if user feedback indicates STdiff is unusable.
+
+**Reference**: `spatialGE/STDIFF_PERFORMANCE_ANALYSIS.md`
 
 ---
 
