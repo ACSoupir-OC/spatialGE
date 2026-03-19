@@ -2,9 +2,21 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-19 13:35 UTC  
-**Status**: 🏃 STclust & STdiff Complete, STenrich/STgradient/SThet Pending  
-**Package Status**: Ready for further development
+**Last Updated**: 2026-03-19 20:05 UTC  
+**Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
+**Package Status**: Ready for SThet refactoring
+
+---
+
+## ⏱️ Task Timing Log
+
+| Task | Started | Completed | Duration | Status |
+|------|---------|-----------|----------|--------|
+| SThet: Create legacy baseline tests | 2026-03-19 19:57 UTC | 2026-03-19 20:02 UTC | 5 min | ✅ Complete |
+| SThet: Create SThet_legacy.R | 2026-03-19 20:02 UTC | 2026-03-19 20:03 UTC | 1 min | ✅ Complete |
+| STgradient: Fix correlation bugs | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
+| STenrich: Create core module | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
+| Test suites: Update with inline data | - | 2026-03-19 19:41 UTC | - | ✅ Complete |
 
 ---
 
@@ -52,12 +64,12 @@
 ### 🏃 In Progress / Pending
 
 **5. SThet** - Spatial heterogeneity (Priority 1 - NEXT)
-- 📄 `R/SThet.R` - Public interface
-- 📄 `R/SThet_invdist_test.R` - Distance-based tests
-- ❌ **Missing**: Helper functions file
-- ❌ **Missing**: Legacy implementation
-- ❌ **Missing**: Core implementation (modular)
-- ❌ **Missing**: Test suite
+- ✅ `R/SThet_legacy.R` - Legacy implementation (COMPLETE - 2026-03-19 20:03 UTC)
+- ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests (COMPLETE - 2026-03-19 20:02 UTC)
+- 📄 `R/SThet.R` - Public interface (pending refactoring)
+- 📄 `R/SThet_invdist_test.R` - Distance-based tests (pending refactoring)
+- ❌ **Missing**: `R/SThet_core.R` - Core implementation (modular)
+- ❌ **Missing**: `R/SThet_helpers.R` - Helper functions
 
 **6. STplot** - Spatial plotting (Priority 2)
 - 📄 `R/STplot.R` - Basic plotting
@@ -71,28 +83,25 @@
 
 ### Priority 1: Refactor SThet 🔴 CRITICAL (NEXT)
 
-**Status**: Monolithic implementation, needs full modularization
+**Status**: Legacy tests and SThet_legacy.R complete ✅
 
-**Deliverables**:
-- [ ] Create `R/SThet.R` (modular version)
-  - Public interface function
-  - Call `SThet_core()` from core file
+**Completed** (2026-03-19 19:57-20:03 UTC, 6 min total):
+- ✅ `R/SThet_legacy.R` - Legacy implementation with both distance-based and invdist_test variants
+- ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests, all passing
+
+**Remaining Deliverables**:
 - [ ] Create `R/SThet_core.R`
-  - Core implementation
-  - `SThet_core()` - Main core function
+  - Core implementation with `SThet_core()` main function
   - `SThet_validate_input()` - Input validation
-  - `SThet_calculate_moran()` - Moran's I calculation
-  - `SThet_calculate_geary()` - Geary's C calculation
+  - `SThet_prepare_data()` - Extract samples, coordinates, genes
+  - `SThet_calculate_moran()` - Moran's I calculation (no test)
+  - `SThet_calculate_geary()` - Geary's C calculation (no test)
   - `SThet_format_results()` - Results formatting
-- [ ] Create `R/SThet_legacy.R`
-  - Replicate original implementation for comparison
-- [ ] Update `R/SThet_invdist_test.R` to use new core
-- [ ] Create `tests/testthat/test-SThet.R`
-  - Core functionality tests
-  - Input validation tests
-  - Comparison with legacy output
+- [ ] Create `R/SThet_helpers.R` - Helper functions (create_listw_from_dist, etc.)
+- [ ] Update `R/SThet.R` - Public interface to call core
+- [ ] Verify backward compatibility (compare with SThet_legacy output)
 
-**Timeline**: ~3 days
+**Timeline**: ~2-3 days
 
 ---
 
