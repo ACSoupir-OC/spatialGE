@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-19 20:41 UTC  
+**Last Updated**: 2026-03-19 22:00 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -16,6 +16,7 @@
 | SThet: Create SThet_legacy.R | 2026-03-19 20:02 UTC | 2026-03-19 20:03 UTC | 1 min | ✅ Complete |
 | SThet: Refactor core module | 2026-03-19 20:16 UTC | 2026-03-19 20:22 UTC | 7 min | ✅ Complete |
 | SThet: Refactor invdist_test + tests | 2026-03-19 20:31 UTC | 2026-03-19 20:40 UTC | 9 min | ✅ Complete |
+| STplot: Create comprehensive tests | 2026-03-19 21:54 UTC | 2026-03-19 21:59 UTC | 5 min | ✅ Complete |
 | STgradient: Fix correlation bugs | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
 | STenrich: Create core module | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
 | Test suites: Update with inline data | - | 2026-03-19 19:41 UTC | - | ✅ Complete |
@@ -106,25 +107,30 @@
 
 ---
 
-### Priority 4: Complete Test Suite 🟡 HIGH
+### Priority 4: Complete Test Suite 🟢 PROGRESS
 
-**Status**: Only STclust has comprehensive tests (30/30 passing)
+**Status**: STclust, SThet, and STplot have comprehensive tests
 
-**Deliverables**:
-- [ ] `tests/testthat/test-STenrich.R` - STenrich tests (~20-30 tests)
-- [ ] `tests/testthat/test-STgradient.R` - STgradient tests (~15-20 tests)
-- [ ] `tests/testthat/test-SThet.R` - SThet tests (~15-20 tests)
-- [ ] `tests/testthat/test-STplot.R` - STplot tests (~10-15 tests)
+**Completed**:
+- ✅ `tests/testthat/test-STclust.R` - 30 tests (100% passing)
+- ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 tests (100% passing)
+- ✅ `tests/testthat/test-SThet-comprehensive.R` - 9 tests (100% passing)
+- ✅ `tests/testthat/test-STplot.R` - 15 tests (100% passing) - COMPLETE 2026-03-19 21:59 UTC
+- ✅ `tests/testthat/test-STenrich-complete.R` - 11 tests (created, works via Rscript)
+- ✅ `tests/testthat/test-STgradient-complete.R` - 5 tests (created, works via Rscript)
+
+**Remaining**:
 - [ ] `tests/testthat/test-integration.R` - End-to-end workflow tests
+- [ ] Fix testthat environment isolation for STenrich/STgradient (st_obj context sharing)
 
 **Test Strategy**:
-1. **Unit tests** - Test individual functions
-2. **Integration tests** - Test full workflows
-3. **Regression tests** - Compare with legacy outputs
-4. **Edge case tests** - Invalid inputs, missing data, etc.
-5. **Performance tests** - Benchmark refactored vs legacy
+1. **Unit tests** - ✅ Test individual functions
+2. **Integration tests** - ⏳ Test full workflows
+3. **Regression tests** - ✅ Compare with legacy outputs (SThet)
+4. **Edge case tests** - ✅ Invalid inputs, missing data, etc.
+5. **Performance tests** - ⏳ Benchmark refactored vs legacy
 
-**Timeline**: ~4 days
+**Timeline**: ~2 days remaining (integration tests)
 
 ---
 
@@ -204,7 +210,7 @@
 | Metric | Current | Target | Status |
 |--------|---------|--------|--------|
 | Refactored functions | 5/7 (STclust, STdiff, STenrich, STgradient, SThet) | 7/7 (100%) | 🏃 71% |
-| Test coverage | ~70% (STclust 30 tests + SThet 17 tests + test suites created) | >80% | 🏃 In Progress |
+| Test coverage | ~75% (STclust 30 + SThet 17 + STplot 15 + STenrich 11 + STgradient 5 = 78 tests) | >80% | 🏃 75% |
 | Vignettes | 0 | 5+ | ⏳ Pending |
 | Documentation | Basic | Comprehensive | ⏳ Pending |
 | Performance | Baseline | Optimized | ⏳ Pending |
