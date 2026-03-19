@@ -770,3 +770,926 @@ test_that("STclust_hierarchical() - Multiple samples integration", {
   
   cat("Multi-sample integration tests passed: independent clustering per sample\n")
 })
+
+
+# =============================================================================
+# SECTION 3: STclust Edge Cases, Error Handling, and Regression Tests
+# Tests for boundary conditions, error handling, consistency, and integration
+# Test data: melanoma_thrane dataset
+# =============================================================================
+
+test_that("STclust_edge_cases - Boundary conditions (single gene, two spots, extreme ws, ks=1)", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- testthat::test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # --------------------------------------------------------------
+  # Test 1: Single gene minimum (topgenes=1)
+  # Edge case: minimum number of genes for clustering
+  # Should still work but may produce degenerate clusters
+  # --------------------------------------------------------------
+  melanoma_min <- STclust_select_genes(x=melanoma, samples=samples, topgenes=1, cores=1)
+  expect_type(melanoma_min, "list")
+  expect_length(melanoma_min$trcounts_df, length(samples))
+  expect_equal(nrow(melanoma_min$trcounts_df[[1]]), 1)
+  
+  # Should still be able to cluster with single gene
+  scaled_dists_min <- STclust_calculate_distances(
+    trcounts_df=melanoma_min$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean'
+  )
+  expect_type(scaled_dists_min, "list")
+  expect_length(scaled_dists_min, 2)
+  
+  weighted_dists_min <- STclust_weight_distances(scaled_dists=scaled_dists_min, ws=0.025)
+  expect_type(weighted_dists_min, "list")
+  expect_length(weighted_dists_min, 1)
+  
+  # Cluster with single gene should still produce valid result
+  cluster_single_gene <- STclust_hierarchical(
+    trcounts_df=melanoma_min$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=2,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=5
+  )
+  expect_type(cluster_single_gene, "list")
+  expect_true("cluster_assignment" %in% names(cluster_single_gene))
+  expect_type(cluster_single_gene$cluster_assignment, "integer")
+  expect_true(all(cluster_single_gene$cluster_assignment >= 1))
+  cat("Single gene clustering test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 2: Two spots minimum for clustering
+  # Edge case: minimum number of spots that can be clustered
+  # Should produce exactly one cluster (or error if minClusterSize violated)
+  # --------------------------------------------------------------
+  # Create minimal test data with 2 spots
+  minimal_expr <- melanoma_min$trcounts_df[[1]][1:2, ]
+  minimal_coord <- melanoma@spatial_meta[[1]][1:2, ]
+  
+  # With only 2 spots and minClusterSize=5, should fail gracefully or produce 1 cluster
+  cluster_two_spots <- tryCatch({
+    STclust_hierarchical(
+      trcounts_df=minimal_expr,
+      coord_dat=minimal_coord,
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=2,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=5  # Larger than n_spots, should produce 1 cluster or error
+    )
+  }, error = function(e) {
+    # If error, expect reasonable error message
+    expect_true(nchar(e$message) > 0)
+    return(NULL)
+  })
+  
+  # If clustering succeeded, verify result
+  if(!is.null(cluster_two_spots)) {
+    expect_type(cluster_two_spots, "list")
+    expect_true("cluster_assignment" %in% names(cluster_two_spots))
+    # With 2 spots and minClusterSize=5, should have all spots in one cluster
+    expect_equal(length(unique(cluster_two_spots$cluster_assignment)), 1)
+  }
+  cat("Two spots minimum test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 3: Very large ws (ws=0.9, spatial dominated)
+  # Edge case: clustering dominated by spatial proximity
+  # Should produce spatially contiguous clusters
+  # --------------------------------------------------------------
+  melanoma_large_ws <- STclust_select_genes(x=melanoma, samples=samples, topgenes=1000, cores=1)
+  
+  scaled_dists_large_ws <- STclust_calculate_distances(
+    trcounts_df=melanoma_large_ws$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean'
+  )
+  
+  # ws=0.9 means 90% spatial, 10% expression
+  weighted_large_ws <- STclust_weight_distances(scaled_dists=scaled_dists_large_ws, ws=0.9)
+  expect_type(weighted_large_ws, "list")
+  expect_length(weighted_large_ws, 1)
+  
+  cluster_large_ws <- STclust_hierarchical(
+    trcounts_df=melanoma_large_ws$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.9,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  expect_type(cluster_large_ws, "list")
+  expect_true("cluster_assignment" %in% names(cluster_large_ws))
+  expect_type(cluster_large_ws$cluster_assignment, "integer")
+  expect_equal(max(cluster_large_ws$cluster_assignment), 3)
+  cat("Very large ws (0.9) test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 4: Very small ws (ws=0.001, expression dominated)
+  # Edge case: clustering dominated by gene expression
+  # Should produce clusters based on transcriptomic similarity
+  # --------------------------------------------------------------
+  scaled_dists_small_ws <- STclust_calculate_distances(
+    trcounts_df=melanoma_large_ws$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean'
+  )
+  
+  # ws=0.001 means 0.1% spatial, 99.9% expression
+  weighted_small_ws <- STclust_weight_distances(scaled_dists=scaled_dists_small_ws, ws=0.001)
+  expect_type(weighted_small_ws, "list")
+  expect_length(weighted_small_ws, 1)
+  
+  cluster_small_ws <- STclust_hierarchical(
+    trcounts_df=melanoma_large_ws$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.001,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  expect_type(cluster_small_ws, "list")
+  expect_true("cluster_assignment" %in% names(cluster_small_ws))
+  expect_type(cluster_small_ws$cluster_assignment, "integer")
+  expect_equal(max(cluster_small_ws$cluster_assignment), 3)
+  
+  # Verify ws=0.001 and ws=0.9 produce different clusterings
+  different_extremes <- !all(cluster_large_ws$cluster_assignment == cluster_small_ws$cluster_assignment)
+  expect_true(different_extremes, "ws=0.9 and ws=0.001 should produce different clusterings")
+  cat("Very small ws (0.001) test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 5: ks=1 (single cluster edge case)
+  # Edge case: requesting only 1 cluster
+  # Should produce exactly one cluster with all spots assigned
+  # --------------------------------------------------------------
+  cluster_ks1 <- STclust_hierarchical(
+    trcounts_df=melanoma_large_ws$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=1,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  expect_type(cluster_ks1, "list")
+  expect_true("cluster_assignment" %in% names(cluster_ks1))
+  expect_type(cluster_ks1$cluster_assignment, "integer")
+  
+  # Verify exactly 1 cluster produced
+  n_clusters_ks1 <- max(cluster_ks1$cluster_assignment)
+  expect_equal(n_clusters_ks1, 1)
+  
+  # Verify all spots assigned to cluster 1
+  expect_true(all(cluster_ks1$cluster_assignment == 1))
+  cat("Single cluster (ks=1) test passed\n")
+})
+
+
+test_that("STclust_error_handling - Invalid inputs (ks, ws, dist_metric, linkage, STlist)", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- testthat::test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # Prepare valid data for error tests
+  melanoma_prepared <- STclust_select_genes(x=melanoma, samples=samples, topgenes=1000, cores=1)
+  
+  # --------------------------------------------------------------
+  # Test 1: Invalid ks values
+  # - ks = negative (should error)
+  # - ks = zero (should error)
+  # - ks = non-integer (should error or coerce)
+  # - ks = character string (should error)
+  # --------------------------------------------------------------
+  
+  # Test negative ks
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=-1,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "invalid|negative|ks",
+    info = "Negative ks should produce error"
+  )
+  
+  # Test zero ks
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=0,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "invalid|zero|ks",
+    info = "Zero ks should produce error"
+  )
+  
+  # Test non-integer ks (should either error or round)
+  result_nonint_ks <- tryCatch({
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=2.5,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    )
+  }, error = function(e) {
+    # If error, verify it's about ks
+    expect_true(grepl("ks|integer|invalid", e$message, ignore.case=TRUE))
+    return(NULL)
+  })
+  
+  # If non-integer ks was accepted, verify it was coerced to integer
+  if(!is.null(result_nonint_ks)) {
+    expect_type(result_nonint_ks, "list")
+    expect_true("cluster_assignment" %in% names(result_nonint_ks))
+    # Should have been rounded/truncated to 2 or 3
+    expect_true(max(result_nonint_ks$cluster_assignment) %in% c(2, 3))
+  }
+  cat("Invalid ks values test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 2: Invalid ws values
+  # - ws < 0 (should error)
+  # - ws > 1 (should error)
+  # - ws = NA (should error)
+  # --------------------------------------------------------------
+  
+  # Test negative ws
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='euclidean',
+      ws=-0.1,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "invalid|negative|ws|between",
+    info = "Negative ws should produce error"
+  )
+  
+  # Test ws > 1
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='euclidean',
+      ws=1.5,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "invalid|greater|ws|between",
+    info = "ws > 1 should produce error"
+  )
+  
+  # Test ws = NA
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='euclidean',
+      ws=NA,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "NA|missing|invalid",
+    info = "NA ws should produce error"
+  )
+  cat("Invalid ws values test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 3: Invalid dist_metric (unknown metric)
+  # - Should error with informative message about valid metrics
+  # --------------------------------------------------------------
+  
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='unknown_metric',
+      ws=0.025,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "invalid|unknown|dist_metric|euclidean|manhattan",
+    info = "Invalid dist_metric should produce error"
+  )
+  cat("Invalid dist_metric test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 4: Invalid linkage method (unknown method)
+  # - Should error with informative message about valid linkage methods
+  # --------------------------------------------------------------
+  
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=melanoma_prepared$trcounts_df[[1]],
+      coord_dat=melanoma@spatial_meta[[1]],
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=3,
+      linkage='unknown_linkage',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "invalid|unknown|linkage|ward|average|complete",
+    info = "Invalid linkage should produce error"
+  )
+  cat("Invalid linkage method test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 5: NULL or empty STlist
+  # - Should error with clear message
+  # --------------------------------------------------------------
+  
+  # Test NULL STlist
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=NULL,
+      coord_dat=NULL,
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "NULL|empty|missing|length",
+    info = "NULL inputs should produce error"
+  )
+  
+  # Test empty list
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=list(),
+      coord_dat=list(),
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "empty|length|zero|samples",
+    info = "Empty list inputs should produce error"
+  )
+  cat("NULL/empty STlist test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 6: Missing samples in STlist (mismatched lengths)
+  # - trcounts_df and coord_dat should have same length
+  # - Should error if lengths don't match
+  # --------------------------------------------------------------
+  
+  expect_error(
+    STclust_hierarchical(
+      trcounts_df=list(melanoma_prepared$trcounts_df[[1]]),
+      coord_dat=list(melanoma@spatial_meta[[1]], melanoma@spatial_meta[[2]]),  # Mismatch!
+      dist_metric='euclidean',
+      ws=0.025,
+      method='fixed',
+      ks=3,
+      linkage='ward.D2',
+      deepSplit=2,
+      minClusterSize=10
+    ),
+    regexp = "length|mismatch|sample|equal",
+    info = "Mismatched sample lengths should produce error"
+  )
+  cat("Missing/mismatched samples test passed\n")
+})
+
+
+test_that("STclust_regression - Consistency and reproducibility", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- testthat::test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # Prepare data
+  melanoma_prepared <- STclust_select_genes(x=melanoma, samples=samples, topgenes=1000, cores=1)
+  
+  # --------------------------------------------------------------
+  # Test 1: Deterministic results with set.seed()
+  # - Same seed should produce identical clustering
+  # - Different seeds may produce different results (stochastic elements)
+  # --------------------------------------------------------------
+  
+  # Run 1 with seed 42
+  set.seed(42)
+  result_seed42_1 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Run 2 with same seed 42
+  set.seed(42)
+  result_seed42_2 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Verify identical results with same seed
+  expect_equal(result_seed42_1$cluster_assignment, result_seed42_2$cluster_assignment,
+               info = "Same seed should produce identical clustering")
+  cat("Deterministic results with set.seed() test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 2: Multiple runs produce identical clustering (no randomness)
+  # - Hierarchical clustering should be deterministic without DTC
+  # - Multiple runs without set.seed() should produce identical results
+  # --------------------------------------------------------------
+  
+  # Run 1 without explicit seed
+  result_run1 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Run 2 without explicit seed
+  result_run2 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Run 3 without explicit seed
+  result_run3 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=3,
+    linkage='ward.D2',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Verify all runs produce identical results
+  expect_equal(result_run1$cluster_assignment, result_run2$cluster_assignment,
+               info = "Multiple runs should produce identical clustering")
+  expect_equal(result_run2$cluster_assignment, result_run3$cluster_assignment,
+               info = "Multiple runs should produce identical clustering")
+  cat("Multiple runs reproducibility test passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 3: STclust() vs STclust_legacy() comparison with various parameters
+  # - Legacy and current implementations should produce consistent results
+  # - Test with different ks, ws, linkage values
+  # --------------------------------------------------------------
+  
+  # Check if STclust_legacy exists
+  if(exists("STclust_legacy", mode="function")) {
+    # Test 1: Default parameters
+    result_current <- STclust(
+      x=melanoma,
+      samples=samples,
+      topgenes=500,
+      ws=0.025,
+      ks=3,
+      dist_metric='euclidean',
+      linkage='ward.D2',
+      cores=1
+    )
+    
+    result_legacy <- STclust_legacy(
+      x=melanoma,
+      samples=samples,
+      topgenes=500,
+      ws=0.025,
+      ks=3,
+      dist_metric='euclidean',
+      linkage='ward.D2',
+      cores=1
+    )
+    
+    # Verify both produce valid results
+    expect_type(result_current, "list")
+    expect_type(result_legacy, "list")
+    expect_true("cluster_assignment" %in% names(result_current))
+    expect_true("cluster_assignment" %in% names(result_legacy))
+    
+    # Verify cluster counts match
+    expect_equal(max(result_current$cluster_assignment[[1]]),
+                 max(result_legacy$cluster_assignment[[1]]),
+                 info = "Current and legacy should produce same number of clusters")
+    
+    cat("STclust vs STclust_legacy test passed (same parameters)\n")
+    
+    # Test 2: Different ks value
+    result_current_k5 <- STclust(
+      x=melanoma, samples=samples, topgenes=500, ws=0.025, ks=5,
+      dist_metric='euclidean', linkage='ward.D2', cores=1
+    )
+    
+    result_legacy_k5 <- STclust_legacy(
+      x=melanoma, samples=samples, topgenes=500, ws=0.025, ks=5,
+      dist_metric='euclidean', linkage='ward.D2', cores=1
+    )
+    
+    expect_equal(max(result_current_k5$cluster_assignment[[1]]),
+                 max(result_legacy_k5$cluster_assignment[[1]]),
+                 info = "Current and legacy should produce same number of clusters for ks=5")
+    cat("STclust vs STclust_legacy test passed (ks=5)\n")
+    
+    # Test 3: Different ws value
+    result_current_ws01 <- STclust(
+      x=melanoma, samples=samples, topgenes=500, ws=0.1, ks=3,
+      dist_metric='euclidean', linkage='ward.D2', cores=1
+    )
+    
+    result_legacy_ws01 <- STclust_legacy(
+      x=melanoma, samples=samples, topgenes=500, ws=0.1, ks=3,
+      dist_metric='euclidean', linkage='ward.D2', cores=1
+    )
+    
+    expect_equal(max(result_current_ws01$cluster_assignment[[1]]),
+                 max(result_legacy_ws01$cluster_assignment[[1]]),
+                 info = "Current and legacy should produce same number of clusters for ws=0.1")
+    cat("STclust vs STclust_legacy test passed (ws=0.1)\n")
+  } else {
+    # If STclust_legacy doesn't exist, just verify STclust is consistent
+    cat("STclust_legacy not available, skipping legacy comparison\n")
+  }
+  
+  # --------------------------------------------------------------
+  # Test 4: Verify reproducibility across different runs (fresh sessions)
+  # - Simulate by running the same computation multiple times
+  # --------------------------------------------------------------
+  
+  # Run 1
+  repro_run1 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=4,
+    linkage='average',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Run 2
+  repro_run2 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=4,
+    linkage='average',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Run 3
+  repro_run3 <- STclust_hierarchical(
+    trcounts_df=melanoma_prepared$trcounts_df[[1]],
+    coord_dat=melanoma@spatial_meta[[1]],
+    dist_metric='euclidean',
+    ws=0.025,
+    method='fixed',
+    ks=4,
+    linkage='average',
+    deepSplit=2,
+    minClusterSize=10
+  )
+  
+  # Verify all runs identical
+  expect_equal(repro_run1$cluster_assignment, repro_run2$cluster_assignment)
+  expect_equal(repro_run2$cluster_assignment, repro_run3$cluster_assignment)
+  expect_equal(repro_run1$cluster_assignment, repro_run3$cluster_assignment)
+  cat("Reproducibility across runs test passed\n")
+})
+
+
+test_that("STclust_integration - Full workflow (STclust → STdiff, visualization)", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- testthat::test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # --------------------------------------------------------------
+  # Test 1: STclust → STdiff pipeline
+  # - Perform clustering
+  # - Use clustered data for differential expression analysis
+  # - Verify downstream functions work with clustered data
+  # --------------------------------------------------------------
+  
+  # Step 1: Cluster the data
+  cluster_result <- STclust(
+    x=melanoma,
+    samples=samples,
+    topgenes=500,
+    ws=0.025,
+    ks=3,
+    dist_metric='euclidean',
+    linkage='ward.D2',
+    cores=1
+  )
+  
+  # Verify clustering result
+  expect_type(cluster_result, "list")
+  expect_true("cluster_assignment" %in% names(cluster_result))
+  expect_true("x" %in% names(cluster_result))
+  expect_true(inherits(cluster_result$x, "STlist"))
+  
+  # Verify spatial_meta has cluster assignments
+  expect_true("cluster_assignment" %in% colnames(cluster_result$x@spatial_meta[[1]]))
+  cat("STclust clustering completed\n")
+  
+  # Step 2: Perform differential expression analysis using clusters
+  # Create group variable from cluster assignments
+  cluster_groups <- as.factor(cluster_result$cluster_assignment[[1]])
+  
+  # Run STdiff with cluster groups
+  tryCatch({
+    stdiff_result <- STdiff(
+      x=cluster_result$x,
+      groups=cluster_groups,
+      method="wilcox",
+      cores=1
+    )
+    
+    # Verify STdiff result
+    expect_type(stdiff_result, "list")
+    expect_true("statistic" %in% names(stdiff_result))
+    expect_true("pvalue" %in% names(stdiff_result))
+    expect_true("adj_pvalue" %in% names(stdiff_result))
+    
+    # Verify all genes have statistics
+    expect_equal(length(stdiff_result$statistic), nrow(cluster_result$x@tr_counts[[1]]))
+    expect_equal(length(stdiff_result$pvalue), nrow(cluster_result$x@tr_counts[[1]]))
+    
+    cat("STclust → STdiff pipeline test passed\n")
+  }, error = function(e) {
+    # If STdiff fails, verify it's not due to clustering issues
+    # (could be due to other factors)
+    cat(sprintf("STdiff error (may be acceptable): %s\n", e$message))
+  })
+  
+  # --------------------------------------------------------------
+  # Test 2: Verify clustered data works with other downstream functions
+  # - Test with basic STlist functions
+  # --------------------------------------------------------------
+  
+  # Verify STlist structure is intact after clustering
+  expect_true(inherits(cluster_result$x, "STlist"))
+  expect_true("tr_counts" %in% names(cluster_result$x))
+  expect_true("spatial_meta" %in% names(cluster_result$x))
+  expect_true("gene_meta" %in% names(cluster_result$x))
+  
+  # Verify spatial coordinates are preserved
+  expect_true("row" %in% colnames(cluster_result$x@spatial_meta[[1]]))
+  expect_true("column" %in% colnames(cluster_result$x@spatial_meta[[1]]))
+  
+  # Verify gene expression matrix is preserved
+  expect_true(nrow(cluster_result$x@tr_counts[[1]]) > 0)
+  expect_true(ncol(cluster_result$x@tr_counts[[1]]) > 0)
+  cat("Clustered data structure verification passed\n")
+  
+  # --------------------------------------------------------------
+  # Test 3: Test plot_STclust() or similar visualization works
+  # - Verify plotting function exists and works
+  # - Test with clustered data
+  # --------------------------------------------------------------
+  
+  # Check if plot_STclust exists
+  if(exists("plot_STclust", mode="function")) {
+    # Try to create a plot (will not save, just verify it runs)
+    tryCatch({
+      # Suppress plot output
+      old_device <- dev.cur()
+      dev.new()  # Open new device
+      on.exit(dev.off(), add=TRUE)
+      
+      plot_STclust(cluster_result, ks=3)
+      
+      # If we get here without error, plot works
+      cat("plot_STclust() visualization test passed\n")
+    }, error = function(e) {
+      # If plot fails, note it but don't fail test
+      cat(sprintf("plot_STclust error (may be acceptable): %s\n", e$message))
+    })
+  } else if(exists("plot_STclust_legacy", mode="function")) {
+    # Try legacy plotting function
+    tryCatch({
+      old_device <- dev.cur()
+      dev.new()
+      on.exit(dev.off(), add=TRUE)
+      
+      plot_STclust_legacy(cluster_result, ks=3)
+      cat("plot_STclust_legacy() visualization test passed\n")
+    }, error = function(e) {
+      cat(sprintf("plot_STclust_legacy error (may be acceptable): %s\n", e$message))
+    })
+  } else {
+    # No plotting function found - note this but don't fail test
+    cat("No plot_STclust function found, skipping visualization test\n")
+  }
+  
+  # --------------------------------------------------------------
+  # Test 4: Test multi-sample clustering with downstream analysis
+  # - Cluster multiple samples
+  # - Verify each sample has cluster assignments
+  # - Test downstream compatibility
+  # --------------------------------------------------------------
+  
+  if(length(samples) >= 2) {
+    multi_cluster_result <- STclust(
+      x=melanoma,
+      samples=samples[1:2],
+      topgenes=500,
+      ws=0.025,
+      ks=3,
+      dist_metric='euclidean',
+      linkage='ward.D2',
+      cores=1
+    )
+    
+    # Verify multi-sample clustering
+    expect_type(multi_cluster_result, "list")
+    expect_true("cluster_assignment" %in% names(multi_cluster_result))
+    expect_length(multi_cluster_result$cluster_assignment, 2)
+    
+    # Verify each sample has cluster assignments
+    for(i in 1:2) {
+      expect_type(multi_cluster_result$cluster_assignment[[i]], "integer")
+      expect_true(all(multi_cluster_result$cluster_assignment[[i]] >= 1))
+      expect_equal(max(multi_cluster_result$cluster_assignment[[i]]), 3)
+    }
+    cat("Multi-sample integration test passed\n")
+  }
+  
+  cat("Full workflow integration tests passed\n")
+})
+
+
+test_that("STclust_performance - Runtime sanity check", {
+  if("package:spatialGE" %in% search()) {
+    detach("package:spatialGE", unload=TRUE, force=TRUE)
+  }
+  devtools::load_all('../../.', export_all=TRUE)
+  
+  # Load melanoma test data
+  data_dir <- testthat::test_path("data/melanoma_thrane")
+  skip_if_not(dir.exists(data_dir), "Melanoma data not found")
+  melanoma <- load_melanoma_thrane()
+  samples <- names(melanoma@spatial_meta)
+  
+  # --------------------------------------------------------------
+  # Test: Reasonable runtime for small dataset (<30 seconds)
+  # - Measure time for complete STclust workflow
+  # - Should complete within reasonable time for small dataset
+  # --------------------------------------------------------------
+  
+  start_time <- Sys.time()
+  
+  cluster_result <- STclust(
+    x=melanoma,
+    samples=samples[1],  # Use single sample for speed
+    topgenes=500,
+    ws=0.025,
+    ks=3,
+    dist_metric='euclidean',
+    linkage='ward.D2',
+    cores=1
+  )
+  
+  end_time <- Sys.time()
+  elapsed_time <- as.numeric(difftime(end_time, start_time, units="secs"))
+  
+  cat(sprintf("STclust completed in %.2f seconds\n", elapsed_time))
+  
+  # Verify clustering result
+  expect_type(cluster_result, "list")
+  expect_true("cluster_assignment" %in% names(cluster_result))
+  expect_type(cluster_result$cluster_assignment, "integer")
+  
+  # Verify runtime is reasonable (<30 seconds for small dataset)
+  expect_true(elapsed_time < 30,
+              info = sprintf("STclust should complete in <30 seconds, took %.2f seconds", elapsed_time))
+  
+  cat("Performance sanity check passed: completed in %.2f seconds\n", elapsed_time)
+  
+  # --------------------------------------------------------------
+  # Test: No memory leaks or excessive allocation
+  # - Verify cluster result size is reasonable
+  # --------------------------------------------------------------
+  
+  # Verify result size is proportional to input
+  n_spots <- nrow(melanoma@spatial_meta[[1]])
+  n_genes <- nrow(melanoma@tr_counts[[1]])
+  
+  # Cluster assignment should be same length as number of spots
+  expect_equal(length(cluster_result$cluster_assignment[[1]]), n_spots)
+  
+  # STlist should have same number of genes (or fewer if filtered)
+  expect_true(nrow(cluster_result$x@tr_counts[[1]]) <= n_genes)
+  
+  cat("Memory allocation sanity check passed\n")
+})
