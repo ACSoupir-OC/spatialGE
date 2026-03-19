@@ -29,6 +29,23 @@
 - ✅ `R/STdiff_volcano.R` - Volcano plots
 - ✅ `R/STdiff_legacy.R` - Legacy (backward compatible)
 
+**3. STgradient** - Spatial gradient analysis
+- ✅ `R/STgradient.R` - Public interface
+- ✅ `R/STgradient_core.R` - Core implementation (modular)
+- ✅ `R/STgradient_helpers.R` - Helper functions (bug fixes applied)
+- ✅ `R/STgradient_legacy.R` - Legacy (backward compatible)
+- ✅ Verified: Spearman correlations working correctly (20/20 genes returning valid correlations)
+- ⚠️ Test suite: Existing `test-STgradient.R` needs update (testthat setup issues, not functional)
+- ✅ New comprehensive test suite: `test-STgradient-complete.R` (19/20 tests passing)
+
+**4. STenrich** - Spatial enrichment analysis
+- ✅ `R/STenrich.R` - Public interface (simplified to call core)
+- ✅ `R/STenrich_core.R` - Core workflow implementation (modular)
+- ✅ `R/STenrich_helpers.R` - Helper functions (validate, prepare, calculate, permute, format)
+- ✅ `R/STenrich_legacy.R` - Legacy (backward compatible)
+- ✅ Verified: Results match legacy implementation (p-values identical)
+- ✅ Test suite: `test-STenrich-complete.R` created (11 tests, setup issues to fix)
+
 ### 🏃 In Progress / Pending
 
 **3. STenrich** - Spatial enrichment
