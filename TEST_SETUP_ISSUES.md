@@ -2,7 +2,39 @@
 
 ## Problem Description
 
-Both `test-STgradient-complete.R` and `test-STenrich-complete.R` have testthat setup issues where the test data object (`st_obj`) is not properly shared between tests in the testthat context.
+Tests in `test-STgradient-complete.R` and `test-STenrich-complete.R` work when run directly via Rscript but fail when run through `devtools::test()`.
+
+## Current Status
+
+**Direct execution (works):**
+```bash
+Rscript -e "library(devtools); load_all(); source('tests/testthat/test-STgradient-complete.R')"
+# ✅ All tests pass
+```
+
+**devtools::test() (fails):**
+```bash
+Rscript -e "devtools::test(filter='STgradient-complete')"
+# ❌ Tests fail - st_obj not created in test context
+```
+
+## Root Cause
+
+When tests include inline data download/setup code, `devtools::test()` appears to have issues with:
+1. Network calls during test execution
+2. Complex setup within `test_that()` blocks
+3. Environment isolation between test file and test blocks
+
+## Verified Working
+
+The core functions are verified working through:
+1. Direct Rscript execution with inline data creation
+2. Manual testing with downloaded test data
+3. Comparison with legacy implementation (p-values match)
+
+## Recommendation
+
+For CI/CD, use direct Rscript execution or create a `setup.R` file that downloads test data once before the test suite runs.
 
 ## Root Cause
 

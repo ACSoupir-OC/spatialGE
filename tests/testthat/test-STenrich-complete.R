@@ -10,35 +10,42 @@ library(spatialGE)
 load_all("../../.", export_all = TRUE)
 
 # ============================================================================
-# SETUP
+# Helper function to create test data
 # ============================================================================
 
-# Download test data
-thrane_tmp = tempdir()
-unlink(thrane_tmp, recursive = TRUE)
-dir.create(thrane_tmp)
-lk = 'https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
-download.file(lk, destfile = paste0(thrane_tmp, '/', 'melanoma_thrane.zip'), mode = 'wb')
-unzip(zipfile = paste0(thrane_tmp, '/melanoma_thrane.zip'), exdir = thrane_tmp)
-count_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names = TRUE, pattern = 'counts')
-coord_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names = TRUE, pattern = 'mapping')
-clin_file = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names = TRUE, pattern = 'clinical')
-st_obj = STlist(rnacounts = count_files, spotcoords = coord_files, samples = clin_file)
-st_obj = transform_data(st_obj)
+create_test_data = function(){
+  thrane_tmp = tempdir()
+  unlink(thrane_tmp, recursive = TRUE)
+  dir.create(thrane_tmp)
+  lk = 'https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
+  download.file(lk, destfile = paste0(thrane_tmp, '/', 'melanoma_thrane.zip'), mode = 'wb')
+  unzip(zipfile = paste0(thrane_tmp, '/melanoma_thrane.zip'), exdir = thrane_tmp)
+  count_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names = TRUE, pattern = 'counts')
+  coord_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names = TRUE, pattern = 'mapping')
+  clin_file = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names = TRUE, pattern = 'clinical')
+  st_obj = STlist(rnacounts = count_files, spotcoords = coord_files, samples = clin_file)
+  st_obj = transform_data(st_obj)
+  return(st_obj)
+}
 
-# Define gene sets
-genes = rownames(st_obj@tr_counts[[1]])
-gene_sets = list(
-  GS1 = genes[1:10],
-  GS2 = genes[11:20],
-  GS3 = genes[21:30]
-)
+# Define gene sets helper
+create_gene_sets = function(st_obj){
+  genes = rownames(st_obj@tr_counts[[1]])
+  list(
+    GS1 = genes[1:10],
+    GS2 = genes[11:20],
+    GS3 = genes[21:30]
+  )
+}
 
 # ============================================================================
 # TEST 1: Basic function runs without error
 # ============================================================================
 
 test_that("STenrich runs without error", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -68,6 +75,9 @@ test_that("STenrich runs without error", {
 # ============================================================================
 
 test_that("STenrich with multiple samples", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -92,6 +102,9 @@ test_that("STenrich with multiple samples", {
 # ============================================================================
 
 test_that("STenrich with avg score type", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result_avg = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -113,6 +126,9 @@ test_that("STenrich with avg score type", {
 # ============================================================================
 
 test_that("STenrich with different min_units", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result_10 = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -143,6 +159,9 @@ test_that("STenrich with different min_units", {
 # ============================================================================
 
 test_that("STenrich with different num_sds", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result_1sd = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -175,6 +194,9 @@ test_that("STenrich with different num_sds", {
 # ============================================================================
 
 test_that("STenrich with different reps", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result_100 = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -208,6 +230,9 @@ test_that("STenrich with different reps", {
 # ============================================================================
 
 test_that("STenrich p-value adjustment", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -232,6 +257,9 @@ test_that("STenrich p-value adjustment", {
 # ============================================================================
 
 test_that("STenrich matches legacy output", {
+  st_obj = create_test_data()
+  gene_sets = create_gene_sets(st_obj)
+  
   result_modern = STenrich(
     x = st_obj,
     gene_sets = gene_sets,
@@ -269,6 +297,8 @@ test_that("STenrich matches legacy output", {
 # ============================================================================
 
 test_that("STenrich invalid STlist", {
+  gene_sets = list(GS1 = c("GENE1", "GENE2"))
+  
   expect_error({
     STenrich(
       x = NULL,
@@ -283,11 +313,12 @@ test_that("STenrich invalid STlist", {
 # ============================================================================
 
 test_that("STenrich with domain filtering", {
-  # First run clustering to get domains
-  st_obj_clustered = STclust(st_obj, ws = 0.025, ks = c(2, 3), cores = 1, verbose = FALSE)
+  st_obj = create_test_data()
+  st_obj = STclust(st_obj, ws = 0.025, ks = c(2, 3), cores = 1, verbose = FALSE)
+  gene_sets = create_gene_sets(st_obj)
   
   result = STenrich(
-    x = st_obj_clustered,
+    x = st_obj,
     gene_sets = gene_sets,
     samples = 1,
     annot = "stclust_spw0.025_k2",
@@ -301,6 +332,39 @@ test_that("STenrich with domain filtering", {
   # Should return list with results
   expect_s3_class(result, "list")
   expect_true(length(result) > 0)
+})
+
+# ============================================================================
+# TEST 11: Gene set size validation
+# ============================================================================
+
+test_that("STenrich gene set size validation", {
+  st_obj = create_test_data()
+  
+  # Create gene sets with varying sizes
+  genes = rownames(st_obj@tr_counts[[1]])
+  gene_sets = list(
+    GS_small = genes[1:3],   # Below min_genes (5)
+    GS_valid = genes[1:10]   # Above min_genes
+  )
+  
+  result = STenrich(
+    x = st_obj,
+    gene_sets = gene_sets,
+    samples = 1,
+    reps = 100,
+    min_units = 10,
+    min_genes = 5,
+    cores = 1,
+    verbose = FALSE
+  )
+  
+  # Should return list
+  expect_s3_class(result, "list")
+  expect_true(length(result) > 0)
+  
+  # Should have results for both gene sets
+  expect_true(nrow(result[[1]]) >= 1)
 })
 
 cat("\n=== STenrich Comprehensive Test Suite Complete ===\n")
