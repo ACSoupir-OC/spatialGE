@@ -1,0 +1,305 @@
+# STdiff Test Suite - Fast Version
+# Tests for spatial differential expression analysis
+# Optimized for speed while maintaining coverage
+#
+# Created: 2026-03-19
+#
+
+# ============================================================================
+# Setup - Create test data
+# ============================================================================
+
+cat('Setting up STdiff test data...\n')
+
+thrane_tmp = tempdir()
+unlink(thrane_tmp, recursive=TRUE)
+dir.create(thrane_tmp)
+
+lk = 'https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
+cat('Downloading test data (may take 1-2 min)...\n')
+download.file(lk, destfile=paste0(thrane_tmp, '/melanoma_thrane.zip'), mode='wb', timeout=120)
+unzip(zipfile=paste0(thrane_tmp, '/melanoma_thrane.zip'), exdir=thrane_tmp)
+
+count_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='counts')
+coord_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='mapping')
+clin_file = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='clinical')
+
+cat('Creating STlist...\n')
+st_obj = STlist(rnacounts=count_files, spotcoords=coord_files, samples=clin_file)
+st_obj = transform_data(st_obj)
+
+cat('Running STclust...\n')
+st_obj = STclust(st_obj, samples=1, w=0.025, deepSplit=FALSE, verbose=FALSE)
+
+cluster_col = grep('stclust', colnames(st_obj@spatial_meta[[1]]), value=TRUE)[1]
+cat('Using cluster column:', cluster_col, '\n')
+cat('Test data ready.\n\n')
+
+# ============================================================================
+# TEST 1: Basic STdiff - Non-spatial tests
+# ============================================================================
+
+test_that("STdiff - Basic non-spatial tests", {
+  cat('TEST 1: Basic non-spatial tests (10 genes)...\n')
+  
+  result = STdiff(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 10,
+    verbose = 0
+  )
+  
+  expect_true(is.list(result))
+  expect_true(length(result) > 0)
+  expect_true(is.data.frame(result[[1]]))
+  expect_true(nrow(result[[1]]) > 0)
+  
+  # Check required columns
+  expect_true('sample' %in% colnames(result[[1]]))
+  expect_true('gene' %in% colnames(result[[1]]))
+  expect_true('avg_log2fc' %in% colnames(result[[1]]))
+  expect_true('ttest_p_val' %in% colnames(result[[1]]))
+  expect_true('adj_p_val' %in% colnames(result[[1]]))
+  
+  cat('TEST 1: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 2: Wilcoxon test type
+# ============================================================================
+
+test_that("STdiff - Wilcoxon test", {
+  cat('TEST 2: Wilcoxon test (10 genes)...\n')
+  
+  result = STdiff(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    test_type = 'wilcoxon',
+    sp_topgenes = 0,
+    topgenes = 10,
+    verbose = 0
+  )
+  
+  expect_true(length(result) > 0)
+  expect_true('wilcox_p_val' %in% colnames(result[[1]]))
+  
+  cat('TEST 2: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 3: Invalid test type error
+# ============================================================================
+
+test_that("STdiff - Invalid test type error", {
+  cat('TEST 3: Invalid test type error...\n')
+  
+  expect_error(
+    STdiff(
+      x = st_obj,
+      samples = 1,
+      annot = cluster_col,
+      test_type = 'invalid_test',
+      sp_topgenes = 0,
+      verbose = 0
+    ),
+    'Test type is one of'
+  )
+  
+  cat('TEST 3: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 4: Invalid sp_topgenes error
+# ============================================================================
+
+test_that("STdiff - Invalid sp_topgenes error", {
+  cat('TEST 4: Invalid sp_topgenes error...\n')
+  
+  expect_error(
+    STdiff(x = st_obj, samples = 1, annot = cluster_col, sp_topgenes = 1.5, verbose = 0)
+  )
+  
+  expect_error(
+    STdiff(x = st_obj, samples = 1, annot = cluster_col, sp_topgenes = -0.1, verbose = 0)
+  )
+  
+  cat('TEST 4: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 5: Multiple samples
+# ============================================================================
+
+test_that("STdiff - Multiple samples", {
+  cat('TEST 5: Multiple samples (5 genes)...\n')
+  
+  result = STdiff(
+    x = st_obj,
+    samples = c(1, 2),
+    annot = cluster_col,
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 5,
+    verbose = 0
+  )
+  
+  expect_true(length(result) >= 1)
+  
+  cat('TEST 5: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 6: Pairwise tests
+# ============================================================================
+
+test_that("STdiff - Pairwise tests", {
+  cat('TEST 6: Pairwise tests (5 genes)...\n')
+  
+  result = STdiff(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    pairwise = TRUE,
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 5,
+    verbose = 0
+  )
+  
+  expect_true(length(result) > 0)
+  
+  cat('TEST 6: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 7: P-value adjustment methods
+# ============================================================================
+
+test_that("STdiff - P-value adjustment", {
+  cat('TEST 7: P-value adjustment (5 genes)...\n')
+  
+  result_fdr = STdiff(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    pval_adj = 'fdr',
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 5,
+    verbose = 0
+  )
+  
+  result_bonf = STdiff(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    pval_adj = 'bonferroni',
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 5,
+    verbose = 0
+  )
+  
+  expect_true(length(result_fdr) > 0)
+  expect_true(length(result_bonf) > 0)
+  
+  cat('TEST 7: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 8: Result structure verification
+# ============================================================================
+
+test_that("STdiff - Result structure", {
+  cat('TEST 8: Result structure verification...\n')
+  
+  result = STdiff(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 10,
+    verbose = 0
+  )
+  
+  res_df = result[[1]]
+  
+  # P-values between 0 and 1
+  expect_true(all(res_df$ttest_p_val >= 0, na.rm = TRUE))
+  expect_true(all(res_df$ttest_p_val <= 1, na.rm = TRUE))
+  
+  # Log2FC is numeric
+  expect_true(is.numeric(res_df$avg_log2fc))
+  
+  cat('TEST 8: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 9: Invalid sample error
+# ============================================================================
+
+test_that("STdiff - Invalid sample error", {
+  cat('TEST 9: Invalid sample error...\n')
+  
+  expect_error(
+    STdiff(
+      x = st_obj,
+      samples = 'INVALID_SAMPLE',
+      annot = cluster_col,
+      sp_topgenes = 0,
+      verbose = 0
+    )
+  )
+  
+  cat('TEST 9: PASSED\n\n')
+})
+
+# ============================================================================
+# TEST 10: Modern vs Legacy comparison
+# ============================================================================
+
+test_that("STdiff - Modern vs legacy", {
+  cat('TEST 10: Modern vs legacy comparison (5 genes)...\n')
+  
+  result_modern = STdiff(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 5,
+    verbose = 0
+  )
+  
+  result_legacy = STdiff_legacy(
+    x = st_obj,
+    samples = 1,
+    annot = cluster_col,
+    test_type = 't_test',
+    sp_topgenes = 0,
+    topgenes = 5,
+    verbose = 0
+  )
+  
+  expect_true(is.list(result_modern))
+  expect_true(is.list(result_legacy))
+  expect_true(length(result_modern) > 0)
+  expect_true(length(result_legacy) > 0)
+  
+  # Check gene overlap
+  genes_modern = sort(result_modern[[1]]$gene)
+  genes_legacy = sort(result_legacy[[1]]$gene)
+  overlap = length(intersect(genes_modern, genes_legacy))
+  expect_true(overlap >= min(length(genes_modern), length(genes_legacy)) * 0.8)
+  
+  cat('TEST 10: PASSED\n\n')
+})
+
+cat('\n========================================\n')
+cat('All STdiff tests complete!\n')
+cat('========================================\n')
