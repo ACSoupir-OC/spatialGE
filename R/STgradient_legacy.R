@@ -1,5 +1,11 @@
 ##
-#' @title STgradient: Tests of gene expression spatial gradients
+# STgradient_legacy.R - Legacy implementation (identical to FridleyLab/spatialGE)
+#
+# This file contains the exact original implementation from FridleyLab/spatialGE
+# for reproducibility and comparison purposes
+#
+
+#' @title STgradient_legacy: Tests of gene expression spatial gradients (legacy)
 #' @description Calculates Spearman's coefficients to detect genes showing expression spatial gradients
 #' @details
 #' The `STgradient` function fits linear models and calculates Spearman coefficients
@@ -97,6 +103,7 @@ STgradient_legacy = function(x=NULL, samples=NULL, topgenes=2000, annot=NULL, re
   }
   samplenames = samplenames[ !(samplenames %in% sample_rm) ]
   rm(sample_rm) # Clean env
+
 
   # Define number of cores to use
   if(.Platform$OS.type == 'windows'){

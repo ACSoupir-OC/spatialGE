@@ -1,4 +1,10 @@
 ##
+# STgradient: Spatial gradient analysis - Public interface
+#
+# This file contains the public STgradient function
+# and imports from STgradient_helpers.R for helper functions
+#
+
 #' @title STgradient: Tests of gene expression spatial gradients
 #' @description Calculates Spearman's coefficients to detect genes showing expression spatial gradients
 #' @details
@@ -46,69 +52,38 @@
 #'
 #' @export
 #'
-#' @importFrom magrittr %>%
-#' @importFrom stats IQR lm cor.test p.adjust quantile
+#' @seealso STgradient_legacy for reproducibility with original implementation
 #'
+#' @importFrom magrittr %>%
+#' @importFrom stats p.adjust
+#' @importFrom tibble add_column column_to_rownames
+#' @importFrom dplyr mutate select
+#' @importFrom parallel mclapply count
 STgradient = function(x=NULL, samples=NULL, topgenes=2000, annot=NULL, ref=NULL, exclude=NULL,
                       out_rm=FALSE, limit=NULL, distsumm='min', min_nb=3, robust=TRUE,
                       nb_dist_thr=NULL, log_dist=FALSE, cores=NULL, verbose=TRUE){
 
-  # To prevent NOTES in R CMD check
-  . = NULL
-
-  # Record time
-  zero_t = Sys.time()
-
   # Validate inputs
   validation = STgradient_validate_input(x, samples, topgenes, annot, ref, exclude, min_nb, nb_dist_thr, cores, verbose)
 
-  # Parallel processing across samples
-  results_ls = parallel::mclapply(validation$samples, function(sample_name){
-    # Prepare distances and categorize spots
-    dist_data = STgradient_prepare_distances(x, sample_name, validation$annot, validation$ref, validation$exclude)
-
-    # Filter reference spots by neighbor count
-    nbs_keep = STgradient_filter_neighbors(dist_data$dist_tmp, dist_data$ref_tmp, validation$min_nb, validation$nb_dist_thr)
-
-    # Summarize distances from reference
-    dists_summ = STgradient_summarize_distances(dist_data$dist_tmp, dist_data$nonref_tmp, dist_data$ref_tmp,
-                                                 nbs_keep, distsumm, limit)
-
-    if(nrow(dists_summ) > 1){
-      # Identify variable genes
-      vargenes = STgradient_identify_variable_genes(x, sample_name, dists_summ, topgenes)
-
-      # Extract expression data
-      vargenes_expr = STgradient_extract_expression(x, sample_name, vargenes, dists_summ)
-
-      if(nrow(vargenes_expr) > 0){
-        # Detect outliers if requested
-        if(out_rm & !robust){
-          outliers = STgradient_detect_outliers(vargenes_expr, out_rm)
-        } else {
-          outliers = list()
-        }
-
-        # Calculate correlations
-        results = STgradient_calculate_correlations(vargenes_expr, outliers, robust, log_dist, sample_name)
-
-        # Format results
-        results = STgradient_format_results(results, distsumm)
-      } else{
-        results = data.frame()
-      }
-
-    } else{
-      results = data.frame()
-    }
-
-    return(results)
-  }, mc.cores=validation$cores)
-
-  names(results_ls) = validation$samples
-
-  # Clean up and report timing
-  results_ls = STgradient_cleanup(results_ls, zero_t, verbose)
+  # Call core function
+  results_ls = STgradient_core(
+    x = x,
+    samples = validation$samples,
+    annot = validation$annot,
+    ref = validation$ref,
+    exclude = validation$exclude,
+    out_rm = out_rm,
+    limit = limit,
+    distsumm = distsumm,
+    min_nb = min_nb,
+    robust = robust,
+    nb_dist_thr = validation$nb_dist_thr,
+    log_dist = log_dist,
+    topgenes = topgenes,
+    cores = validation$cores,
+    verbose = verbose
+  )
 
   return(results_ls)
 }
