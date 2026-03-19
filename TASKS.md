@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-19 20:23 UTC  
+**Last Updated**: 2026-03-19 20:41 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -15,6 +15,7 @@
 | SThet: Create legacy baseline tests | 2026-03-19 19:57 UTC | 2026-03-19 20:02 UTC | 5 min | ✅ Complete |
 | SThet: Create SThet_legacy.R | 2026-03-19 20:02 UTC | 2026-03-19 20:03 UTC | 1 min | ✅ Complete |
 | SThet: Refactor core module | 2026-03-19 20:16 UTC | 2026-03-19 20:22 UTC | 7 min | ✅ Complete |
+| SThet: Refactor invdist_test + tests | 2026-03-19 20:31 UTC | 2026-03-19 20:40 UTC | 9 min | ✅ Complete |
 | STgradient: Fix correlation bugs | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
 | STenrich: Create core module | - | 2026-03-19 19:18 UTC | - | ✅ Complete |
 | Test suites: Update with inline data | - | 2026-03-19 19:41 UTC | - | ✅ Complete |
@@ -62,15 +63,17 @@
 - ✅ Test suite: `test-STenrich-complete.R` created (11 tests, inline data creation)
 - ⚠️ Note: Tests work via direct Rscript execution; devtools::test() has environment isolation issues
 
-### 🏃 In Progress / Pending
+### ✅ Completed Functions
 
-**5. SThet** - Spatial heterogeneity (Priority 1 - NEXT)
-- ✅ `R/SThet_legacy.R` - Legacy implementation (COMPLETE - 2026-03-19 20:03 UTC)
-- ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests (COMPLETE - 2026-03-19 20:02 UTC)
-- ✅ `R/SThet_core.R` - Core implementation (COMPLETE - 2026-03-19 20:22 UTC)
-- ✅ `R/SThet.R` - Public interface (COMPLETE - calls core)
-- 📄 `R/SThet_invdist_test.R` - Distance-based tests (pending refactoring)
-- ❌ **Missing**: Comprehensive test suite for modern SThet
+**5. SThet** - Spatial heterogeneity (COMPLETE - 2026-03-19 20:40 UTC)
+- ✅ `R/SThet_legacy.R` - Legacy implementation (20:03 UTC)
+- ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests (20:02 UTC)
+- ✅ `R/SThet_core.R` - Core implementation (20:22 UTC)
+- ✅ `R/SThet.R` - Public interface (20:22 UTC)
+- ✅ `R/SThet_invdist_test.R` - Statistical test variant (20:40 UTC)
+- ✅ `tests/testthat/test-SThet-comprehensive.R` - 9 comprehensive tests (20:40 UTC)
+- ✅ **All tests passing**: 8 baseline + 9 comprehensive = 17 tests total
+- ✅ **Verified**: Modern matches legacy exactly for all scenarios
 
 **6. STplot** - Spatial plotting (Priority 2)
 - 📄 `R/STplot.R` - Basic plotting
@@ -84,20 +87,22 @@
 
 ### Priority 1: Refactor SThet 🔴 CRITICAL (NEXT)
 
-**Status**: Core refactoring complete ✅
+**Status**: ✅ COMPLETE (2026-03-19 20:40 UTC)
 
-**Completed** (2026-03-19 19:57-20:22 UTC, 25 min total):
+**Completed** (2026-03-19 19:57-20:40 UTC, 43 min total):
 - ✅ `R/SThet_legacy.R` - Legacy implementation (5 min)
 - ✅ `tests/testthat/test-SThet-legacy-baseline.R` - 8 baseline tests (1 min)
 - ✅ `R/SThet_core.R` - Core implementation (7 min)
-- ✅ `R/SThet.R` - Public interface updated (included in 7 min)
-- ✅ Verification: Modern matches legacy exactly (MLANA, TP53, CD37 all match)
+- ✅ `R/SThet.R` - Public interface updated (7 min)
+- ✅ `R/SThet_invdist_test.R` - Statistical test variant (9 min)
+- ✅ `tests/testthat/test-SThet-comprehensive.R` - 9 comprehensive tests (9 min)
 
-**Remaining Deliverables**:
-- [ ] Refactor `R/SThet_invdist_test.R` to use modular pattern (optional)
-- [ ] Create comprehensive test suite for modern SThet (compare with legacy)
+**Results**:
+- ✅ All 17 tests passing (8 baseline + 9 comprehensive)
+- ✅ Modern matches legacy exactly for all scenarios
+- ✅ Full backward compatibility verified
 
-**Timeline**: ~1 day remaining (tests)
+**Timeline**: COMPLETE ✅
 
 ---
 
@@ -199,7 +204,7 @@
 | Metric | Current | Target | Status |
 |--------|---------|--------|--------|
 | Refactored functions | 5/7 (STclust, STdiff, STenrich, STgradient, SThet) | 7/7 (100%) | 🏃 71% |
-| Test coverage | ~65% (STclust + SThet baseline + test suites created) | >80% | 🏃 In Progress |
+| Test coverage | ~70% (STclust 30 tests + SThet 17 tests + test suites created) | >80% | 🏃 In Progress |
 | Vignettes | 0 | 5+ | ⏳ Pending |
 | Documentation | Basic | Comprehensive | ⏳ Pending |
 | Performance | Baseline | Optimized | ⏳ Pending |
