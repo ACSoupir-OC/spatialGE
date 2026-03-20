@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-20 02:25 UTC  
+**Last Updated**: 2026-03-20 02:55 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -183,6 +183,46 @@
 - `SThet_legacy` ✅
 
 **Files Changed**: 33 files (NAMESPACE + 32 man/*.Rd files)
+
+---
+
+### Priority 5.5: pkgdown Reference Site ✅ COMPLETE
+
+**Status**: Complete (2026-03-20 02:52 UTC)
+
+**Deliverables**:
+- [x] Create `_pkgdown.yml` configuration
+- [x] Mark internal functions with `@keywords internal`
+- [x] Build full pkgdown site in `docs/`
+- [x] Push to GitHub for GitHub Pages deployment
+
+**Configuration** (`_pkgdown.yml`):
+- Bootstrap 5 template
+- Organized reference sections (Core, STdiff, SThet, STgradient, STenrich, etc.)
+- Legacy functions section
+- Helper functions section
+- Custom author link
+
+**Internal Functions Marked**:
+- `STgradient_core` ✅
+- `STlist-class` and methods (show, summary, dim) ✅
+- `dispatch_ingest.*` methods ✅
+
+**Site Contents**:
+- Home page (README.md rendered)
+- Reference documentation (150+ function pages)
+- Authors page
+- News section
+- Search index (for pkgdown search)
+- Accessibility features (alt text warnings noted)
+
+**Notes**:
+- Vignettes excluded from build (rmarkdown rendering errors)
+- Some examples skipped (STenrich timeout)
+- README images missing (articles/img/logo.png, spatialGE_workflow_v3.png)
+
+**Files Changed**: 281 files (docs/ directory + _pkgdown.yml + man/*.Rd updates)
+**Deployed to**: `docs/` directory (ready for GitHub Pages)
 
 ---
 
