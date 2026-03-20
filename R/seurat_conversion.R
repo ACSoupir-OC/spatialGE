@@ -127,15 +127,20 @@ as.Seurat.STlist <- function(x, samples = NULL, assay.name = "RNA",
       }
     }
     
-    # Add gene metadata if available
+    # Add gene metadata if available (Seurat v5 compatible)
     if (!rlang::is_empty(x@gene_meta[[sname]]) && nrow(x@gene_meta[[sname]]) > 0) {
       gene_meta <- x@gene_meta[[sname]]
-      # Match genes
       common_genes <- intersect(rownames(seurat_obj), gene_meta$gene)
       if (length(common_genes) > 0) {
+        # Initialize meta.features in misc slot (Seurat v5 structure)
+        if (is.null(seurat_obj@assays[[assay.name]]@misc$meta.features)) {
+          seurat_obj@assays[[assay.name]]@misc$meta.features <- 
+            data.frame(row.names = rownames(seurat_obj))
+        }
+        
         for (col in setdiff(colnames(gene_meta), "gene")) {
           meta_col <- gene_meta[match(rownames(seurat_obj), gene_meta$gene), col]
-          seurat_obj[[paste0("gene_", col)]] <- meta_col
+          seurat_obj@assays[[assay.name]]@misc$meta.features[[paste0("gene_", col)]] <- meta_col
         }
       }
     }
