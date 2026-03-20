@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-20 00:05 UTC  
+**Last Updated**: 2026-03-20 00:35 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -132,7 +132,11 @@
 
 **Remaining**:
 - [ ] `tests/testthat/test-integration.R` - End-to-end workflow tests
-- [ ] Fix remaining test expectation failures (function signature changes)
+
+**Note**: All test failures were test bugs (wrong expectations), not function bugs:
+- Fixed `expect_s3_class(result, "list")` → `expect_true(is.list(result))` (list is base type, not S3)
+- Fixed `expect_warning()` → `expect_message()` (STgradient uses message() not warning())
+- Modern and legacy implementations match correctly
 
 **Test Strategy**:
 1. **Unit tests** - ✅ Test individual functions
