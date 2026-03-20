@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-20 02:20 UTC  
+**Last Updated**: 2026-03-20 02:25 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -149,28 +149,40 @@
 
 ---
 
-### Priority 5: Update NAMESPACE 🟡 HIGH
+### Priority 5: Update NAMESPACE ✅ COMPLETE
 
-**Status**: Partially complete
+**Status**: Complete (2026-03-20 02:16 UTC)
 
 **Deliverables**:
-- [ ] Review and update `NAMESPACE` exports
-- [ ] Ensure all public functions are exported
-- [ ] Ensure all internal functions are NOT exported
-- [ ] Add proper roxygen2 directives
-- [ ] Verify `useDynLib(spatialGE, .registration = TRUE)` is correct
+- [x] Review and update `NAMESPACE` exports
+- [x] Ensure all public functions are exported
+- [x] Ensure all internal functions are NOT exported
+- [x] Add proper roxygen2 directives
+- [x] Verify `useDynLib(spatialGE, .registration = TRUE)` is correct
 
-**Current Exports** (from NAMESPACE review):
-- `STclust`, `STclust_legacy` ✅
-- `STdiff`, `STdiff_*` (all subfunctions) ✅
-- `STenrich`, `STenrich_legacy` ✅
-- `STgradient`, `STgradient_legacy` ✅
-- `SThet` ✅ (missing legacy export?)
-- `STList`, `STList_legacy` ✅
-- `STplot`, `STplot_interpolation` ✅
-- Helper functions: `calculate_dist_matrices`, `calculate_weighted_dist`, etc.
+**Action**: Ran `devtools::document()` to regenerate NAMESPACE from roxygen2 tags
 
-**Timeline**: ~1 day
+**Fixed Missing Exports**:
+- `STdiff_legacy` - was missing, now exported ✅
+- `SThet_legacy` - was missing, now exported ✅
+- `SThet_invdist_test_legacy` - bonus addition ✅
+
+**Verified Internal Functions NOT Exported**:
+- `STenrich_core` ✅ (marked @keywords internal)
+- `STgradient_core` ✅ (marked @keywords internal)
+- `STgradient_validate_input` ✅ (marked @keywords internal)
+- All `_core` functions ✅
+
+**All Legacy Functions Exported**:
+- `STList_legacy` ✅
+- `STclust_legacy` ✅
+- `STdiff_legacy` ✅
+- `STenrich_legacy` ✅
+- `STgradient_legacy` ✅
+- `SThet_invdist_test_legacy` ✅
+- `SThet_legacy` ✅
+
+**Files Changed**: 33 files (NAMESPACE + 32 man/*.Rd files)
 
 ---
 
