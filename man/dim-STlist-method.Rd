@@ -16,3 +16,4 @@ Returns the number of genes and spots for each array within an STList object
 This function takes an STList and prints the number of genes (rows) and spots (columns) of
 each spatial array within that object.
 }
+\keyword{internal}

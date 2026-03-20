@@ -62,3 +62,4 @@ Core implementation of STgradient - calculates Spearman correlations between gen
 \details{
 Internal function - use STgradient() for public interface
 }
+\keyword{internal}

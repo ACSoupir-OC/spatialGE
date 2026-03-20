@@ -20,3 +20,4 @@ Reads delimited text files, converts to sparse matrices, and handles
 basic barcode matching with coordinate files. Supports both single samples
 and batch processing.
 }
+\keyword{internal}

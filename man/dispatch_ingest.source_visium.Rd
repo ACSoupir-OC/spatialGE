@@ -15,3 +15,4 @@ list containing counts sparse matrix and coords dataframe
 \description{
 Dispatches to appropriate Visium reader based on file format (H5 or MEX)
 }
+\keyword{internal}

@@ -19,3 +19,4 @@ Dispatches to appropriate H5 reader based on file format heuristics
 Uses coordinate file patterns and filename heuristics to distinguish
 between Visium and Xenium H5 files. Falls back to Visium as default.
 }
+\keyword{internal}

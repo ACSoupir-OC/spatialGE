@@ -2,6 +2,7 @@
 #' @description Dispatches to appropriate Visium reader based on file format (H5 or MEX)
 #' @param source InputSource object of type 'visium'
 #' @return list containing counts sparse matrix and coords dataframe
+#' @keywords internal
 #' @export
 dispatch_ingest.source_visium <- function(source) {
   path <- source$rna
@@ -52,6 +53,7 @@ dispatch_ingest.source_visium <- function(source) {
 #'   between Visium and Xenium H5 files. Falls back to Visium as default.
 #' @param source InputSource object of type 'h5_10x'
 #' @return list containing counts sparse matrix and coords dataframe
+#' @keywords internal
 #' @export
 dispatch_ingest.source_h5_10x <- function(source) {
   path <- source$rna

@@ -1,0 +1,176 @@
+# Package index
+
+## Core Analysis Functions
+
+Main spatial analysis workflows
+
+- [`STclust()`](https://acsoupir-oc.github.io/spatialGE/reference/STclust.md)
+  : STclust: Spatial clustering (modular implementation)
+- [`STdiff()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff.md)
+  : STdiff: Differential gene expression analysis for spatial
+  transcriptomics
+- [`STenrich()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
+  [`STenrich_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
+  : STenrich: Test for spatial enrichment of gene expression sets
+- [`STgradient()`](https://acsoupir-oc.github.io/spatialGE/reference/STgradient.md)
+  : STgradient: Tests of gene expression spatial gradients
+- [`SThet()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet.md)
+  : SThet: Computes global spatial autocorrelation statistics on gene
+  expression
+- [`STplot()`](https://acsoupir-oc.github.io/spatialGE/reference/STplot.md)
+  : STplot: Plots of gene expression, cluster memberships, and metadata
+  in spatial context
+
+## Differential Expression (STdiff)
+
+Spatial and non-spatial differential expression testing
+
+- [`STdiff_run_nonspatial()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_run_nonspatial.md)
+  : STdiff_run_nonspatial: Run non-spatial differential expression tests
+- [`STdiff_run_spatial()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_run_spatial.md)
+  : STdiff_run_spatial: Run spatial differential expression analysis
+- [`STdiff_fit_ttest()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_fit_ttest.md)
+  : STdiff_fit_ttest: Fit non-spatial t-tests
+- [`STdiff_fit_wilcoxon()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_fit_wilcoxon.md)
+  : STdiff_fit_wilcoxon: Fit non-spatial Wilcoxon tests
+- [`STdiff_fit_mm()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_fit_mm.md)
+  : STdiff_fit_mm: Fit non-spatial mixed models
+- [`STdiff_fit_spatial_models()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_fit_spatial_models.md)
+  : STdiff_fit_spatial_models: Fit spaMM spatial models with Matern
+  covariance
+- [`STdiff_adjust_pvalues()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_adjust_pvalues.md)
+  : STdiff_adjust_pvalues: Adjust p-values using multiple testing
+  correction
+- [`STdiff_add_metadata()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_add_metadata.md)
+  : STdiff_add_metadata: Add cluster and sample metadata to results
+- [`STdiff_compile_results()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_compile_results.md)
+  : STdiff_compile_results: Compile non-spatial and spatial results
+- [`STdiff_format_output()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_format_output.md)
+  : STdiff_format_output: Format results for user consumption
+- [`STdiff_extract_spatial_pvalues()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_extract_spatial_pvalues.md)
+  : STdiff_extract_spatial_pvalues: Extract spatial p-values from model
+  results
+- [`STdiff_check_convergence()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_check_convergence.md)
+  : STdiff_check_convergence: Check model convergence and extract
+  summary statistics
+- [`STdiff_volcano()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_volcano.md)
+  : STdiff_volcano: Generates volcano plots from STdiff results
+
+## Heterogeneity Analysis (SThet)
+
+Spatial heterogeneity statistics (Moran’s I, Geary’s C)
+
+- [`SThet()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet.md)
+  : SThet: Computes global spatial autocorrelation statistics on gene
+  expression
+- [`SThet_invdist_test()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet_invdist_test.md)
+  : SThet_invdist_test: Computes spatial autocorrelation with
+  statistical tests
+- [`compare_SThet()`](https://acsoupir-oc.github.io/spatialGE/reference/compare_SThet.md)
+  : compare_SThet: Compares spatial autocorrelation statistics across
+  samples
+
+## Gradient Analysis (STgradient)
+
+Spatial gradient correlation analysis
+
+- [`STgradient()`](https://acsoupir-oc.github.io/spatialGE/reference/STgradient.md)
+  : STgradient: Tests of gene expression spatial gradients
+
+## Enrichment Analysis (STenrich)
+
+Gene set enrichment analysis with spatial permutation
+
+- [`STenrich()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
+  [`STenrich_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
+  : STenrich: Test for spatial enrichment of gene expression sets
+
+## Clustering (STclust)
+
+Spatial clustering with hierarchical methods
+
+- [`STclust()`](https://acsoupir-oc.github.io/spatialGE/reference/STclust.md)
+  : STclust: Spatial clustering (modular implementation)
+- [`get_hier_clusters_dtc()`](https://acsoupir-oc.github.io/spatialGE/reference/get_hier_clusters_dtc.md)
+  : get_hier_clusters_dtc: Hierarchical clustering with DynamicTreeCut
+- [`get_hier_clusters_ks()`](https://acsoupir-oc.github.io/spatialGE/reference/get_hier_clusters_ks.md)
+  : get_hier_clusters_ks: Hierarchical clustering with fixed k values
+
+## Data Import & Management
+
+Create and manage STlist objects
+
+- [`STlist()`](https://acsoupir-oc.github.io/spatialGE/reference/STlist.md)
+  **\[stable\]** : STlist: Creation of STlist objects for spatial
+  transcriptomics analysis
+- [`STList_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STList_legacy.md)
+  **\[superseded\]** : STlist (Legacy): Creation of STlist objects for
+  spatial transcriptomics analysis
+- [`summarize_STlist()`](https://acsoupir-oc.github.io/spatialGE/reference/summarize_STlist.md)
+  : summarize_STlist: Generates a data frame with summary statistics
+- [`spatial_metadata()`](https://acsoupir-oc.github.io/spatialGE/reference/spatial_metadata.md)
+  : spatial_metadata: Prints the names of the available spot/cell
+  annotations
+- [`filter_data()`](https://acsoupir-oc.github.io/spatialGE/reference/filter_data.md)
+  : filter_data: Filters cells/spots, genes, or samples
+- [`transform_data()`](https://acsoupir-oc.github.io/spatialGE/reference/transform_data.md)
+  : transform_data: Transformation of spatial transcriptomics data
+- [`get_gene_meta()`](https://acsoupir-oc.github.io/spatialGE/reference/get_gene_meta.md)
+  : get_gene_meta: Extract gene-level metadata and statistics
+
+## Visualization
+
+Plotting and visualization functions
+
+- [`STplot()`](https://acsoupir-oc.github.io/spatialGE/reference/STplot.md)
+  : STplot: Plots of gene expression, cluster memberships, and metadata
+  in spatial context
+- [`STplot_interpolation()`](https://acsoupir-oc.github.io/spatialGE/reference/STplot_interpolation.md)
+  : STplot_interpolation: Visualize gene expression surfaces
+- [`plot_counts()`](https://acsoupir-oc.github.io/spatialGE/reference/plot_counts.md)
+  : plot_counts: Generates plots for the distribution of counts
+- [`plot_image()`](https://acsoupir-oc.github.io/spatialGE/reference/plot_image.md)
+  : plot_image: Generate a ggplot object of the tissue image
+- [`distribution_plots()`](https://acsoupir-oc.github.io/spatialGE/reference/distribution_plots.md)
+  : per_unit_counts: Generates distribution plots of spot/cell meta data
+  or gene expression
+- [`pseudobulk_dim_plot()`](https://acsoupir-oc.github.io/spatialGE/reference/pseudobulk_dim_plot.md)
+  : pseudobulk_dim_plot: Plot PCA of pseudobulk samples
+- [`pseudobulk_heatmap()`](https://acsoupir-oc.github.io/spatialGE/reference/pseudobulk_heatmap.md)
+  : pseudobulk_heatmap: Heatmap of pseudobulk samples
+- [`pseudobulk_samples()`](https://acsoupir-oc.github.io/spatialGE/reference/pseudobulk_samples.md)
+  : pseudobulk_samples: Aggregates counts into "pseudo bulk" samples
+- [`gene_interpolation()`](https://acsoupir-oc.github.io/spatialGE/reference/gene_interpolation.md)
+  : gene_interpolation: Spatial interpolation of gene expression
+
+## Legacy Functions
+
+Original implementations for reproducibility
+
+- [`STclust_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STclust_legacy.md)
+  : STclust: Detect clusters of spots/cells
+- [`STdiff_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_legacy.md)
+  : STdiff: Differential gene expression analysis for spatial
+  transcriptomics data
+- [`STenrich()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
+  [`STenrich_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
+  : STenrich: Test for spatial enrichment of gene expression sets
+- [`STgradient_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STgradient_legacy.md)
+  : STgradient_legacy: Tests of gene expression spatial gradients
+  (legacy)
+- [`SThet_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet_legacy.md)
+  : SThet_legacy: Computes global spatial autocorrelation statistics on
+  gene expression
+
+## Helper Functions
+
+Utility functions for spatial analysis
+
+- [`calculate_dist_matrices()`](https://acsoupir-oc.github.io/spatialGE/reference/calculate_dist_matrices.md)
+  : calculate_dist_matrices: Calculate and scale distance matrices
+- [`calculate_weighted_dist()`](https://acsoupir-oc.github.io/spatialGE/reference/calculate_weighted_dist.md)
+  : calculate_weighted_dist: Calculate weighted distance matrices
+- [`load_images()`](https://acsoupir-oc.github.io/spatialGE/reference/load_images.md)
+  : load_images: Place tissue images within STlist
+- [`tissue_names()`](https://acsoupir-oc.github.io/spatialGE/reference/tissue_names.md)
+  : tissue_names: Prints the names of the tissue samples in the STlist

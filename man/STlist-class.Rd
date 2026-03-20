@@ -25,3 +25,4 @@ Definition of an STlist object class.
 \item{\code{misc}}{Parameters and images from ST data}
 }}
 
+\keyword{internal}

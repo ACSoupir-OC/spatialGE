@@ -27,7 +27,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @importFrom stats IQR cor.test p.adjust quantile
-#'
+#' @keywords internal
 STgradient_core = function(x, samples, annot, ref, exclude, out_rm, limit, distsumm, min_nb, robust, nb_dist_thr, log_dist, topgenes, cores, verbose){
 
   # Record time

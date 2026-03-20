@@ -19,3 +19,4 @@ Handles named list of dataframes with counts and coordinates
 Processes named list inputs where each element contains gene expression
 dataframes. Sorts and aligns count and coordinate dataframes.
 }
+\keyword{internal}

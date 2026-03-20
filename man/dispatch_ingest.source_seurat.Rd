@@ -19,3 +19,4 @@ Converts Seurat spatial object to STlist format
 Extracts counts from Spatial assay and coordinates from images slot,
 supporting multiple slices from a single Seurat object.
 }
+\keyword{internal}

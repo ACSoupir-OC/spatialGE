@@ -10,7 +10,7 @@
 #' @slot tr_counts transfromed per spot counts
 #' @slot gene_krige results from kriging on gene expression
 #' @slot misc Parameters and images from ST data
-#
+#' @keywords internal
 #
 setClass(Class="STlist",
          slots=list(counts="list",
@@ -34,7 +34,8 @@ setClass(Class="STlist",
 #' object and other information about the object.
 #'
 #' @param object an STList object to show summary from.
-#
+#' @keywords internal
+#' @export
 #
 setMethod("show", signature="STlist",
           function(object){
@@ -71,7 +72,8 @@ setMethod("show", signature="STlist",
 #' object and other information about the object.
 #'
 #' @param object an STList object to show summary from.
-#
+#' @keywords internal
+#' @export
 #
 setMethod("summary", signature="STlist",
           function(object){
@@ -108,7 +110,8 @@ setMethod("summary", signature="STlist",
 #' each spatial array within that object.
 #'
 #' @param x an STList object to show summary from.
-#
+#' @keywords internal
+#' @export
 #
 setMethod(f="dim", signature="STlist",
           definition=function(x){

@@ -5,6 +5,7 @@
 #'   and batch processing.
 #' @param source InputSource object of type 'generic' or 'list'
 #' @return list containing counts sparse matrix and coords dataframe
+#' @keywords internal
 #' @export
 dispatch_ingest.source_generic <- function(source) {
   # Text files (csv/tsv)
@@ -122,6 +123,7 @@ dispatch_ingest.source_generic <- function(source) {
   return(list(counts=counts, coords=coords_df))
 }
 
+#' @keywords internal
 #' @export
 #' @title Ingest List of DataFrames
 #' @description Handles named list of dataframes with counts and coordinates
@@ -190,6 +192,7 @@ dispatch_ingest.source_list <- function(source) {
 #'   supporting multiple slices from a single Seurat object.
 #' @param source InputSource object of type 'seurat'
 #' @return list containing counts list and coords list (one per slice)
+#' @keywords internal
 #' @export
 dispatch_ingest.source_seurat <- function(source) {
   obj <- source$rna

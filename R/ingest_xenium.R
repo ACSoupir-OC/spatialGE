@@ -2,6 +2,7 @@
 #' @description Dispatches to appropriate Xenium reader based on file format (H5 or MEX)
 #' @param source InputSource object of type 'xenium'
 #' @return list containing counts sparse matrix and coords dataframe
+#' @keywords internal
 #' @export
 dispatch_ingest.source_xenium <- function(source) {
   path <- source$rna

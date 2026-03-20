@@ -16,3 +16,4 @@ Prints overview/summary of STList oject.
 This function takes an STList and prints a the number of spatial arrays in that
 object and other information about the object.
 }
+\keyword{internal}

@@ -1,0 +1,110 @@
+url: https://acsoupir-oc.github.io/spatialGE/
+
+template:
+  bootstrap: 5
+
+home:
+  title: "spatialGE: Spatial Genomics Analysis"
+  description: "Analysis tools for spatial transcriptomics and spatial genomics data"
+
+authors:
+  Alex Soupir:
+    href: https://github.com/ACSoupir-OC
+
+reference:
+  - title: "Core Analysis Functions"
+    desc: "Main spatial analysis workflows"
+    contents:
+      - STclust
+      - STdiff
+      - STenrich
+      - STgradient
+      - SThet
+      - STplot
+
+  - title: "Differential Expression (STdiff)"
+    desc: "Spatial and non-spatial differential expression testing"
+    contents:
+      - STdiff_run_nonspatial
+      - STdiff_run_spatial
+      - STdiff_fit_ttest
+      - STdiff_fit_wilcoxon
+      - STdiff_fit_mm
+      - STdiff_fit_spatial_models
+      - STdiff_adjust_pvalues
+      - STdiff_add_metadata
+      - STdiff_compile_results
+      - STdiff_format_output
+      - STdiff_extract_spatial_pvalues
+      - STdiff_check_convergence
+      - STdiff_volcano
+
+  - title: "Heterogeneity Analysis (SThet)"
+    desc: "Spatial heterogeneity statistics (Moran's I, Geary's C)"
+    contents:
+      - SThet
+      - SThet_invdist_test
+      - compare_SThet
+
+  - title: "Gradient Analysis (STgradient)"
+    desc: "Spatial gradient correlation analysis"
+    contents:
+      - STgradient
+
+  - title: "Enrichment Analysis (STenrich)"
+    desc: "Gene set enrichment analysis with spatial permutation"
+    contents:
+      - STenrich
+
+  - title: "Clustering (STclust)"
+    desc: "Spatial clustering with hierarchical methods"
+    contents:
+      - STclust
+      - get_hier_clusters_dtc
+      - get_hier_clusters_ks
+
+  - title: "Data Import & Management"
+    desc: "Create and manage STlist objects"
+    contents:
+      - STlist
+      - STList_legacy
+      - summarize_STlist
+      - spatial_metadata
+      - filter_data
+      - transform_data
+      - get_gene_meta
+
+  - title: "Visualization"
+    desc: "Plotting and visualization functions"
+    contents:
+      - STplot
+      - STplot_interpolation
+      - plot_counts
+      - plot_image
+      - distribution_plots
+      - pseudobulk_dim_plot
+      - pseudobulk_heatmap
+      - pseudobulk_samples
+      - gene_interpolation
+
+  - title: "Legacy Functions"
+    desc: "Original implementations for reproducibility"
+    contents:
+      - STclust_legacy
+      - STdiff_legacy
+      - STenrich_legacy
+      - STgradient_legacy
+      - SThet_legacy
+
+  - title: "Helper Functions"
+    desc: "Utility functions for spatial analysis"
+    contents:
+      - calculate_dist_matrices
+      - calculate_weighted_dist
+      - load_images
+      - tissue_names
+
+news:
+  releases:
+    - text: "Version 1.0.0"
+      href: https://github.com/ACSoupir-OC/spatialGE/releases
