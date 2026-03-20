@@ -135,7 +135,9 @@ articles:
     desc: "Step-by-step guides and workflows"
     contents:
       - basic_functions_vignette
-      - seurat_integration
+      - spatial_differential_expression
+      - spatial_enrichment_gradients_smi
+      - troubleshooting
 
 news:
   releases:
