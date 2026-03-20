@@ -85,3 +85,6 @@ can be used to investigate if a gene is expressed higher in spots/cells closer t
 a specific reference tissue domain, compared to spots/cells farther from the
 reference domain (or viceversa as indicated by the Spearman's cofficient).
 }
+\seealso{
+STgradient_legacy for reproducibility with original implementation
+}

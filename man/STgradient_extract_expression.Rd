@@ -2,23 +2,23 @@
 % Please edit documentation in R/STgradient_helpers.R
 \name{STgradient_extract_expression}
 \alias{STgradient_extract_expression}
-\title{STgradient_extract_expression: Extract expression and join with distances}
+\title{STgradient_extract_expression: Extract expression data}
 \usage{
 STgradient_extract_expression(x, sample_name, vargenes, dists_summ)
 }
 \arguments{
-\item{x}{an STlist object}
+\item{x}{STlist object}
 
-\item{sample_name}{name of sample to process}
+\item{sample_name}{sample name}
 
-\item{vargenes}{vector of variable gene names}
+\item{vargenes}{vector of gene names}
 
-\item{dists_summ}{data.frame with barcode and distance}
+\item{dists_summ}{distance summary data frame}
 }
 \value{
-data.frame with expression data and distances
+data frame with expression and distance data
 }
 \description{
-Extract transformed expression data for variable genes and join with distance data
+Extract transformed expression for variable genes with distance data
 }
 \keyword{internal}

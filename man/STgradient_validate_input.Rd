@@ -2,7 +2,7 @@
 % Please edit documentation in R/STgradient_helpers.R
 \name{STgradient_validate_input}
 \alias{STgradient_validate_input}
-\title{STgradient_validate_input: Validate input parameters}
+\title{STgradient_validate_input: Validate STgradient inputs}
 \usage{
 STgradient_validate_input(
   x,
@@ -18,28 +18,30 @@ STgradient_validate_input(
 )
 }
 \arguments{
-\item{x}{an STlist object}
+\item{x}{STlist object}
 
-\item{samples}{vector of sample names to process}
+\item{samples}{samples to process}
 
-\item{topgenes}{number of top variable genes}
+\item{topgenes}{number of top genes}
 
-\item{annot}{annotation column name}
+\item{annot}{annotation column}
 
 \item{ref}{reference cluster}
 
 \item{exclude}{optional exclude cluster}
 
-\item{min_nb}{minimum number of neighbors}
+\item{min_nb}{minimum neighbors}
 
 \item{nb_dist_thr}{neighborhood distance threshold}
 
-\item{verbose}{verbosity level}
+\item{cores}{number of cores}
+
+\item{verbose}{verbosity}
 }
 \value{
-list with validated inputs
+validated parameters list
 }
 \description{
-Validate sample names, annotation columns, reference clusters, and other parameters
+Validate inputs for STgradient function
 }
 \keyword{internal}

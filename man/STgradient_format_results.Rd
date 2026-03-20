@@ -2,19 +2,19 @@
 % Please edit documentation in R/STgradient_helpers.R
 \name{STgradient_format_results}
 \alias{STgradient_format_results}
-\title{STgradient_format_results: Format results with p-value adjustment}
+\title{STgradient_format_results: Format results}
 \usage{
 STgradient_format_results(dist_cor, distsumm)
 }
 \arguments{
-\item{dist_cor}{data.frame with correlation results}
+\item{dist_cor}{correlation results data frame}
 
-\item{distsumm}{distance summary metric ('min' or 'avg')}
+\item{distsumm}{distance summary metric}
 }
 \value{
-formatted data.frame with adjusted p-values
+formatted data frame
 }
 \description{
-Adjust p-values and rename columns with distance summary prefix
+Format correlation results with proper column names
 }
 \keyword{internal}

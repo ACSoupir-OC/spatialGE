@@ -14,22 +14,22 @@ STgradient_summarize_distances(
 )
 }
 \arguments{
-\item{dist_tmp}{full distance matrix}
+\item{dist_tmp}{distance matrix}
 
-\item{nonref_tmp}{non-reference spot barcodes}
+\item{nonref_tmp}{non-reference barcodes}
 
-\item{ref_tmp}{reference spot barcodes}
+\item{ref_tmp}{reference barcodes}
 
-\item{nbs_keep}{barcodes of reference spots with enough neighbors}
+\item{nbs_keep}{reference barcodes to keep}
 
-\item{distsumm}{distance summary method ('min' or 'avg')}
+\item{distsumm}{distance summary metric ('min' or 'avg')}
 
 \item{limit}{optional distance limit}
 }
 \value{
-data.frame with barcode and distance to reference
+data frame with barcode and dist2ref
 }
 \description{
-Calculate min or avg distance from non-reference spots to reference spots
+Calculate min or average distance from reference for non-reference spots
 }
 \keyword{internal}

@@ -2,21 +2,21 @@
 % Please edit documentation in R/STgradient_helpers.R
 \name{STgradient_cleanup}
 \alias{STgradient_cleanup}
-\title{STgradient_cleanup: Remove empty samples and report timing}
+\title{STgradient_cleanup: Final cleanup}
 \usage{
 STgradient_cleanup(results_ls, zero_t, verbose)
 }
 \arguments{
-\item{results_ls}{list of results data.frames}
+\item{results_ls}{list of results}
 
 \item{zero_t}{start time}
 
-\item{verbose}{verbosity level}
+\item{verbose}{verbosity flag}
 }
 \value{
 cleaned list of results
 }
 \description{
-Clean results by removing samples with no output and report completion time
+Remove empty samples and report timing
 }
 \keyword{internal}

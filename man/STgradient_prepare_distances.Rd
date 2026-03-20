@@ -2,12 +2,12 @@
 % Please edit documentation in R/STgradient_helpers.R
 \name{STgradient_prepare_distances}
 \alias{STgradient_prepare_distances}
-\title{STgradient_prepare_distances: Calculate Euclidean distances}
+\title{STgradient_prepare_distances: Prepare distance data}
 \usage{
 STgradient_prepare_distances(x, sample_name, annot, ref, exclude)
 }
 \arguments{
-\item{x}{an STlist object}
+\item{x}{STlist object}
 
 \item{sample_name}{name of sample to process}
 
@@ -15,12 +15,12 @@ STgradient_prepare_distances(x, sample_name, annot, ref, exclude)
 
 \item{ref}{reference cluster}
 
-\item{exclude}{optional exclude cluster}
+\item{exclude}{optional cluster to exclude}
 }
 \value{
-list with distance matrix and categorized spots
+list with distance data frames
 }
 \description{
-Calculate Euclidean distance matrix and categorize spots by cluster
+Calculate and categorize distances for gradient analysis
 }
 \keyword{internal}

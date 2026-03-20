@@ -2,7 +2,7 @@
 % Please edit documentation in R/STgradient_legacy.R
 \name{STgradient_legacy}
 \alias{STgradient_legacy}
-\title{STgradient: Tests of gene expression spatial gradients}
+\title{STgradient_legacy: Tests of gene expression spatial gradients (legacy)}
 \usage{
 STgradient_legacy(
   x = NULL,

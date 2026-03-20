@@ -7,18 +7,18 @@
 STgradient_filter_neighbors(dist_tmp, ref_tmp, min_nb, nb_dist_thr)
 }
 \arguments{
-\item{dist_tmp}{full distance matrix}
+\item{dist_tmp}{distance matrix}
 
-\item{ref_tmp}{reference spot barcodes}
+\item{ref_tmp}{reference barcodes}
 
-\item{min_nb}{minimum number of neighbors required}
+\item{min_nb}{minimum neighbors required}
 
-\item{nb_dist_thr}{neighborhood distance threshold (2-element vector)}
+\item{nb_dist_thr}{neighborhood distance threshold}
 }
 \value{
-vector of barcodes to keep (reference spots with enough neighbors)
+vector of reference barcodes to keep
 }
 \description{
-Identify reference spots with sufficient neighbors within neighborhood tolerance
+Identify reference spots with sufficient neighbors
 }
 \keyword{internal}

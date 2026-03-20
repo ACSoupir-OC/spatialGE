@@ -2,16 +2,16 @@
 % Please edit documentation in R/STgradient_helpers.R
 \name{STgradient_identify_variable_genes}
 \alias{STgradient_identify_variable_genes}
-\title{STgradient_identify_variable_genes: Identify top variable genes}
+\title{STgradient_identify_variable_genes: Identify variable genes}
 \usage{
 STgradient_identify_variable_genes(x, sample_name, dists_summ, topgenes)
 }
 \arguments{
-\item{x}{an STlist object}
+\item{x}{STlist object}
 
-\item{sample_name}{name of sample to process}
+\item{sample_name}{sample name}
 
-\item{dists_summ}{data.frame with distance data}
+\item{dists_summ}{distance summary data frame}
 
 \item{topgenes}{number of top genes to select}
 }
@@ -19,6 +19,6 @@ STgradient_identify_variable_genes(x, sample_name, dists_summ, topgenes)
 vector of gene names
 }
 \description{
-Identify top genes by variance using VST method
+Select top variable genes for analysis
 }
 \keyword{internal}

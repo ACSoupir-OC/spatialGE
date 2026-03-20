@@ -2,7 +2,7 @@
 % Please edit documentation in R/STgradient_helpers.R
 \name{STgradient_calculate_correlations}
 \alias{STgradient_calculate_correlations}
-\title{STgradient_calculate_correlations: Calculate linear models and Spearman correlations}
+\title{STgradient_calculate_correlations: Calculate correlations}
 \usage{
 STgradient_calculate_correlations(
   vargenes_expr,
@@ -27,6 +27,6 @@ STgradient_calculate_correlations(
 data.frame with correlation results
 }
 \description{
-For each gene, fit linear models and calculate Spearman correlations with distance
+For each gene, fit linear models and calculate Spearman correlations
 }
 \keyword{internal}
