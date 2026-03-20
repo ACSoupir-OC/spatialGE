@@ -1,4 +1,6 @@
-# SThet_legacy: Computes global spatial autocorrelation statistics on gene expression
+# SThet_legacy: Computes global spatial autocorrelation statistics on gene expression (legacy)
+
+**\[superseded\]**
 
 Computes the global spatial autocorrelation statistics Moran's I and/or
 Geary's C for a set of genes
@@ -67,6 +69,9 @@ SThet_legacy(
 an STlist containing spatial statistics
 
 ## Details
+
+**This is the legacy implementation from version 1.x.** Use `SThet` for
+new projects.
 
 The function computes global spatial autocorrelation statistics (Moran's
 I and/or Geary's C) for the requested genes and samples. Then

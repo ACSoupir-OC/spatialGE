@@ -1,8 +1,13 @@
 ##
-#' @title STclust: Detect clusters of spots/cells
-#' @description Perform unsupervised spatially-informed clustering on the spots/cells of a
+#' @title STclust: Detect clusters of spots/cells (legacy)
+#' @description
+#' `r lifecycle::badge("superseded")`
+#' 
+#' Perform unsupervised spatially-informed clustering on the spots/cells of a
 #' ST sample
 #' @details
+#' \strong{This is the legacy implementation from version 1.x.} Use `STclust` for new projects.
+#' 
 #' The function takes an STlist and calculates euclidean distances between cells or spots
 #' based on the x,y spatial locations, and the expression of the top variable genes
 #' (`Seurat::FindVariableFeatures`). The resulting distances are weighted by

@@ -102,7 +102,10 @@ STclust_hierarchical = function(weighted_dists, ws, ks, linkage, deepSplit, verb
 
 ##
 #' @title STclust: Spatial clustering (modular implementation)
-#' @description Perform unsupervised spatially-informed clustering on the spots/cells of an ST sample
+#' @description
+#' `r lifecycle::badge("stable")`
+#' 
+#' Perform unsupervised spatially-informed clustering on the spots/cells of an ST sample
 #' @details
 #' The function calculates Euclidean distances between cells or spots based on:
 #' 1. Expression of top variable genes (Seurat's FindVariableFeatures)

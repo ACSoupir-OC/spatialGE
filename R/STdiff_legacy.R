@@ -1,8 +1,13 @@
 ##
-#' @title STdiff: Differential gene expression analysis for spatial transcriptomics data
-#' @description Tests for differentially expressed genes using linear models with or
+#' @title STdiff: Differential gene expression analysis for spatial transcriptomics data (legacy)
+#' @description
+#' `r lifecycle::badge("superseded")`
+#' 
+#' Tests for differentially expressed genes using linear models with or
 #' without spatial covariance structures
 #' @details
+#' \strong{This is the legacy implementation from version 1.x.} Use `STdiff` for new projects.
+#' 
 #' The method tests for differentially expressed genes between groups of spots/cells
 #' (e.g., clusters) in a spatial transcriptomics sample. Specifically, the function
 #' tests for genes with significantly higher or lower gene expression in one group of

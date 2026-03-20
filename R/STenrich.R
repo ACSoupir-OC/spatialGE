@@ -12,7 +12,10 @@
 
 ##
 #' @title STenrich: Test for spatial enrichment of gene expression sets
-#' @description Test for spatial enrichment of gene expression sets in spatial transcriptomics data
+#' @description
+#' `r lifecycle::badge("stable")`
+#' 
+#' Test for spatial enrichment of gene expression sets in spatial transcriptomics data
 #' @details The function performs a randomization test to assess if the sum of
 #' distances between cells/spots with high expression of a gene set is lower than
 #' the sum of distances among randomly selected cells/spots. The cells/spots are

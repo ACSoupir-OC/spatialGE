@@ -1,5 +1,7 @@
 # STclust: Spatial clustering (modular implementation)
 
+**\[stable\]**
+
 Perform unsupervised spatially-informed clustering on the spots/cells of
 an ST sample
 

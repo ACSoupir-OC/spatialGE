@@ -29,7 +29,10 @@ if(legacy_path == '' || !file.exists(legacy_path)){
 
 ##
 #' @title STdiff: Differential gene expression analysis for spatial transcriptomics
-#' @description Tests for differentially expressed genes between groups of spots/cells
+#' @description
+#' `r lifecycle::badge("stable")`
+#' 
+#' Tests for differentially expressed genes between groups of spots/cells
 #' in spatial transcriptomics data. First runs non-spatial tests (linear models, t-tests,
 #' or Wilcoxon tests) to detect DE genes, then optionally fits spatial mixed models
 #' with Matern covariance structure on a subset of DE genes.

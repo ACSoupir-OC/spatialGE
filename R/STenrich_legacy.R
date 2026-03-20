@@ -11,16 +11,18 @@
 
 ##
 #' @title STenrich_legacy: Legacy implementation for reproducibility
-#' @description Original implementation of STenrich for reproducibility with previous results
-#' @description Please use STenrich() for new analyses.
+#' @description
+#' `r lifecycle::badge("superseded")`
+#' 
+#' Original implementation of STenrich for reproducibility with previous results
+#' 
+#' \strong{This is the legacy implementation from version 1.x.} Use `STenrich()` for new analyses.
 #'
 #' @inheritParams STenrich
 #' @return list of data frames with p-values and adjusted p-values per sample
 #'
 #' @export
 #' @rdname STenrich
-#'
-#' @note This is the original implementation. Use STenrich() for new work.
 STenrich_legacy = function(x=NULL, samples=NULL, gene_sets=NULL, score_type='avg', reps=1000,
                            annot=NULL, domain=NULL, num_sds=1, min_units=20, min_genes=5,
                            pval_adj_method='BH', seed=12345, cores=NULL, verbose=TRUE){

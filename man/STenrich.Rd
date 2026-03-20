@@ -84,11 +84,15 @@ a list of data frames with the results of the test
 list of data frames with p-values and adjusted p-values per sample
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Test for spatial enrichment of gene expression sets in spatial transcriptomics data
+
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
 
 Original implementation of STenrich for reproducibility with previous results
 
-Please use STenrich() for new analyses.
+\strong{This is the legacy implementation from version 1.x.} Use \code{STenrich()} for new analyses.
 }
 \details{
 The function performs a randomization test to assess if the sum of
@@ -99,9 +103,6 @@ set is higher than the average expression plus \code{num_sds} times the standard
 Control over the size of regions with high expression is provided by setting the
 minimum number of cells/spots (\code{min_units}). This method is a modification of
 the method devised by Hunter et al. 2021 (zebrafish melanoma study).
-}
-\note{
-This is the original implementation. Use STenrich() for new work.
 }
 \examples{
 \donttest{

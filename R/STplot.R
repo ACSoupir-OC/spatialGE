@@ -1,6 +1,9 @@
 ##
 #' @title STplot: Plots of gene expression, cluster memberships, and metadata in spatial context
-#' @description Generates a plot of the location of spots/cells within an spatial
+#' @description
+#' `r lifecycle::badge("stable")`
+#' 
+#' Generates a plot of the location of spots/cells within an spatial
 #' sample, and colors them according to gene expression levels or spot/cell-level
 #' metadata
 #' @details

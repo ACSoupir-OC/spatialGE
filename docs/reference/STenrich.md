@@ -1,12 +1,17 @@
 # STenrich: Test for spatial enrichment of gene expression sets
 
+**\[stable\]**
+
 Test for spatial enrichment of gene expression sets in spatial
 transcriptomics data
+
+**\[superseded\]**
 
 Original implementation of STenrich for reproducibility with previous
 results
 
-Please use STenrich() for new analyses.
+**This is the legacy implementation from version 1.x.** Use `STenrich()`
+for new analyses.
 
 ## Usage
 
@@ -133,10 +138,6 @@ expression plus `num_sds` times the standard deviation. Control over the
 size of regions with high expression is provided by setting the minimum
 number of cells/spots (`min_units`). This method is a modification of
 the method devised by Hunter et al. 2021 (zebrafish melanoma study).
-
-## Note
-
-This is the original implementation. Use STenrich() for new work.
 
 ## See also
 

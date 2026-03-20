@@ -1,4 +1,6 @@
-# STclust: Detect clusters of spots/cells
+# STclust: Detect clusters of spots/cells (legacy)
+
+**\[superseded\]**
 
 Perform unsupervised spatially-informed clustering on the spots/cells of
 a ST sample
@@ -76,6 +78,9 @@ STclust_legacy(
 an STlist with cluster assignments
 
 ## Details
+
+**This is the legacy implementation from version 1.x.** Use `STclust`
+for new projects.
 
 The function takes an STlist and calculates euclidean distances between
 cells or spots based on the x,y spatial locations, and the expression of

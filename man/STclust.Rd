@@ -42,6 +42,8 @@ STclust(
 an STlist with cluster assignments added to @spatial_meta
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Perform unsupervised spatially-informed clustering on the spots/cells of an ST sample
 }
 \details{

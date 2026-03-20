@@ -75,6 +75,8 @@ the number of cores is defined automatically}
 a list of data frames with the results of the test
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Calculates Spearman's coefficients to detect genes showing expression spatial gradients
 }
 \details{

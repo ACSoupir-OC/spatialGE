@@ -1,5 +1,7 @@
 # SThet: Computes global spatial autocorrelation statistics on gene expression
 
+**\[stable\]**
+
 Computes the global spatial autocorrelation statistics Moran's I and/or
 Geary's C for a set of genes
 

@@ -6,7 +6,10 @@
 #
 
 #' @title STgradient: Tests of gene expression spatial gradients
-#' @description Calculates Spearman's coefficients to detect genes showing expression spatial gradients
+#' @description
+#' `r lifecycle::badge("stable")`
+#' 
+#' Calculates Spearman's coefficients to detect genes showing expression spatial gradients
 #' @details
 #' The `STgradient` function fits linear models and calculates Spearman coefficients
 #' between the expression of a gene and the minimum or average distance of spots or

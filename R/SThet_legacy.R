@@ -13,10 +13,16 @@
 # ============================================================================
 
 ##
-#' @title SThet_legacy: Computes global spatial autocorrelation statistics on gene expression
-#' @description Computes the global spatial autocorrelation statistics Moran's I and/or
+#' @title SThet_legacy: Computes global spatial autocorrelation statistics on gene expression (legacy)
+#' @description
+#' `r lifecycle::badge("superseded")`
+#' 
+#' Computes the global spatial autocorrelation statistics Moran's I and/or
 #' Geary's C for a set of genes
-#' @details The function computes global spatial autocorrelation statistics (Moran's I and/or
+#' @details
+#' \strong{This is the legacy implementation from version 1.x.} Use `SThet` for new projects.
+#' 
+#' The function computes global spatial autocorrelation statistics (Moran's I and/or
 #' Geary's C) for the requested genes and samples. Then computation uses the
 #' package `spdep`. The calculated statistics are stored in the STlist, which can
 #' be accessed with the `get_gene_meta` function. For visual comparative analysis,

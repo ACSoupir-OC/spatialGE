@@ -90,21 +90,23 @@ transcriptomics. Bioinformatics, 38:2645-2647.
 Main spatial analysis workflows
 
 - [`STclust()`](https://acsoupir-oc.github.io/spatialGE/reference/STclust.md)
-  : STclust: Spatial clustering (modular implementation)
+  **\[stable\]** : STclust: Spatial clustering (modular implementation)
 - [`STdiff()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff.md)
-  : STdiff: Differential gene expression analysis for spatial
-  transcriptomics
+  **\[stable\]** : STdiff: Differential gene expression analysis for
+  spatial transcriptomics
 - [`STenrich()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
   [`STenrich_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
-  : STenrich: Test for spatial enrichment of gene expression sets
+  **\[stable\]** : STenrich: Test for spatial enrichment of gene
+  expression sets
 - [`STgradient()`](https://acsoupir-oc.github.io/spatialGE/reference/STgradient.md)
-  : STgradient: Tests of gene expression spatial gradients
+  **\[stable\]** : STgradient: Tests of gene expression spatial
+  gradients
 - [`SThet()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet.md)
-  : SThet: Computes global spatial autocorrelation statistics on gene
-  expression
+  **\[stable\]** : SThet: Computes global spatial autocorrelation
+  statistics on gene expression
 - [`STplot()`](https://acsoupir-oc.github.io/spatialGE/reference/STplot.md)
-  : STplot: Plots of gene expression, cluster memberships, and metadata
-  in spatial context
+  **\[stable\]** : STplot: Plots of gene expression, cluster
+  memberships, and metadata in spatial context
 
 ## Differential Expression (STdiff)
 
@@ -146,8 +148,8 @@ Spatial and non-spatial differential expression testing
 Spatial heterogeneity statistics (Moran’s I, Geary’s C)
 
 - [`SThet()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet.md)
-  : SThet: Computes global spatial autocorrelation statistics on gene
-  expression
+  **\[stable\]** : SThet: Computes global spatial autocorrelation
+  statistics on gene expression
 - [`SThet_invdist_test()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet_invdist_test.md)
   : SThet_invdist_test: Computes spatial autocorrelation with
   statistical tests
@@ -160,7 +162,8 @@ Spatial heterogeneity statistics (Moran’s I, Geary’s C)
 Spatial gradient correlation analysis
 
 - [`STgradient()`](https://acsoupir-oc.github.io/spatialGE/reference/STgradient.md)
-  : STgradient: Tests of gene expression spatial gradients
+  **\[stable\]** : STgradient: Tests of gene expression spatial
+  gradients
 
 ## Enrichment Analysis (STenrich)
 
@@ -168,14 +171,15 @@ Gene set enrichment analysis with spatial permutation
 
 - [`STenrich()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
   [`STenrich_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
-  : STenrich: Test for spatial enrichment of gene expression sets
+  **\[stable\]** : STenrich: Test for spatial enrichment of gene
+  expression sets
 
 ## Clustering (STclust)
 
 Spatial clustering with hierarchical methods
 
 - [`STclust()`](https://acsoupir-oc.github.io/spatialGE/reference/STclust.md)
-  : STclust: Spatial clustering (modular implementation)
+  **\[stable\]** : STclust: Spatial clustering (modular implementation)
 - [`get_hier_clusters_dtc()`](https://acsoupir-oc.github.io/spatialGE/reference/get_hier_clusters_dtc.md)
   : get_hier_clusters_dtc: Hierarchical clustering with DynamicTreeCut
 - [`get_hier_clusters_ks()`](https://acsoupir-oc.github.io/spatialGE/reference/get_hier_clusters_ks.md)
@@ -188,9 +192,6 @@ Create and manage STlist objects
 - [`STlist()`](https://acsoupir-oc.github.io/spatialGE/reference/STlist.md)
   **\[stable\]** : STlist: Creation of STlist objects for spatial
   transcriptomics analysis
-- [`STList_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STList_legacy.md)
-  **\[superseded\]** : STlist (Legacy): Creation of STlist objects for
-  spatial transcriptomics analysis
 - [`summarize_STlist()`](https://acsoupir-oc.github.io/spatialGE/reference/summarize_STlist.md)
   : summarize_STlist: Generates a data frame with summary statistics
 - [`spatial_metadata()`](https://acsoupir-oc.github.io/spatialGE/reference/spatial_metadata.md)
@@ -208,8 +209,8 @@ Create and manage STlist objects
 Plotting and visualization functions
 
 - [`STplot()`](https://acsoupir-oc.github.io/spatialGE/reference/STplot.md)
-  : STplot: Plots of gene expression, cluster memberships, and metadata
-  in spatial context
+  **\[stable\]** : STplot: Plots of gene expression, cluster
+  memberships, and metadata in spatial context
 - [`STplot_interpolation()`](https://acsoupir-oc.github.io/spatialGE/reference/STplot_interpolation.md)
   : STplot_interpolation: Visualize gene expression surfaces
 - [`plot_counts()`](https://acsoupir-oc.github.io/spatialGE/reference/plot_counts.md)
@@ -232,20 +233,24 @@ Plotting and visualization functions
 
 Original implementations for reproducibility
 
+- [`STList_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STList_legacy.md)
+  **\[superseded\]** : STlist (Legacy): Creation of STlist objects for
+  spatial transcriptomics analysis
 - [`STclust_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STclust_legacy.md)
-  : STclust: Detect clusters of spots/cells
+  **\[superseded\]** : STclust: Detect clusters of spots/cells (legacy)
 - [`STdiff_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STdiff_legacy.md)
-  : STdiff: Differential gene expression analysis for spatial
-  transcriptomics data
+  **\[superseded\]** : STdiff: Differential gene expression analysis for
+  spatial transcriptomics data (legacy)
 - [`STenrich()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
   [`STenrich_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md)
-  : STenrich: Test for spatial enrichment of gene expression sets
+  **\[stable\]** : STenrich: Test for spatial enrichment of gene
+  expression sets
 - [`STgradient_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/STgradient_legacy.md)
-  : STgradient_legacy: Tests of gene expression spatial gradients
-  (legacy)
+  **\[superseded\]** : STgradient_legacy: Tests of gene expression
+  spatial gradients (legacy)
 - [`SThet_legacy()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet_legacy.md)
-  : SThet_legacy: Computes global spatial autocorrelation statistics on
-  gene expression
+  **\[superseded\]** : SThet_legacy: Computes global spatial
+  autocorrelation statistics on gene expression (legacy)
 
 ## Helper Functions
 

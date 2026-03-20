@@ -1,5 +1,7 @@
 # STdiff: Differential gene expression analysis for spatial transcriptomics
 
+**\[stable\]**
+
 Tests for differentially expressed genes between groups of spots/cells
 in spatial transcriptomics data. First runs non-spatial tests (linear
 models, t-tests, or Wilcoxon tests) to detect DE genes, then optionally

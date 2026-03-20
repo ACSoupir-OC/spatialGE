@@ -1,5 +1,7 @@
 # STplot: Plots of gene expression, cluster memberships, and metadata in spatial context
 
+**\[stable\]**
+
 Generates a plot of the location of spots/cells within an spatial
 sample, and colors them according to gene expression levels or
 spot/cell-level metadata

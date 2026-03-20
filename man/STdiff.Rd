@@ -79,6 +79,8 @@ comments (indicating spatial model status: 'no_spatial_test', 'time_out',
 'no_convergence', or NA for successful spatial models)
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Tests for differentially expressed genes between groups of spots/cells
 in spatial transcriptomics data. First runs non-spatial tests (linear models, t-tests,
 or Wilcoxon tests) to detect DE genes, then optionally fits spatial mixed models

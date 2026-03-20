@@ -1,5 +1,7 @@
 # STgradient_legacy: Tests of gene expression spatial gradients (legacy)
 
+**\[superseded\]**
+
 Calculates Spearman's coefficients to detect genes showing expression
 spatial gradients
 
@@ -116,6 +118,9 @@ STgradient_legacy(
 a list of data frames with the results of the test
 
 ## Details
+
+**This is the legacy implementation from version 1.x.** Use `STgradient`
+for new projects.
 
 The `STgradient` function fits linear models and calculates Spearman
 coefficients between the expression of a gene and the minimum or average

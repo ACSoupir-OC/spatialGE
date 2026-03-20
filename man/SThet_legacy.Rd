@@ -2,7 +2,7 @@
 % Please edit documentation in R/SThet_legacy.R
 \name{SThet_legacy}
 \alias{SThet_legacy}
-\title{SThet_legacy: Computes global spatial autocorrelation statistics on gene expression}
+\title{SThet_legacy: Computes global spatial autocorrelation statistics on gene expression (legacy)}
 \usage{
 SThet_legacy(
   x = NULL,
@@ -43,10 +43,14 @@ uses \code{parallel::mclapply} and works only in Unix systems}
 an STlist containing spatial statistics
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
 Computes the global spatial autocorrelation statistics Moran's I and/or
 Geary's C for a set of genes
 }
 \details{
+\strong{This is the legacy implementation from version 1.x.} Use \code{SThet} for new projects.
+
 The function computes global spatial autocorrelation statistics (Moran's I and/or
 Geary's C) for the requested genes and samples. Then computation uses the
 package \code{spdep}. The calculated statistics are stored in the STlist, which can

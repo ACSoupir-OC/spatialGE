@@ -43,6 +43,8 @@ uses \code{parallel::mclapply} and works only in Unix systems}
 an STlist containing spatial statistics
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Computes the global spatial autocorrelation statistics Moran's I and/or
 Geary's C for a set of genes
 }

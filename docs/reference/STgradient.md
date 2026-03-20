@@ -1,5 +1,7 @@
 # STgradient: Tests of gene expression spatial gradients
 
+**\[stable\]**
+
 Calculates Spearman's coefficients to detect genes showing expression
 spatial gradients
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/STclust_legacy.R
 \name{STclust_legacy}
 \alias{STclust_legacy}
-\title{STclust: Detect clusters of spots/cells}
+\title{STclust: Detect clusters of spots/cells (legacy)}
 \usage{
 STclust_legacy(
   x = NULL,
@@ -49,10 +49,14 @@ control cluster resolution}
 an STlist with cluster assignments
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
 Perform unsupervised spatially-informed clustering on the spots/cells of a
 ST sample
 }
 \details{
+\strong{This is the legacy implementation from version 1.x.} Use \code{STclust} for new projects.
+
 The function takes an STlist and calculates euclidean distances between cells or spots
 based on the x,y spatial locations, and the expression of the top variable genes
 (\code{Seurat::FindVariableFeatures}). The resulting distances are weighted by

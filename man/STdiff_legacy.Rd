@@ -2,7 +2,7 @@
 % Please edit documentation in R/STdiff_legacy.R
 \name{STdiff_legacy}
 \alias{STdiff_legacy}
-\title{STdiff: Differential gene expression analysis for spatial transcriptomics data}
+\title{STdiff: Differential gene expression analysis for spatial transcriptomics data (legacy)}
 \usage{
 STdiff_legacy(
   x = NULL,
@@ -71,10 +71,14 @@ a list with one data frame per sample with results of differential gene
 expression analysis
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
 Tests for differentially expressed genes using linear models with or
 without spatial covariance structures
 }
 \details{
+\strong{This is the legacy implementation from version 1.x.} Use \code{STdiff} for new projects.
+
 The method tests for differentially expressed genes between groups of spots/cells
 (e.g., clusters) in a spatial transcriptomics sample. Specifically, the function
 tests for genes with significantly higher or lower gene expression in one group of

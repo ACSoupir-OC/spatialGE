@@ -1,6 +1,9 @@
 ##
 #' @title SThet: Computes global spatial autocorrelation statistics on gene expression
-#' @description Computes the global spatial autocorrelation statistics Moran's I and/or
+#' @description
+#' `r lifecycle::badge("stable")`
+#' 
+#' Computes the global spatial autocorrelation statistics Moran's I and/or
 #' Geary's C for a set of genes
 #' @details The function computes global spatial autocorrelation statistics (Moran's I and/or
 #' Geary's C) for the requested genes and samples. Then computation uses the

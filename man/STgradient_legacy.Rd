@@ -75,9 +75,13 @@ the number of cores is defined automatically}
 a list of data frames with the results of the test
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+
 Calculates Spearman's coefficients to detect genes showing expression spatial gradients
 }
 \details{
+\strong{This is the legacy implementation from version 1.x.} Use \code{STgradient} for new projects.
+
 The \code{STgradient} function fits linear models and calculates Spearman coefficients
 between the expression of a gene and the minimum or average distance of spots or
 cells to a reference tissue domain. In other wordsm the \code{STgradient} function

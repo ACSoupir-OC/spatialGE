@@ -80,7 +80,6 @@ reference:
     desc: "Create and manage STlist objects"
     contents:
       - STlist
-      - STList_legacy
       - summarize_STlist
       - spatial_metadata
       - filter_data
@@ -103,6 +102,7 @@ reference:
   - title: "Legacy Functions"
     desc: "Original implementations for reproducibility"
     contents:
+      - STList_legacy
       - STclust_legacy
       - STdiff_legacy
       - STenrich_legacy

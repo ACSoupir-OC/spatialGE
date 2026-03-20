@@ -53,6 +53,8 @@ aesthetic.}
 a list of plots
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Generates a plot of the location of spots/cells within an spatial
 sample, and colors them according to gene expression levels or spot/cell-level
 metadata
