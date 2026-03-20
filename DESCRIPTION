@@ -100,6 +100,7 @@ Suggests:
     R.utils,
     scSpatialSIM,
     spatstat,
+    Seurat (>= 5.0.0),
     SeuratObject,
     tidyverse,
     testthat (>= 3.0.0)
