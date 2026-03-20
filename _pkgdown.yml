@@ -127,6 +127,13 @@ reference:
       - tissue_names
       - can_convert_to_STlist
 
+articles:
+  - title: "Vignettes"
+    desc: "Step-by-step guides and workflows"
+    contents:
+      - basic_functions_vignette
+      - seurat_integration
+
 news:
   releases:
     - text: "Version 1.0.0"

@@ -2,8 +2,12 @@ pandoc: 3.9.0.2
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
+  basic_functions_vignette: basic_functions_vignette.html
   seurat_integration: seurat_integration.html
-last_built: 2026-03-20T10:19Z
+  spatial_differential_expression: spatial_differential_expression.html
+  spatial_enrichment_gradients_smi: spatial_enrichment_gradients_smi.html
+  troubleshooting: troubleshooting.html
+last_built: 2026-03-20T12:05Z
 urls:
   reference: https://acsoupir-oc.github.io/spatialGE/reference
   article: https://acsoupir-oc.github.io/spatialGE/articles

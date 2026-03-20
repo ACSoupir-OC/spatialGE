@@ -26,10 +26,7 @@ Public wrapper function that calls the modular STdiff functions"><meta property=
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/seurat_integration.html">Seurat Integration: Bidirectional Workflows</a></li>
-  </ul></li>
+<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-news" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">News</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-news"><li><h6 class="dropdown-header" data-toc-skip>Releases</h6></li>
@@ -182,17 +179,18 @@ and is computationally expensive. Set sp_topgenes=0 to run non-spatial tests onl
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span>
-<span><span class="co"># Run non-spatial tests only</span></span>
-<span><span class="va">result</span> <span class="op">=</span> <span class="fu">STdiff</span><span class="op">(</span>x<span class="op">=</span><span class="va">stlist_obj</span>, annot<span class="op">=</span><span class="st">'cluster'</span>, test_type<span class="op">=</span><span class="st">'mm'</span>, sp_topgenes<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Run with spatial models on top 20% of DE genes</span></span>
-<span><span class="va">result</span> <span class="op">=</span> <span class="fu">STdiff</span><span class="op">(</span>x<span class="op">=</span><span class="va">stlist_obj</span>, annot<span class="op">=</span><span class="st">'cluster'</span>, sp_topgenes<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Run pairwise tests with t-test</span></span>
-<span><span class="va">result</span> <span class="op">=</span> <span class="fu">STdiff</span><span class="op">(</span>x<span class="op">=</span><span class="va">stlist_obj</span>, annot<span class="op">=</span><span class="st">'cluster'</span>, pairwise<span class="op">=</span><span class="cn">TRUE</span>, test_type<span class="op">=</span><span class="st">'t_test'</span><span class="op">)</span></span>
-<span><span class="op">}</span> <span class="co"># }</span></span>
-<span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Run non-spatial tests only</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">=</span> <span class="fu">STdiff</span><span class="op">(</span>x<span class="op">=</span><span class="va">stlist_obj</span>, annot<span class="op">=</span><span class="st">'cluster'</span>, test_type<span class="op">=</span><span class="st">'mm'</span>, sp_topgenes<span class="op">=</span><span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Run with spatial models on top 20% of DE genes</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">=</span> <span class="fu">STdiff</span><span class="op">(</span>x<span class="op">=</span><span class="va">stlist_obj</span>, annot<span class="op">=</span><span class="st">'cluster'</span>, sp_topgenes<span class="op">=</span><span class="fl">0.2</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Run pairwise tests with t-test</span></span></span>
+<span class="r-in"><span><span class="va">result</span> <span class="op">=</span> <span class="fu">STdiff</span><span class="op">(</span>x<span class="op">=</span><span class="va">stlist_obj</span>, annot<span class="op">=</span><span class="st">'cluster'</span>, pairwise<span class="op">=</span><span class="cn">TRUE</span>, test_type<span class="op">=</span><span class="st">'t_test'</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
