@@ -1,37 +1,26 @@
----
-title: "Seurat Integration: Bidirectional Workflows"
-date: '`r format(Sys.Date())`'
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{seurat_integration}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 8,
-  fig.height = 6
-)
-options(rmarkdown.html_vignette.check_title = FALSE)
-```
+# Seurat Integration: Bidirectional Workflows
 
 ## Overview
 
-This vignette demonstrates how to integrate **spatialGE** with **Seurat** for seamless spatial transcriptomics workflows. The `spatialGE` package now provides bidirectional conversion utilities that allow you to:
+This vignette demonstrates how to integrate **spatialGE** with
+**Seurat** for seamless spatial transcriptomics workflows. The
+`spatialGE` package now provides bidirectional conversion utilities that
+allow you to:
 
-1. **Convert Seurat objects to STlist** - Run spatialGE analyses on Seurat-processed data
-2. **Convert STlist to Seurat** - Leverage Seurat's visualization and downstream analysis tools
-3. **Run spatialGE directly from Seurat** - One-step analysis workflows
-4. **Transfer results back to Seurat** - Add cluster assignments, spatial statistics to Seurat metadata
+1.  **Convert Seurat objects to STlist** - Run spatialGE analyses on
+    Seurat-processed data
+2.  **Convert STlist to Seurat** - Leverage Seurat’s visualization and
+    downstream analysis tools
+3.  **Run spatialGE directly from Seurat** - One-step analysis workflows
+4.  **Transfer results back to Seurat** - Add cluster assignments,
+    spatial statistics to Seurat metadata
 
 ## Installation
 
 Make sure both packages are installed:
 
-```{r install_packages, eval=FALSE}
+``` r
+
 # Install spatialGE
 # install.packages("spatialGE")  # CRAN version
 # devtools::install_github("ACSoupir-OC/spatialGE")  # Development version
@@ -42,7 +31,8 @@ install.packages("Seurat")
 
 Load the required libraries:
 
-```{r load_libraries, message=FALSE, warning=FALSE}
+``` r
+
 library(spatialGE)
 
 # Seurat is required for the examples in this vignette
@@ -60,9 +50,11 @@ if (requireNamespace("Seurat", quietly = TRUE)) {
 
 ### Starting with a Seurat Object
 
-Assume you have a Seurat object that has been processed through the standard Seurat workflow:
+Assume you have a Seurat object that has been processed through the
+standard Seurat workflow:
 
-```{r create_example_seurat, eval=FALSE}
+``` r
+
 # Example: Create or load a Seurat object
 # seurat_obj <- readRDS("my_seurat_object.rds")
 
@@ -76,12 +68,12 @@ Assume you have a Seurat object that has been processed through the standard Seu
 # seurat_obj <- FindClusters(seurat_obj)
 ```
 
-For this vignette, we'll show code examples. To run them, you'll need:
-1. spatialGE installed: `install.packages("spatialGE")`
-2. Seurat installed: `install.packages("Seurat")`
-3. Example data (see code below)
+For this vignette, we’ll show code examples. To run them, you’ll
+need: 1. spatialGE installed: `install.packages("spatialGE")` 2. Seurat
+installed: `install.packages("Seurat")` 3. Example data (see code below)
 
-```{r create_minimal_seurat, eval=FALSE}
+``` r
+
 # Load example data that comes with spatialGE
 data("melanoma_thrane", package = "spatialGE")
 
@@ -96,9 +88,12 @@ summary(melanoma_thrane)
 
 ### Convert Seurat to STlist
 
-Use `as.STlist.Seurat()` to convert:
+Use
+[`as.STlist.Seurat()`](https://acsoupir-oc.github.io/spatialGE/reference/as.STlist.Seurat.md)
+to convert:
 
-```{r seurat_to_stlist, eval=FALSE}
+``` r
+
 # Convert Seurat object to STlist
 st_obj <- as.STlist.Seurat(
   seurat_obj,
@@ -115,18 +110,19 @@ summary(st_obj)
 
 **Key Parameters:**
 
-| Parameter | Description | Default |
-|-----------|-------------|---------|
-| `assay` | Which Seurat assay to extract | `"RNA"` |
-| `slot` | Which slot within the assay | `"counts"` |
-| `use.spatial` | Extract spatial coordinates | `TRUE` |
-| `verbose` | Print progress messages | `TRUE` |
+| Parameter     | Description                   | Default    |
+|---------------|-------------------------------|------------|
+| `assay`       | Which Seurat assay to extract | `"RNA"`    |
+| `slot`        | Which slot within the assay   | `"counts"` |
+| `use.spatial` | Extract spatial coordinates   | `TRUE`     |
+| `verbose`     | Print progress messages       | `TRUE`     |
 
 ### Run spatialGE Analysis
 
 Now run any spatialGE analysis on the converted object:
 
-```{r run_spatialge_analysis, eval=FALSE}
+``` r
+
 # Run spatial heterogeneity analysis
 genes_of_interest <- c("MLANA", "CD37", "TP53")
 st_obj <- SThet(st_obj, genes = genes_of_interest)
@@ -145,9 +141,11 @@ head(st_obj@spatial_meta[[1]])
 
 ### Convert STlist to Seurat
 
-After running spatialGE analysis, convert back to Seurat for visualization:
+After running spatialGE analysis, convert back to Seurat for
+visualization:
 
-```{r stlist_to_seurat, eval=FALSE}
+``` r
+
 # Convert STlist to Seurat object
 seurat_obj <- as.Seurat.STlist(
   st_obj,
@@ -163,9 +161,10 @@ print(seurat_obj)
 
 ### Visualize in Seurat
 
-Leverage Seurat's powerful visualization tools:
+Leverage Seurat’s powerful visualization tools:
 
-```{r seurat_visualization, eval=FALSE}
+``` r
+
 # FeaturePlot for gene expression
 FeaturePlot(seurat_obj, features = c("MLANA", "CD37"))
 
@@ -181,7 +180,8 @@ SpatialFeaturePlot(seurat_obj, features = "MLANA")
 
 For quick analyses, use the wrapper function:
 
-```{r direct_analysis, eval=FALSE}
+``` r
+
 # One-step heterogeneity analysis
 result <- spatialGE_from_seurat(
   seurat_obj,
@@ -208,7 +208,7 @@ result <- spatialGE_from_seurat(
 
 **Available Analyses:**
 
-- `"SThet"` - Spatial heterogeneity (Moran's I, Geary's C)
+- `"SThet"` - Spatial heterogeneity (Moran’s I, Geary’s C)
 - `"STclust"` - Spatial domain detection
 - `"STdiff"` - Spatial differential expression
 - `"STenrich"` - Spatial enrichment analysis
@@ -216,9 +216,12 @@ result <- spatialGE_from_seurat(
 
 ## Workflow 4: Adding Results Back to Seurat
 
-Use `add_spatialGE_to_seurat()` to transfer analysis results:
+Use
+[`add_spatialGE_to_seurat()`](https://acsoupir-oc.github.io/spatialGE/reference/add_spatialGE_to_seurat.md)
+to transfer analysis results:
 
-```{r add_results_to_seurat, eval=FALSE}
+``` r
+
 # After running SThet
 st_obj <- SThet(st_obj, genes = c("MLANA", "CD37"))
 
@@ -251,17 +254,18 @@ head(seurat_obj$spatialGE_cluster)
 **Result Types:**
 
 | Type | Description | Location in Seurat |
-|------|-------------|-------------------|
+|----|----|----|
 | `"clusters"` | Spatial domain assignments | `seurat_obj$spatialGE_cluster` |
-| `"moran"` | Moran's I statistics | `seurat_obj@assays$RNA@meta.features` |
-| `"geary"` | Geary's C statistics | `seurat_obj@assays$RNA@meta.features` |
+| `"moran"` | Moran’s I statistics | `seurat_obj@assays$RNA@meta.features` |
+| `"geary"` | Geary’s C statistics | `seurat_obj@assays$RNA@meta.features` |
 | `"custom"` | Custom metadata | User-specified |
 
 ## Workflow 5: Gene Set Analysis Integration
 
 Convert spatialGE enrichment results for Seurat GSEA:
 
-```{r geneset_integration, eval=FALSE}
+``` r
+
 # Run enrichment analysis
 pathway_list <- list(
   "EMT" = c("VIM", "CDH2", "FN1", "SNAI1"),
@@ -290,9 +294,10 @@ head(seurat_obj$spatialGE_1)
 
 ## Complete Example: End-to-End Workflow
 
-Here's a complete workflow from start to finish:
+Here’s a complete workflow from start to finish:
 
-```{r complete_workflow, eval=FALSE}
+``` r
+
 # ============================================================
 # Step 1: Start with Seurat object (already preprocessed)
 # ============================================================
@@ -350,7 +355,8 @@ seurat_obj <- add_spatialGE_to_seurat(
 
 When working with merged Seurat objects (multiple samples):
 
-```{r multi_sample, eval=FALSE}
+``` r
+
 # Seurat object with multiple samples
 # seurat_merged <- merge(seurat1, seurat2, seurat3)
 
@@ -372,7 +378,8 @@ seurat_sample1 <- as.Seurat.STlist(st_obj, samples = "sample_1")
 
 ### Batch Processing
 
-```{r batch_processing, eval=FALSE}
+``` r
+
 # Process samples individually
 results_list <- list()
 
@@ -389,9 +396,10 @@ combined_results <- do.call(rbind, results_list)
 
 ## Troubleshooting
 
-### Issue: "Seurat package is required"
+### Issue: “Seurat package is required”
 
-```{r troubleshooting_seurat, eval=FALSE}
+``` r
+
 # Install Seurat
 install.packages("Seurat")
 
@@ -401,7 +409,8 @@ install.packages("Seurat")
 
 ### Issue: No spatial coordinates found
 
-```{r troubleshooting_coords, eval=FALSE}
+``` r
+
 # Check if Seurat object has images
 names(seurat_obj@images)
 
@@ -416,7 +425,8 @@ st_obj@spatial_meta[[1]] <- your_coordinates_df
 
 When converting between formats, cell barcodes may not match exactly:
 
-```{r troubleshooting_barcodes, eval=FALSE}
+``` r
+
 # Check barcodes
 head(colnames(seurat_obj))
 head(st_obj@spatial_meta[[1]]$barcode)
@@ -431,7 +441,8 @@ head(st_obj@spatial_meta[[1]]$barcode)
 
 ### Issue: Memory errors with large objects
 
-```{r troubleshooting_memory, eval=FALSE}
+``` r
+
 # Process samples individually instead of merged
 for (sample in names(seurat_obj@images)) {
   seurat_single <- subset(seurat_obj, images = sample)
@@ -446,46 +457,60 @@ pryr::mem_used()
 
 ## Best Practices
 
-1. **Always validate after conversion**
-   ```{r best_practice_validate, eval=FALSE}
-   st_obj <- as.STlist.Seurat(seurat_obj)
-   print(st_obj)
-   summary(st_obj)
-   ```
+1.  **Always validate after conversion**
 
-2. **Preserve original objects**
-   ```{r best_practice_backup, eval=FALSE}
-   seurat_original <- seurat_obj  # Keep backup
-   seurat_obj <- as.Seurat.STlist(st_obj)  # Overwrite carefully
-   ```
+    ``` r
 
-3. **Check assay compatibility**
-   ```{r best_practice_assay, eval=FALSE}
-   # Use raw counts for spatialGE
-   Seurat::Assays(seurat_obj)  # Check available assays
-   st_obj <- as.STlist.Seurat(seurat_obj, assay = "RNA", slot = "counts")
-   ```
+    st_obj <- as.STlist.Seurat(seurat_obj)
+    print(st_obj)
+    summary(st_obj)
+    ```
 
-4. **Document your workflow**
-   ```{r best_practice_document, eval=FALSE}
-   # Save conversion metadata
-   st_obj@misc$conversion_info <- list(
-     source = "seurat",
-     assay = "RNA",
-     timestamp = Sys.time(),
-     seurat_version = packageVersion("Seurat")
-   )
-   ```
+2.  **Preserve original objects**
+
+    ``` r
+
+    seurat_original <- seurat_obj  # Keep backup
+    seurat_obj <- as.Seurat.STlist(st_obj)  # Overwrite carefully
+    ```
+
+3.  **Check assay compatibility**
+
+    ``` r
+
+    # Use raw counts for spatialGE
+    Seurat::Assays(seurat_obj)  # Check available assays
+    st_obj <- as.STlist.Seurat(seurat_obj, assay = "RNA", slot = "counts")
+    ```
+
+4.  **Document your workflow**
+
+    ``` r
+
+    # Save conversion metadata
+    st_obj@misc$conversion_info <- list(
+      source = "seurat",
+      assay = "RNA",
+      timestamp = Sys.time(),
+      seurat_version = packageVersion("Seurat")
+    )
+    ```
 
 ## See Also
 
-- `vignette("basic_functions_vignette", package = "spatialGE")` - Core spatialGE functions
-- `vignette("spatial_differential_expression", package = "spatialGE")` - STdiff tutorial
-- `vignette("spatial_enrichment_gradients_smi", package = "spatialGE")` - STenrich and STgradient
-- Seurat website: https://satijalab.org/seurat/
+- `vignette("basic_functions_vignette", package = "spatialGE")` - Core
+  spatialGE functions
+- `vignette("spatial_differential_expression", package = "spatialGE")` -
+  STdiff tutorial
+- `vignette("spatial_enrichment_gradients_smi", package = "spatialGE")` -
+  STenrich and STgradient
+- Seurat website: <https://satijalab.org/seurat/>
 
 ## References
 
-- Hao Y, et al. (2024). "Seurat v5: A comprehensive toolkit for single-cell and spatial data analysis." _Nature Biotechnology_.
-- Stuart T, et al. (2019). "Comprehensive Integration of Single-Cell Data." _Cell_.
-- Soupir AC, et al. (2024). "spatialGE: Spatial transcriptomics analysis tools." _bioRxiv_.
+- Hao Y, et al. (2024). “Seurat v5: A comprehensive toolkit for
+  single-cell and spatial data analysis.” *Nature Biotechnology*.
+- Stuart T, et al. (2019). “Comprehensive Integration of Single-Cell
+  Data.” *Cell*.
+- Soupir AC, et al. (2024). “spatialGE: Spatial transcriptomics analysis
+  tools.” *bioRxiv*.
