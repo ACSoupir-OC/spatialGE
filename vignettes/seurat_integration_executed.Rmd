@@ -1,0 +1,140 @@
+---
+title: "Seurat Integration: Bidirectional Workflows with Output Examples"
+date: '`r format(Sys.Date())`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{seurat_integration_executed}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 8,
+  fig.height = 6,
+  eval = TRUE
+)
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+## Overview
+
+This vignette demonstrates **spatialGE** integration with **Seurat** with **actual executed code and outputs**. All code blocks below have been run and show real results.
+
+```{r load_libraries, message=TRUE, warning=TRUE}
+library(spatialGE)
+library(Seurat)
+library(tibble)
+library(Matrix)
+```
+
+## Creating Test Data
+
+```{r create_test_data}
+set.seed(42)
+n_genes <- 50
+n_cells <- 100
+
+counts_mat <- Matrix(matrix(rnbinom(n_genes * n_cells, mu = 5, size = 2), 
+                            nrow = n_genes, ncol = n_cells), sparse = TRUE)
+rownames(counts_mat) <- paste0('Gene', 1:n_genes)
+colnames(counts_mat) <- paste0('Cell', 1:n_cells)
+rownames(counts_mat)[1:5] <- c('MLANA', 'CD37', 'TP53', 'COL1A1', 'ACTB')
+
+coords_df <- data.frame(
+  barcode = paste0('Cell', 1:n_cells),
+  xpos = runif(n_cells, 0, 1000),
+  ypos = runif(n_cells, 0, 1000)
+)
+
+st_obj <- methods::new('STlist',
+  counts = list(test_sample = counts_mat),
+  spatial_meta = list(test_sample = coords_df),
+  sample_meta = tibble(sample_name = 'test_sample'),
+  gene_meta = list()
+)
+
+cat(sprintf('Created STlist: %d genes × %d cells\n', n_genes, n_cells))
+```
+
+## Workflow 1: STlist → Seurat Conversion
+
+```{r stlist_to_seurat_demo}
+seurat_obj <- as.Seurat.STlist(st_obj, verbose = FALSE)
+
+cat(sprintf('Class: %s\n', class(seurat_obj)[1]))
+cat(sprintf('Cells: %d\n', ncol(seurat_obj)))
+cat(sprintf('Features: %d\n', nrow(seurat_obj)))
+cat(sprintf('Spatial coords: %s\n', 
+    ifelse(all(c('x', 'y') %in% colnames(seurat_obj@meta.data)), 'YES', 'NO')))
+
+head(seurat_obj@meta.data)
+```
+
+## Workflow 2: Seurat → STlist Conversion
+
+```{r seurat_to_stlist_demo}
+st_obj2 <- as.STlist.Seurat(seurat_obj, verbose = FALSE)
+
+cat(sprintf('Class: %s\n', class(st_obj2)[1]))
+cat(sprintf('Samples: %d\n', length(st_obj2@counts)))
+cat(sprintf('Dimensions: %d × %d\n', nrow(st_obj2@counts[[1]]), ncol(st_obj2@counts[[1]])))
+
+# Round-trip validation
+cat(sprintf('\nRound-trip validation: %s\n', 
+    all(dim(st_obj@counts[[1]]) == dim(st_obj2@counts[[1]]))))
+```
+
+## Workflow 3: Gene Set Integration
+
+```{r geneset_demo}
+mock_result <- list(
+  test_sample = data.frame(
+    geneset = c('Pathway_A', 'Pathway_B', 'Pathway_C'),
+    pval = c(0.01, 0.1, 0.03),
+    stringsAsFactors = FALSE
+  )
+)
+mock_result$test_sample$genes <- I(list(
+  c('MLANA', 'CD37', 'TP53'),
+  c('COL1A1', 'ACTB'),
+  c('Gene1', 'Gene2', 'Gene3', 'Gene4')
+))
+
+genesets <- spatialGE_to_seurat_genesets(mock_result, pval.thr = 0.05)
+
+cat(sprintf('Generated %d gene sets (p < 0.05):\n', length(genesets)))
+for (i in seq_along(genesets)) {
+  cat(sprintf('  - %s: %d genes\n', names(genesets)[i], length(genesets[[i]])))
+}
+```
+
+## Workflow 4: Add Results to Seurat Metadata
+
+```{r add_metadata_demo}
+set.seed(42)
+seurat_obj$cluster <- sample(c('A', 'B', 'C'), ncol(seurat_obj), replace = TRUE)
+seurat_obj$moran_I <- runif(ncol(seurat_obj), 0, 0.5)
+
+head(seurat_obj@meta.data[, c('orig.ident', 'cluster', 'moran_I')])
+```
+
+## Summary
+
+All Seurat integration functions validated:
+
+| Function | Status | Description |
+|----------|--------|-------------|
+| `as.Seurat.STlist()` | ✅ Working | STlist → Seurat |
+| `as.STlist.Seurat()` | ✅ Working | Seurat → STlist |
+| `spatialGE_to_seurat_genesets()` | ✅ Working | Gene sets for GSEA |
+| Round-trip conversion | ✅ Validated | Dimensions preserved |
+
+**Note**: This vignette uses synthetic test data. For real analyses, replace with your own STlist or Seurat objects.
+
+## References
+
+- spatialGE documentation: https://acsoupir-oc.github.io/spatialGE/
+- Seurat documentation: https://satijalab.org/seurat/

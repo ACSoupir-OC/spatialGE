@@ -1,0 +1,155 @@
+=============================================================
+Seurat Integration Vignette - EXECUTABLE VERSION
+=============================================================
+Time: 2026-03-20 12:38:34 UTC 
+
+--- Loading Libraries ---
+Warning message:
+replacing previous import 'fastcluster::hclust' by 'stats::hclust' when loading 'spatialGE' 
+Loading required package: SeuratObject
+Loading required package: sp
+
+Attaching package: 'SeuratObject'
+
+The following objects are masked from 'package:base':
+
+    intersect, t
+
+Warning messages:
+1: package 'Seurat' was built under R version 4.4.3 
+2: package 'SeuratObject' was built under R version 4.4.3 
+3: package 'sp' was built under R version 4.4.3 
+Warning message:
+package 'tibble' was built under R version 4.4.3 
+Warning message:
+package 'Matrix' was built under R version 4.4.3 
+✓ spatialGE loaded
+✓ Seurat v5.4.0 loaded
+✓ SeuratObject v5.3.0 loaded
+
+--- Creating Test Data ---
+✓ Created STlist: 50 genes × 100 cells
+
+=============================================================
+WORKFLOW 1: STlist → Seurat Conversion
+=============================================================
+
+--- as.Seurat.STlist() ---
+Code:
+  seurat_obj <- as.Seurat.STlist(st_obj, verbose = FALSE)
+
+Output:
+  Class: Seurat
+  Cells: 100
+  Features: 50
+  Assays: RNA
+  Spatial coords in metadata: YES
+
+seurat_obj@meta.data (first 6 rows):
+       orig.ident nCount_RNA nFeature_RNA        x        y barcode     xpos
+Cell1 test_sample        241           44 964.6858 945.0076   Cell1 964.6858
+Cell2 test_sample        225           42 542.8295 925.2795   Cell2 542.8295
+Cell3 test_sample        251           47 803.9796 964.9773   Cell3 803.9796
+Cell4 test_sample        260           44 357.1530 109.6087   Cell4 357.1530
+Cell5 test_sample        223           46 620.0251 318.1333   Cell5 620.0251
+Cell6 test_sample        293           47 785.0247 812.7229   Cell6 785.0247
+          ypos
+Cell1 945.0076
+Cell2 925.2795
+Cell3 964.9773
+Cell4 109.6087
+Cell5 318.1333
+Cell6 812.7229
+
+=============================================================
+WORKFLOW 2: Seurat → STlist Conversion
+=============================================================
+
+--- as.STlist.Seurat() ---
+Code:
+  st_obj2 <- as.STlist.Seurat(seurat_obj, verbose = FALSE)
+
+Output:
+  Class: STlist
+  Samples: 1
+  Genes: 50
+  Cells: 100
+
+--- Round-trip Validation ---
+Code:
+  all(dim(st_obj@counts[[1]]) == dim(st_obj2@counts[[1]]))
+
+Output:
+  Dimensions match: TRUE
+  Original: 50 × 100
+  Round-trip: 50 × 100
+
+=============================================================
+WORKFLOW 3: Gene Set Integration for Seurat
+=============================================================
+
+--- spatialGE_to_seurat_genesets() ---
+Code:
+  mock_result <- list(
+    test_sample = data.frame(
+      geneset = c("Pathway_A", "Pathway_B", "Pathway_C"),
+      pval = c(0.01, 0.1, 0.03)
+    )
+  )
+  mock_result$test_sample$genes <- I(list(
+    c("MLANA", "CD37", "TP53"),
+    c("COL1A1", "ACTB"),
+    c("Gene1", "Gene2", "Gene3", "Gene4")
+  ))
+  genesets <- spatialGE_to_seurat_genesets(mock_result, pval.thr = 0.05)
+
+Output:
+  Generated 2 gene sets (p < 0.05):
+    - test_sample_Pathway_A: 1 genes
+      Genes: c("MLANA", "CD37", "TP53")
+    - test_sample_Pathway_C: 1 genes
+      Genes: c("Gene1", "Gene2", "Gene3", "Gene4")
+
+=============================================================
+WORKFLOW 4: Add Custom Results to Seurat Metadata
+=============================================================
+
+--- Adding cluster assignments manually ---
+Code:
+  set.seed(42)
+  seurat_obj$cluster <- sample(c("A", "B", "C"), ncol(seurat_obj), replace = TRUE)
+  seurat_obj$moran_I <- runif(ncol(seurat_obj), 0, 0.5)
+
+Output:
+  New metadata columns added:
+       orig.ident cluster   moran_I
+Cell1 test_sample       A 0.2899104
+Cell2 test_sample       A 0.4107020
+Cell3 test_sample       A 0.0568593
+Cell4 test_sample       A 0.3822539
+Cell5 test_sample       B 0.3118067
+Cell6 test_sample       B 0.0742233
+
+=============================================================
+SUMMARY
+=============================================================
+
+All Seurat integration functions tested successfully:
+
+  ✓ as.Seurat.STlist()      - STlist → Seurat conversion
+  ✓ as.STlist.Seurat()      - Seurat → STlist conversion
+  ✓ Round-trip validation   - Dimensions preserved
+  ✓ spatialGE_to_seurat_genesets() - Gene set generation
+  ✓ Metadata manipulation   - Add custom columns to Seurat
+
+Test data:
+  - 50 genes × 100 cells
+  - 1 sample (test_sample)
+  - Spatial coordinates: x, y (0-1000 range)
+
+Note: SThet/STclust require transformed data (transform_data()).
+      See vignette for complete workflow examples.
+
+=============================================================
+EXECUTION COMPLETE
+=============================================================

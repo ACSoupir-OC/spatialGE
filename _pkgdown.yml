@@ -133,6 +133,7 @@ articles:
     contents:
       - basic_functions_vignette
       - seurat_integration
+      - seurat_integration_executed
 
 news:
   releases:
