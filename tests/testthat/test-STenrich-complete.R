@@ -26,7 +26,7 @@ test_that("STenrich runs without error", {
   )
   
   # Should return a list
-  expect_s3_class(result, "list")
+  expect_true(is.list(result))
   expect_true(length(result) > 0)
   
   # Should have data frame with expected columns
@@ -58,7 +58,7 @@ test_that("STenrich with multiple samples", {
   )
   
   # Should return list with results for both samples
-  expect_s3_class(result, "list")
+  expect_true(is.list(result))
   expect_equal(length(result), 2)
   
   # Each sample should have results
@@ -86,7 +86,7 @@ test_that("STenrich with avg score type", {
   )
   
   # Should return list with results
-  expect_s3_class(result_avg, "list")
+  expect_true(is.list(result_avg))
   expect_true(nrow(result_avg[[1]]) > 0)
 })
 
@@ -119,8 +119,8 @@ test_that("STenrich with different min_units", {
   )
   
   # Both should return lists
-  expect_s3_class(result_10, "list")
-  expect_s3_class(result_20, "list")
+  expect_true(is.list(result_10))
+  expect_true(is.list(result_20))
 })
 
 # ============================================================================
@@ -154,8 +154,8 @@ test_that("STenrich with different num_sds", {
   )
   
   # Both should return lists
-  expect_s3_class(result_1sd, "list")
-  expect_s3_class(result_2sd, "list")
+  expect_true(is.list(result_1sd))
+  expect_true(is.list(result_2sd))
 })
 
 # ============================================================================
@@ -187,8 +187,8 @@ test_that("STenrich with different reps", {
   )
   
   # Both should return lists
-  expect_s3_class(result_100, "list")
-  expect_s3_class(result_500, "list")
+  expect_true(is.list(result_100))
+  expect_true(is.list(result_500))
   
   # Results should have same number of rows
   expect_equal(nrow(result_100[[1]]), nrow(result_500[[1]]))
@@ -250,8 +250,8 @@ test_that("STenrich matches legacy output", {
   )
   
   # Both should return lists
-  expect_s3_class(result_modern, "list")
-  expect_s3_class(result_legacy, "list")
+  expect_true(is.list(result_modern))
+  expect_true(is.list(result_legacy))
   
   # Results should be identical
   expect_equal(nrow(result_modern[[1]]), nrow(result_legacy[[1]]))
@@ -299,7 +299,7 @@ test_that("STenrich with domain filtering", {
   )
   
   # Should return list with results
-  expect_s3_class(result, "list")
+  expect_true(is.list(result))
   expect_true(length(result) > 0)
 })
 
@@ -329,7 +329,7 @@ test_that("STenrich gene set size validation", {
   )
   
   # Should return list
-  expect_s3_class(result, "list")
+  expect_true(is.list(result))
   expect_true(length(result) > 0)
   
   # Should have results for both gene sets

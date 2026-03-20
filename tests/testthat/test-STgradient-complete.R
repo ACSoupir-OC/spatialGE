@@ -27,7 +27,7 @@ test_that("STgradient runs without error", {
   )
   
   # Should return a list
-  expect_s3_class(result, "list")
+  expect_true(is.list(result))
   expect_true(length(result) > 0)
   expect_s3_class(result[[1]], "data.frame")
   expect_true(nrow(result[[1]]) > 0)
@@ -71,14 +71,15 @@ test_that("STgradient with different distsumm", {
 })
 
 # ============================================================================
-# TEST 3: Invalid annot error
+# TEST 3: Invalid annot message
 # ============================================================================
 
-test_that("STgradient - Invalid annot error", {
+test_that("STgradient - Invalid annot message", {
   skip_if_no_data("STgradient")
   st_obj = get_test_stlist()
   
-  expect_error(
+  # Both modern and legacy use message() not warning() for invalid annot
+  expect_message(
     STgradient(
       x = st_obj,
       samples = 1,
@@ -86,7 +87,7 @@ test_that("STgradient - Invalid annot error", {
       annot = "INVALID_COLUMN",
       verbose = FALSE
     ),
-    "Annotation not available"
+    "annotation.*not present"
   )
 })
 
