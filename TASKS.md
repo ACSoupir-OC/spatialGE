@@ -2,7 +2,7 @@
 
 **Version**: 1.0 (In Progress - Modular Refactoring)  
 **Created**: 2026-03-19 13:35 UTC  
-**Last Updated**: 2026-03-20 00:35 UTC  
+**Last Updated**: 2026-03-20 01:25 UTC  
 **Status**: 🏃 STclust, STdiff, STenrich, STgradient Complete; SThet Legacy Tests Done  
 **Package Status**: Ready for SThet refactoring
 
@@ -131,7 +131,7 @@
 - `devtools::test()` now works correctly with shared setup
 
 **Remaining**:
-- [ ] `tests/testthat/test-integration.R` - End-to-end workflow tests
+- [ ] `tests/testthat/test-integration.R` - End-to-end workflow tests **(NEXT)**
 
 **Note**: All test failures were test bugs (wrong expectations), not function bugs:
 - Fixed `expect_s3_class(result, "list")` → `expect_true(is.list(result))` (list is base type, not S3)
@@ -139,13 +139,13 @@
 - Modern and legacy implementations match correctly
 
 **Test Strategy**:
-1. **Unit tests** - ✅ Test individual functions
-2. **Integration tests** - ⏳ Test full workflows
+1. **Unit tests** - ✅ Test individual functions (88 tests total)
+2. **Integration tests** - ⏳ Test full workflows (NEXT - ~1-2 hrs)
 3. **Regression tests** - ✅ Compare with legacy outputs (SThet)
 4. **Edge case tests** - ✅ Invalid inputs, missing data, etc.
 5. **Performance tests** - ⏳ Benchmark refactored vs legacy
 
-**Timeline**: ~2 days remaining (integration tests)
+**Timeline**: Integration tests ~1-2 hours
 
 ---
 
