@@ -109,6 +109,15 @@ reference:
       - STgradient_legacy
       - SThet_legacy
 
+  - title: "Seurat Integration"
+    desc: "Convert between STlist and Seurat objects"
+    contents:
+      - as.Seurat.STlist
+      - as.STlist.Seurat
+      - spatialGE_from_seurat
+      - add_spatialGE_to_seurat
+      - spatialGE_to_seurat_genesets
+
   - title: "Helper Functions"
     desc: "Utility functions for spatial analysis"
     contents:
@@ -116,6 +125,7 @@ reference:
       - calculate_weighted_dist
       - load_images
       - tissue_names
+      - can_convert_to_STlist
 
 news:
   releases:

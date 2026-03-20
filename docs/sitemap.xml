@@ -62,8 +62,12 @@
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/STlist.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/STplot.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/STplot_interpolation.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/add_spatialGE_to_seurat.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/as.STlist.Seurat.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/as.Seurat.STlist.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/calculate_dist_matrices.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/calculate_weighted_dist.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/can_convert_to_STlist.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/compare_SThet.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/count_cores.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/detect_input_source.html</loc></url>
@@ -103,6 +107,8 @@
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/raise_err.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/read_mtx_safe.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/show-STlist-method.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/spatialGE_from_seurat.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/spatialGE_to_seurat_genesets.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/spatial_de.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/spatial_metadata.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/stdiff_mean_test.html</loc></url>

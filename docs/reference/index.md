@@ -167,6 +167,22 @@ Original implementations for reproducibility
   **\[superseded\]** : SThet_legacy: Computes global spatial
   autocorrelation statistics on gene expression (legacy)
 
+## Seurat Integration
+
+Convert between STlist and Seurat objects
+
+- [`as.Seurat.STlist()`](https://acsoupir-oc.github.io/spatialGE/reference/as.Seurat.STlist.md)
+  **\[stable\]** : Convert STlist to Seurat Object
+- [`as.STlist.Seurat()`](https://acsoupir-oc.github.io/spatialGE/reference/as.STlist.Seurat.md)
+  **\[stable\]** : Convert Seurat Object to STlist
+- [`spatialGE_from_seurat()`](https://acsoupir-oc.github.io/spatialGE/reference/spatialGE_from_seurat.md)
+  **\[stable\]** : Run spatialGE analysis on Seurat object
+- [`add_spatialGE_to_seurat()`](https://acsoupir-oc.github.io/spatialGE/reference/add_spatialGE_to_seurat.md)
+  **\[stable\]** : Add spatialGE results to Seurat object
+- [`spatialGE_to_seurat_genesets()`](https://acsoupir-oc.github.io/spatialGE/reference/spatialGE_to_seurat_genesets.md)
+  **\[stable\]** : Create Seurat-compatible gene sets from spatialGE
+  results
+
 ## Helper Functions
 
 Utility functions for spatial analysis
@@ -179,3 +195,5 @@ Utility functions for spatial analysis
   : load_images: Place tissue images within STlist
 - [`tissue_names()`](https://acsoupir-oc.github.io/spatialGE/reference/tissue_names.md)
   : tissue_names: Prints the names of the tissue samples in the STlist
+- [`can_convert_to_STlist()`](https://acsoupir-oc.github.io/spatialGE/reference/can_convert_to_STlist.md)
+  : Check if object can be converted to STlist
