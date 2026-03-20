@@ -138,6 +138,7 @@ articles:
       - spatial_differential_expression
       - spatial_enrichment_gradients_smi
       - troubleshooting
+      - seurat_integration
 
 news:
   releases:
