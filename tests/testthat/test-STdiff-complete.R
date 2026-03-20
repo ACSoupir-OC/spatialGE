@@ -2,44 +2,21 @@
 # Tests for spatial differential expression analysis
 # Optimized for speed while maintaining coverage
 #
+# Uses shared test data from tests/testthat/setup.R
 # Created: 2026-03-19
 #
 
-# ============================================================================
-# Setup - Create test data
-# ============================================================================
-
-cat('Setting up STdiff test data...\n')
-
-thrane_tmp = tempdir()
-unlink(thrane_tmp, recursive=TRUE)
-dir.create(thrane_tmp)
-
-lk = 'https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
-cat('Downloading test data (may take 1-2 min)...\n')
-download.file(lk, destfile=paste0(thrane_tmp, '/melanoma_thrane.zip'), mode='wb', timeout=120)
-unzip(zipfile=paste0(thrane_tmp, '/melanoma_thrane.zip'), exdir=thrane_tmp)
-
-count_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='counts')
-coord_files = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='mapping')
-clin_file = list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='clinical')
-
-cat('Creating STlist...\n')
-st_obj = STlist(rnacounts=count_files, spotcoords=coord_files, samples=clin_file)
-st_obj = transform_data(st_obj)
-
-cat('Running STclust...\n')
-st_obj = STclust(st_obj, samples=1, w=0.025, deepSplit=FALSE, verbose=FALSE)
-
-cluster_col = grep('stclust', colnames(st_obj@spatial_meta[[1]]), value=TRUE)[1]
-cat('Using cluster column:', cluster_col, '\n')
-cat('Test data ready.\n\n')
+library(testthat)
 
 # ============================================================================
 # TEST 1: Basic STdiff - Non-spatial tests
 # ============================================================================
 
 test_that("STdiff - Basic non-spatial tests", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 1: Basic non-spatial tests (10 genes)...\n')
   
   result = STdiff(
@@ -72,6 +49,10 @@ test_that("STdiff - Basic non-spatial tests", {
 # ============================================================================
 
 test_that("STdiff - Wilcoxon test", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 2: Wilcoxon test (10 genes)...\n')
   
   result = STdiff(
@@ -95,6 +76,10 @@ test_that("STdiff - Wilcoxon test", {
 # ============================================================================
 
 test_that("STdiff - Invalid test type error", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 3: Invalid test type error...\n')
   
   expect_error(
@@ -117,6 +102,10 @@ test_that("STdiff - Invalid test type error", {
 # ============================================================================
 
 test_that("STdiff - Invalid sp_topgenes error", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 4: Invalid sp_topgenes error...\n')
   
   expect_error(
@@ -135,6 +124,10 @@ test_that("STdiff - Invalid sp_topgenes error", {
 # ============================================================================
 
 test_that("STdiff - Multiple samples", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 5: Multiple samples (5 genes)...\n')
   
   result = STdiff(
@@ -157,6 +150,10 @@ test_that("STdiff - Multiple samples", {
 # ============================================================================
 
 test_that("STdiff - Pairwise tests", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 6: Pairwise tests (5 genes)...\n')
   
   result = STdiff(
@@ -180,6 +177,10 @@ test_that("STdiff - Pairwise tests", {
 # ============================================================================
 
 test_that("STdiff - P-value adjustment", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 7: P-value adjustment (5 genes)...\n')
   
   result_fdr = STdiff(
@@ -215,6 +216,10 @@ test_that("STdiff - P-value adjustment", {
 # ============================================================================
 
 test_that("STdiff - Result structure", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 8: Result structure verification...\n')
   
   result = STdiff(
@@ -244,6 +249,10 @@ test_that("STdiff - Result structure", {
 # ============================================================================
 
 test_that("STdiff - Invalid sample error", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 9: Invalid sample error...\n')
   
   expect_error(
@@ -264,6 +273,10 @@ test_that("STdiff - Invalid sample error", {
 # ============================================================================
 
 test_that("STdiff - Modern vs legacy", {
+  skip_if_no_data("STdiff")
+  st_obj = get_test_stlist()
+  cluster_col = get_cluster_col()
+  
   cat('TEST 10: Modern vs legacy comparison (5 genes)...\n')
   
   result_modern = STdiff(
