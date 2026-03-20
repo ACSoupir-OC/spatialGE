@@ -1,6 +1,6 @@
 # spatialGE
 
-![](articles/img/logo.png)
+![](reference/figures/logo.png)
 
 An R package for the visualization and analysis of spatially-resolved
 transcriptomics data, such as those generated with 10X Visium. The
@@ -33,7 +33,7 @@ their utility are presented in this publication:
 recently developed methods `STenrich`, `STgradient`, and `STdiff` please
 refer to the spatialGE documentation.
 
-![](articles/img/spatialGE_workflow_v3.png)
+![](reference/figures/spatialGE_workflow_v3.png)
 
 ## Installation
 
