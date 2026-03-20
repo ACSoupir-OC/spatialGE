@@ -3,6 +3,19 @@ url: https://acsoupir-oc.github.io/spatialGE/
 template:
   bootstrap: 5
 
+exclude:
+  - AGENTS/**
+  - DEVELOPMENT.md
+  - OPTIMIZATION_REPORT.md
+  - OPTIMIZATION_SUMMARY.md
+  - PERFORMANCE_ANALYSIS.md
+  - RefactoringPlan.md
+  - STDIFF_PERFORMANCE_ANALYSIS.md
+  - STclust_RefactoringPlan.md
+  - TASKS.md
+  - TEST_SETUP_ISSUES.md
+  - fastcluster-verification.md
+
 home:
   title: "spatialGE: Spatial Genomics Analysis"
   description: "Analysis tools for spatial transcriptomics and spatial genomics data"

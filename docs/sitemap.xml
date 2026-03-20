@@ -1,23 +1,13 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/404.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/DEVELOPMENT.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/LICENSE-text.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/LICENSE.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/OPTIMIZATION_REPORT.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/OPTIMIZATION_SUMMARY.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/PERFORMANCE_ANALYSIS.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/RefactoringPlan.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/STDIFF_PERFORMANCE_ANALYSIS.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/STclust_RefactoringPlan.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/TASKS.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/TEST_SETUP_ISSUES.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/basic_functions_vignette.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/index.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/spatial_differential_expression.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/spatial_enrichment_gradients_smi.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/troubleshooting.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/authors.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/fastcluster-verification.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/index.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/news/index.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/STList_legacy.html</loc></url>
