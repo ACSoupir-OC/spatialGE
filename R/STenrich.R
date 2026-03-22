@@ -54,32 +54,25 @@
 #' @export
 #'
 #' @examples
-#' \donttest{
-#' # Using included melanoma example (Thrane et al.)
-#' # Download example data set from spatialGE_Data
-#' thrane_tmp = tempdir()
-#' unlink(thrane_tmp, recursive=TRUE)
-#' dir.create(thrane_tmp)
-#' lk='https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
-#' tryCatch({
-#'   download.file(lk, destfile=paste0(thrane_tmp, '/', 'melanoma_thrane.zip'), mode='wb')
-#'   unzip(file=paste0(thrane_tmp, '/melanoma_thrane.zip'), exdir=thrane_tmp)
-#'   count_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='counts')
-#'   coord_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='mapping')
-#'   clin_file <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='clinical')
-#'   st_obj <- STlist(rnacounts=count_files, spotcoords=coord_files, samples=clin_file)
-#'   st_obj <- transform_data(st_obj)
+#' \dontrun{
+#' # Load TNBC test data
+#' data_dir <- "tests/testthat/data/tnbc_bassiouni"
+#' count_files <- list.files(data_dir, pattern='counts', full.names=TRUE)[1:2]
+#' coord_files <- list.files(data_dir, pattern='mapping', full.names=TRUE)[1:2]
+#' clin_file <- file.path(data_dir, "bassiouni_clinical.csv")
 #'
-#'   # Define gene sets (using first 10 genes from the data as example)
-#'   genes <- rownames(st_obj@tr_counts[[1]])
-#'   gene_sets <- list(
-#'     GS1 = genes[1:5],
-#'     GS2 = genes[6:10]
-#'   )
+#' # Create STlist
+#' tnbc <- STlist(rnacounts=count_files, spotcoords=coord_files, samples=clin_file)
+#' tnbc <- transform_data(tnbc)
 #'
-#'   # Run STenrich
-#'   res <- STenrich(st_obj, gene_sets = gene_sets, samples = 1, reps = 100)
-#' }
+#' # Define gene sets (Hallmark pathways)
+#' gene_sets <- list(
+#'   "HALLMARK_APOPTOSIS" = c("CASP3", "CASP7", "BAX"),
+#'   "HALLMARK_GLYCOLYSIS" = c("HK2", "PFKP", "LDHA")
+#' )
+#'
+#' # Run enrichment analysis
+#' tnbc <- STenrich(tnbc, gene_sets=gene_sets, n_perm=100)
 #' }
 #'
 #' @seealso STenrich_legacy for reproducibility with original implementation

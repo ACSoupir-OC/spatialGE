@@ -22,6 +22,29 @@
 #' 
 #' @seealso \code{\link{STList_legacy}}
 #' @export STlist
+#' @examples
+#' # Example using TNBC test data included with spatialGE
+#' if (requireNamespace("spatialGE", quietly = TRUE)) {
+#'   data_dir <- system.file("tests/testthat/data/tnbc_bassiouni", package="spatialGE")
+#'   if (data_dir != "") {
+#'     # Get file paths for first sample
+#'     sample_dir <- list.dirs(data_dir, recursive = FALSE)[1]
+#'     count_files <- list.files(sample_dir, pattern="\\.h5$", full.names = TRUE)
+#'     coord_dir <- file.path(sample_dir, "spatial")
+#'     coord_files <- list.files(coord_dir, pattern="tissue_positions", full.names = TRUE)
+#'     clin_file <- list.files(data_dir, pattern="clinical", full.names = TRUE)
+#'     
+#'     # Create STlist object
+#'     tnbc <- STlist(rnacounts = count_files, 
+#'                    spotcoords = coord_files, 
+#'                    samples = clin_file,
+#'                    verbose = TRUE)
+#'     
+#'     # Inspect object
+#'     tnbc
+#'     summary(tnbc)
+#'   }
+#' }
 STlist <- function(rnacounts=NULL, spotcoords=NULL, samples=NULL, cores=NULL, verbose=TRUE) {
   
   # 1. Detect Sources

@@ -68,14 +68,25 @@ if(legacy_path == '' || !file.exists(legacy_path)){
 #' @export
 #' @examples
 #' \dontrun{
-#' # Run non-spatial tests only
+#' # Load TNBC test data
+#' data_dir <- "tests/testthat/data/tnbc_bassiouni"
+#' count_files <- list.files(data_dir, pattern='counts', full.names=TRUE)[1:2]
+#' coord_files <- list.files(data_dir, pattern='mapping', full.names=TRUE)[1:2]
+#' clin_file <- file.path(data_dir, "bassiouni_clinical.csv")
+#' 
+#' # Create STlist
+#' tnbc <- STlist(rnacounts=count_files, spotcoords=coord_files, samples=clin_file)
+#' tnbc <- transform_data(tnbc)
+#' 
+#' # Run non-spatial DE (Wilcoxon)
+#' tnbc <- STdiff(tnbc, test='wilcoxon', group='tissue_type')
+#' 
+#' # Extract and view results
+#' res <- STdiff_compile_results(tnbc)
+#' head(res)
+#' 
+#' # Alternative: Run non-spatial tests only
 #' result = STdiff(x=stlist_obj, annot='cluster', test_type='mm', sp_topgenes=0)
-#'
-#' # Run with spatial models on top 20% of DE genes
-#' result = STdiff(x=stlist_obj, annot='cluster', sp_topgenes=0.2)
-#'
-#' # Run pairwise tests with t-test
-#' result = STdiff(x=stlist_obj, annot='cluster', pairwise=TRUE, test_type='t_test')
 #' }
 #'
 #' @keywords spatial transcriptomics differential expression spaMM

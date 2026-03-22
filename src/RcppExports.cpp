@@ -11,45 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// STenrich_permutation_helper
-NumericVector STenrich_permutation_helper(NumericMatrix coords, int n_subsample, int n_samples);
-RcppExport SEXP _spatialGE_STenrich_permutation_helper(SEXP coordsSEXP, SEXP n_subsampleSEXP, SEXP n_samplesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type coords(coordsSEXP);
-    Rcpp::traits::input_parameter< int >::type n_subsample(n_subsampleSEXP);
-    Rcpp::traits::input_parameter< int >::type n_samples(n_samplesSEXP);
-    rcpp_result_gen = Rcpp::wrap(STenrich_permutation_helper(coords, n_subsample, n_samples));
-    return rcpp_result_gen;
-END_RCPP
-}
-// STenrich_permutation_fast
-NumericVector STenrich_permutation_fast(NumericMatrix coords, int n_subsample, int n_samples);
-RcppExport SEXP _spatialGE_STenrich_permutation_fast(SEXP coordsSEXP, SEXP n_subsampleSEXP, SEXP n_samplesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type coords(coordsSEXP);
-    Rcpp::traits::input_parameter< int >::type n_subsample(n_subsampleSEXP);
-    Rcpp::traits::input_parameter< int >::type n_samples(n_samplesSEXP);
-    rcpp_result_gen = Rcpp::wrap(STenrich_permutation_fast(coords, n_subsample, n_samples));
-    return rcpp_result_gen;
-END_RCPP
-}
-// STenrich_pvalue_calculation
-double STenrich_pvalue_calculation(NumericVector null_distribution, double observed_distance, int n_samples);
-RcppExport SEXP _spatialGE_STenrich_pvalue_calculation(SEXP null_distributionSEXP, SEXP observed_distanceSEXP, SEXP n_samplesSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type null_distribution(null_distributionSEXP);
-    Rcpp::traits::input_parameter< double >::type observed_distance(observed_distanceSEXP);
-    Rcpp::traits::input_parameter< int >::type n_samples(n_samplesSEXP);
-    rcpp_result_gen = Rcpp::wrap(STenrich_pvalue_calculation(null_distribution, observed_distance, n_samples));
-    return rcpp_result_gen;
-END_RCPP
-}
 // SparseRowVar2
 NumericVector SparseRowVar2(Eigen::SparseMatrix<double> mat, NumericVector mu);
 RcppExport SEXP _spatialGE_SparseRowVar2(SEXP matSEXP, SEXP muSEXP) {
@@ -74,6 +35,42 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// STenrich_permutation_fast
+NumericVector STenrich_permutation_fast(NumericMatrix coords, int n_subsample, int n_samples);
+RcppExport SEXP _spatialGE_STenrich_permutation_fast(SEXP coordsSEXP, SEXP n_subsampleSEXP, SEXP n_samplesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type coords(coordsSEXP);
+    Rcpp::traits::input_parameter< int >::type n_subsample(n_subsampleSEXP);
+    Rcpp::traits::input_parameter< int >::type n_samples(n_samplesSEXP);
+    rcpp_result_gen = Rcpp::wrap(STenrich_permutation_fast(coords, n_subsample, n_samples));
+    return rcpp_result_gen;
+END_RCPP
+}
+// STenrich_pvalue_calculation
+double STenrich_pvalue_calculation(NumericVector null_distribution, double observed_distance, int n_samples);
+RcppExport SEXP _spatialGE_STenrich_pvalue_calculation(SEXP null_distributionSEXP, SEXP observed_distanceSEXP, SEXP n_samplesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type null_distribution(null_distributionSEXP);
+    Rcpp::traits::input_parameter< double >::type observed_distance(observed_distanceSEXP);
+    Rcpp::traits::input_parameter< int >::type n_samples(n_samplesSEXP);
+    rcpp_result_gen = Rcpp::wrap(STenrich_pvalue_calculation(null_distribution, observed_distance, n_samples));
+    return rcpp_result_gen;
+END_RCPP
+}
+// STenrich_permutation_helper
+NumericVector STenrich_permutation_helper(NumericMatrix coords, int n_subsample, int n_samples);
+RcppExport SEXP _spatialGE_STenrich_permutation_helper(SEXP coordsSEXP, SEXP n_subsampleSEXP, SEXP n_samplesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type coords(coordsSEXP);
+    Rcpp::traits::input_parameter< int >::type n_subsample(n_subsampleSEXP);
+    Rcpp::traits::input_parameter< int >::type n_samples(n_samplesSEXP);
+    rcpp_result_gen = Rcpp::wrap(STenrich_permutation_helper(coords, n_subsample, n_samples));
+    return rcpp_result_gen;
+END_RCPP
+}
 // computeSubsampleSums
 NumericVector computeSubsampleSums(NumericMatrix coords, int n_subsample, int n_samples);
 RcppExport SEXP _spatialGE_computeSubsampleSums(SEXP coordsSEXP, SEXP n_subsampleSEXP, SEXP n_samplesSEXP) {
@@ -89,11 +86,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_spatialGE_STenrich_permutation_helper", (DL_FUNC) &_spatialGE_STenrich_permutation_helper, 3},
-    {"_spatialGE_STenrich_permutation_fast", (DL_FUNC) &_spatialGE_STenrich_permutation_fast, 3},
-    {"_spatialGE_STenrich_pvalue_calculation", (DL_FUNC) &_spatialGE_STenrich_pvalue_calculation, 3},
     {"_spatialGE_SparseRowVar2", (DL_FUNC) &_spatialGE_SparseRowVar2, 2},
     {"_spatialGE_SparseRowVarStd", (DL_FUNC) &_spatialGE_SparseRowVarStd, 4},
+    {"_spatialGE_STenrich_permutation_fast", (DL_FUNC) &_spatialGE_STenrich_permutation_fast, 3},
+    {"_spatialGE_STenrich_pvalue_calculation", (DL_FUNC) &_spatialGE_STenrich_pvalue_calculation, 3},
+    {"_spatialGE_STenrich_permutation_helper", (DL_FUNC) &_spatialGE_STenrich_permutation_helper, 3},
     {"_spatialGE_computeSubsampleSums", (DL_FUNC) &_spatialGE_computeSubsampleSums, 3},
     {NULL, NULL, 0}
 };

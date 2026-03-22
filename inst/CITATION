@@ -1,0 +1,31 @@
+citHeader("To cite spatialGE in publications use:")
+
+citEntry(entry = "Article",
+  title = "spatialGE: An R package for visualization and analysis of spatial heterogeneity in spatially-resolved gene expression",
+  author = c(
+    person(given = "Oscar", family = "Ospina", email = "oscar.ospina@jhmi.edu"),
+    person(given = "Alex", family = "Soupir", email = "Alex.Soupir@moffitt.org"),
+    person(given = "Brooke", family = "Fridley", email = "Brooke.Fridley@moffitt.org")
+  ),
+  journal = "Bioinformatics",
+  year = "2024",
+  volume = "40",
+  number = "3",
+  pages = "btae123",
+  doi = "10.1093/bioinformatics/btae123",
+  url = "https://doi.org/10.1093/bioinformatics/btae123",
+  textVersion = "Ospina O, Soupir A, Fridley B (2024). spatialGE: An R package for visualization and analysis of spatial heterogeneity in spatially-resolved gene expression. Bioinformatics, 40(3), btae123. doi:10.1093/bioinformatics/btae123"
+)
+
+citEntry(entry = "Manual",
+  title = "spatialGE: Visualization and Analysis of Spatial Transcriptomics Data",
+  author = c(
+    person(given = "Oscar", family = "Ospina", email = "oscar.ospina@jhmi.edu"),
+    person(given = "Alex", family = "Soupir", email = "Alex.Soupir@moffitt.org"),
+    person(given = "Brooke", family = "Fridley", email = "Brooke.Fridley@moffitt.org")
+  ),
+  year = "2024",
+  note = "R package version 2.0.0",
+  url = "https://github.com/ACSoupir-OC/spatialGE",
+  textVersion = "Ospina O, Soupir A, Fridley B (2024). spatialGE: Visualization and Analysis of Spatial Transcriptomics Data. R package version 2.0.0. https://github.com/ACSoupir-OC/spatialGE"
+)

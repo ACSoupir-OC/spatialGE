@@ -1,5 +1,11 @@
 # spatialGE
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![R-CMD-check](https://github.com/FridleyLab/spatialGE/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/FridleyLab/spatialGE/actions)
+[![Bioconductor](https://bioconductor.org/shields/build/release/bioc/spatialGE.svg)](https://bioconductor.org/packages/spatialGE/)
+[![Version](https://img.shields.io/github/r-package/v/FridleyLab/spatialGE)](https://github.com/FridleyLab/spatialGE)
+[![DOI](https://img.shields.io/badge/DOI-10.1093%2Fbioinformatics%2Fbtac145-blue)](https://doi.org/10.1093/bioinformatics/btac145)
+
 <img align="left" src="man/figures/logo.png" height="100" width="90" />
 
 An R package for the visualization and analysis of spatially-resolved transcriptomics data,

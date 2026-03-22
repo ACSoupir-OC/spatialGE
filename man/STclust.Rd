@@ -62,24 +62,21 @@ Supports two clustering modes:
 }
 \examples{
 \donttest{
-# Using included melanoma example (Thrane et al.)
-thrane_tmp = tempdir()
-unlink(thrane_tmp, recursive=TRUE)
-dir.create(thrane_tmp)
-lk='https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
+# TNBC dataset (Bassiouni et al.)
+tnbc_tmp = tempdir()
+unlink(tnbc_tmp, recursive=TRUE)
+dir.create(tnbc_tmp)
+lk = 'https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/tnbc_bassiouni.zip?download='
 tryCatch({
-  download.file(lk, destfile=paste0(thrane_tmp, '/', 'melanoma_thrane.zip'), mode='wb')
-  unzip(file=paste0(thrane_tmp, '/melanoma_thrane.zip'), exdir=thrane_tmp)
-  count_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='counts')
-  coord_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='mapping')
-  clin_file <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='clinical')
-  melanoma <- STlist(rnacounts=count_files[1], spotcoords=coord_files[1], samples=clin_file)
-  melanoma <- transform_data(melanoma)
-  melanoma <- STclust(melanoma, ks=2:3, ws=0.025)
-  STplot(melanoma, ws=0.025, samples='ST_mel1_rep2', ptsize=1)
+  download.file(lk, destfile=file.path(tnbc_tmp, 'tnbc.zip'), mode='wb')
+  unzip(file.path(tnbc_tmp, 'tnbc.zip'), exdir=tnbc_tmp)
+  tnbc = STlist(rnacounts=list.files(file.path(tnbc_tmp, 'tnbc_bassiouni'), pattern='counts', full.names=TRUE)[1],
+                spotcoords=list.files(file.path(tnbc_tmp, 'tnbc_bassiouni'), pattern='mapping', full.names=TRUE)[1],
+                samples='TNBC')
+  tnbc = transform_data(tnbc)
+  tnbc = STclust(tnbc, ks=3, ws=0.025)
 }, error = function(e) {
   message("Could not run example. Are you connected to the internet?")
-  return(NULL)
 })
 }
 

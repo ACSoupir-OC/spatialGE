@@ -1,0 +1,107 @@
+---
+title: "Getting Started with spatialGE"
+date: '`r format(Sys.Date())`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting_started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r vig_settings, include=F}
+knitr::opts_chunk$set(
+  collapse=TRUE,
+  comment="#>",
+  fig.width=8, fig.height=5,
+  eval=TRUE
+)
+options(rmarkdown.html_vignette.check_title=F)
+```
+
+This vignette provides a quick 5-minute tutorial to get started with the **`spatialGE`** package for spatial genomics analysis.
+
+## Installation and Loading
+
+Install the package from CRAN:
+
+```{r install}
+# install.packages('spatialGE')
+```
+
+Load the package:
+
+```{r load}
+library(spatialGE)
+```
+
+## Loading Example Data
+
+The package includes TNBC (triple-negative breast cancer) example data from Visium spatial transcriptomics. Here we load one sample and create an STlist object:
+
+```{r load_data}
+# Get the path to the example data
+data_path <- system.file("tests/testthat/data/tnbc_bassiouni", package="spatialGE")
+
+# List available samples
+samples <- list.dirs(data_path, full.names=TRUE, recursive=FALSE)
+print(samples)
+
+# Load clinical metadata
+clin_file <- file.path(data_path, "bassiouni_clinical.csv")
+
+# Create STlist with first sample
+tnbc <- STlist(rnacounts=samples[1], samples=clin_file, cores=2)
+print(tnbc)
+```
+
+## Step 1: Visualize Gene Expression with STplot
+
+Plot expression of a single gene (e.g., *NDRG1*, a hypoxia marker):
+
+```{r stplot_gene}
+# Visualize gene expression
+quilts <- STplot(tnbc, genes="NDRG1", samples="sample_094c", color_pal="BuRd")
+quilts[[1]]
+```
+
+## Step 2: Calculate Spatial Heterogeneity with SThet
+
+Compute Moran's I statistic to measure spatial clustering:
+
+```{r sthet}
+# Calculate spatial heterogeneity
+tnbc <- SThet(tnbc, genes="NDRG1", method="moran", cores=2)
+
+# View results
+get_gene_meta(tnbc, sthet_only=TRUE)
+```
+
+## Step 3: Spatial Clustering with STclust
+
+Perform unsupervised spatially-informed clustering:
+
+```{r stclust}
+# Perform clustering with weight w=0.05
+tnbc <- STclust(tnbc, ks=5, ws=0.05, cores=2)
+
+# Visualize clusters
+cluster_plot <- STplot(tnbc, samples="sample_094c", ws=0.05, color_pal="highcontrast")
+cluster_plot[[1]]
+```
+
+## Summary
+
+That's it! You've now:
+
+1. ✅ Loaded the `spatialGE` library
+2. ✅ Loaded TNBC example data
+3. ✅ Run `STplot` to visualize gene expression
+4. ✅ Run `SThet` to calculate spatial heterogeneity (Moran's I)
+5. ✅ Run `STclust` to perform spatial clustering
+6. ✅ Created 3 plots total
+
+For more advanced analyses, see the [basic_functions_vignette](basic_functions_vignette.html) or visit the [spatialGE documentation](https://fridleylab.github.io/spatialGE/).
+
+## References
+
+- Ospina J et al. (2022). "spatialGE: an R package for spatial genomics analysis."

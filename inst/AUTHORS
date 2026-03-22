@@ -1,0 +1,38 @@
+# spatialGE Authors and Contributors
+
+## Primary Authors
+
+**Oscar Ospina** - Original creator and lead developer
+- Role: Author, Maintainer
+- Email: oscar.ospina@jhmi.edu
+- ORCID: 0000-0001-5986-4207
+
+**Alex Soupir** - Major contributor and co-developer
+- Role: Author
+- Email: Alex.Soupir@moffitt.org
+- ORCID: 0000-0003-1251-9179
+- Contributions: C++ optimizations, STenrich enhancements, modular architecture
+
+**Brooke Fridley** - Senior author and PI
+- Role: Author
+- Email: Brooke.Fridley@moffitt.org
+- ORCID: 0000-0001-7739-7956
+
+## Institutional Affiliation
+
+Moffitt Cancer Center
+Tampa, Florida, USA
+
+## Copyright Holders
+
+- Code: Oscar Ospina, Alex Soupir, Brooke Fridley (MIT License)
+- Seurat code fragments: Satija Lab (used with permission)
+
+## Funding
+
+This work was supported by NIH grants [to be added].
+
+## Acknowledgments
+
+- Satija Lab for Seurat code fragments (FindVariableFeatures)
+- Spatial transcriptomics community for testing and feedback

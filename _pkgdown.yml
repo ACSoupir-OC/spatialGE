@@ -2,6 +2,35 @@ url: https://acsoupir-oc.github.io/spatialGE/
 
 template:
   bootstrap: 5
+  bootswatch: flatly
+  package: spatialGE
+  bslib:
+    primary: "#2C3E50"
+    secondary: "#18BC9C"
+    font_scale: 1.1
+  includes:
+    in_header: |
+      <link href="pkgdown/extra.css" rel="stylesheet">
+    before_body: |
+      <!-- Custom header content -->
+    after_body: |
+      <!-- Footer with build status -->
+      <footer class="footer mt-5 py-3 bg-light">
+        <div class="container text-center">
+          <p class="text-muted mb-1">
+            <a href="https://github.com/FridleyLab/spatialGE">spatialGE</a> v2.0.0
+            | Built with <a href="https://pkgdown.r-lib.org/">pkgdown</a>
+          </p>
+          <p class="text-muted mb-0">
+            <a href="https://github.com/FridleyLab/spatialGE/actions">
+              <img src="https://github.com/FridleyLab/spatialGE/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check">
+            </a>
+            <a href="https://bioconductor.org/packages/spatialGE/">
+              <img src="https://bioconductor.org/shields/build/release/bioc/spatialGE.svg" alt="Bioconductor">
+            </a>
+          </p>
+        </div>
+      </footer>
 
 exclude:
   - AGENTS/**
@@ -22,10 +51,46 @@ exclude:
 home:
   title: "spatialGE: Spatial Genomics Analysis"
   description: "Analysis tools for spatial transcriptomics and spatial genomics data"
+  links:
+    - text: Bioconductor
+      href: https://bioconductor.org/packages/spatialGE/
+    - text: GitHub
+      href: https://github.com/FridleyLab/spatialGE
+    - text: DOI
+      href: https://doi.org/10.1093/bioinformatics/btac145
 
 authors:
   Alex Soupir:
     href: https://github.com/ACSoupir-OC
+  Oscar Ospina:
+    href: mailto:oscar.ospina@jhmi.edu
+  Brooke Fridley:
+    href: mailto:Brooke.Fridley@moffitt.org
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news, search]
+    right: [github]
+  components:
+    articles:
+      text: Articles
+      menu:
+        - text: "Getting Started"
+          href: articles/getting_started.html
+        - text: "STlist Object Structure"
+          href: articles/stlist_object_structure.html
+        - text: "Basic Functions"
+          href: articles/basic_functions_vignette.html
+        - text: "Seurat Integration"
+          href: articles/seurat_integration.html
+        - text: "Troubleshooting"
+          href: articles/troubleshooting.html
+    reference:
+      text: Reference
+      href: reference/index.html
+    news:
+      text: News
+      href: news/index.html
 
 reference:
   - title: "Core Analysis Functions"
@@ -131,16 +196,32 @@ reference:
       - can_convert_to_STlist
 
 articles:
-  - title: "Vignettes"
-    desc: "Step-by-step guides and workflows"
+  - title: "Getting Started"
+    desc: "Introduction and basic workflows"
     contents:
+      - getting_started
+      - stlist_object_structure
       - basic_functions_vignette
+  
+  - title: "Advanced Analysis"
+    desc: "In-depth analysis workflows"
+    contents:
+      - seurat_integration
       - spatial_differential_expression
       - spatial_enrichment_gradients_smi
+  
+  - title: "Support"
+    desc: "Help and troubleshooting"
+    contents:
       - troubleshooting
-      - seurat_integration
 
 news:
   releases:
+    - text: "Version 2.0.0 — 2026-03-22"
+      href: https://github.com/FridleyLab/spatialGE/releases/tag/v2.0.0
+    - text: "Version 1.2.0"
+      href: https://github.com/FridleyLab/spatialGE/releases/tag/v1.2.0
     - text: "Version 1.0.0"
-      href: https://github.com/ACSoupir-OC/spatialGE/releases
+      href: https://github.com/FridleyLab/spatialGE/releases/tag/v1.0.0
+
+lang: en
