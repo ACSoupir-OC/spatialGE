@@ -11,19 +11,17 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
-<script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Basic functionality: Visualization, domain detection, and spatial heterogeneity">
-<link rel="stylesheet" href="https://acsoupir-oc.github.io/spatialGE/extra.css">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    <!-- Custom header content -->
 
 
-    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="../index.html">spatialGE</a>
 
@@ -392,7 +390,7 @@ will be performed for two of the spatial samples
 <span><span class="co">#&gt; [using ordinary kriging]</span></span>
 <span><span class="co">#&gt; [using ordinary kriging]</span></span>
 <span><span class="co">#&gt; [using ordinary kriging]</span></span>
-<span><span class="co">#&gt; Gene interpolation completed in 0.57 min.</span></span></code></pre></div>
+<span><span class="co">#&gt; Gene interpolation completed in 0.6 min.</span></span></code></pre></div>
 <p>Generating gene expression surfaces can be time consuming. The finer
 resolution to which the surface is to be predicted (<code>ngrid</code>
 argument), the longer the time it takes. The execution time also depends
@@ -744,8 +742,7 @@ transcriptomics</span>.”</span> <em>Bioinformatics</em> 38: 2645–47. <a href
 
 
 
-  <!-- Footer with build status -->
-<footer class="footer mt-5 py-3 bg-light"><div class="container text-center">
+  <footer class="footer mt-5 py-3 bg-light"><div class="container text-center">
     <p class="text-muted mb-1">
       <a href="https://github.com/FridleyLab/spatialGE" class="external-link">spatialGE</a> v2.0.0
       | Built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>

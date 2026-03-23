@@ -4,17 +4,8 @@ template:
   bootstrap: 5
   bootswatch: flatly
   package: spatialGE
-  bslib:
-    primary: "#2C3E50"
-    secondary: "#18BC9C"
-    font_scale: 1.1
   includes:
-    in_header: |
-      <link rel="stylesheet" href="https://acsoupir-oc.github.io/spatialGE/extra.css">
-    before_body: |
-      <!-- Custom header content -->
     after_body: |
-      <!-- Footer with build status -->
       <footer class="footer mt-5 py-3 bg-light">
         <div class="container text-center">
           <p class="text-muted mb-1">
@@ -31,8 +22,6 @@ template:
           </p>
         </div>
       </footer>
-  default_assets: true
-  light-switch: true
 
 home:
   title: "spatialGE: Spatial Genomics Analysis"
