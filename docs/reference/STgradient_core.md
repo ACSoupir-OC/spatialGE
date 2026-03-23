@@ -1,9 +1,19 @@
+<div id="main" class="col-md-9" role="main">
+
 # STgradient_core: Core algorithm for spatial gradient analysis
+
+<div class="ref-description section level2">
 
 Core implementation of STgradient - calculates Spearman correlations
 between gene expression and distances to reference domain
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STgradient_core(
@@ -25,72 +35,90 @@ STgradient_core(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  STlist object with transformed gene expression
+    STlist object with transformed gene expression
 
-- samples:
+-   samples:
 
-  Vector of sample names to process
+    Vector of sample names to process
 
-- annot:
+-   annot:
 
-  Name of annotation column in @spatial_meta
+    Name of annotation column in @spatial_meta
 
-- ref:
+-   ref:
 
-  Reference tissue domain
+    Reference tissue domain
 
-- exclude:
+-   exclude:
 
-  Optional domain to exclude
+    Optional domain to exclude
 
-- out_rm:
+-   out_rm:
 
-  Remove gene expression outliers (IQR method)
+    Remove gene expression outliers (IQR method)
 
-- limit:
+-   limit:
 
-  Limit analysis to spots within this distance threshold
+    Limit analysis to spots within this distance threshold
 
-- distsumm:
+-   distsumm:
 
-  Distance summary metric: "min" or "avg"
+    Distance summary metric: "min" or "avg"
 
-- min_nb:
+-   min_nb:
 
-  Minimum number of neighbors required
+    Minimum number of neighbors required
 
-- robust:
+-   robust:
 
-  Use robust regression
+    Use robust regression
 
-- nb_dist_thr:
+-   nb_dist_thr:
 
-  Neighborhood distance threshold
+    Neighborhood distance threshold
 
-- log_dist:
+-   log_dist:
 
-  Apply log transform to distances
+    Apply log transform to distances
 
-- topgenes:
+-   topgenes:
 
-  Number of high-variance genes to test
+    Number of high-variance genes to test
 
-- cores:
+-   cores:
 
-  Number of cores for parallelization
+    Number of cores for parallelization
 
-- verbose:
+-   verbose:
 
-  Print progress messages
+    Print progress messages
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 List of data frames with correlation results
 
+</div>
+
+<div class="section level2">
+
 ## Details
 
 Internal function - use STgradient() for public interface
+
+</div>
+
+</div>

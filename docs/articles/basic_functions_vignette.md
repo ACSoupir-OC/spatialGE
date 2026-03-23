@@ -1,3 +1,5 @@
+<div id="main" class="col-md-9" role="main">
+
 # Basic functionality: Visualization, domain detection, and spatial heterogeneity
 
 The package ***`spatialGE`*** provides a collection of tools for the
@@ -16,21 +18,27 @@ repository](https://fridleylab.github.io/spatialGE/). A point-and-click,
 user-friendly interface is also available at
 <https://spatialge.moffitt.org>.
 
+<div class="section level2">
+
 ## Installation
 
 The `spatialGE` repository is available at the Comprehensive R Archive
 Network (CRAN) repository and can be installed via `install.packages`:
 
-``` r
+<div id="cb1" class="sourceCode">
 
+``` r
 # install.packages('spatialGE')
 ```
+
+</div>
 
 A development version is available at GitHub and can be installed via
 `devtools`:
 
-``` r
+<div id="cb2" class="sourceCode">
 
+``` r
 # if("devtools" %in% rownames(installed.packages()) == FALSE){
 #   install.packages("devtools")
 # }
@@ -38,14 +46,23 @@ A development version is available at GitHub and can be installed via
 #devtools::install_github("fridleylab/spatialGE")
 ```
 
+</div>
+
 To use `spatialGE`, load the package.
 
-``` r
+<div id="cb3" class="sourceCode">
 
+``` r
 library('spatialGE')
 #> Warning: replacing previous import 'fastcluster::hclust' by 'stats::hclust'
 #> when loading 'spatialGE'
 ```
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Spatially-resolved expression of triple negative breast cancer tumor biopsies
 
@@ -64,14 +81,14 @@ samples from four patients.
 
 The GEO repositories can be accessed using the following links:
 
-- [sample_117d](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433599)
-- [sample_117e](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433600)
-- [sample_120d](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433611)
-- [sample_120e](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433612)
-- [sample_092a](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433585)
-- [sample_092b](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433586)
-- [sample_094c](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433593)
-- [sample_094d](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433594)
+-   [sample_117d](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433599)
+-   [sample_117e](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433600)
+-   [sample_120d](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433611)
+-   [sample_120e](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433612)
+-   [sample_092a](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433585)
+-   [sample_092b](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433586)
+-   [sample_094c](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433593)
+-   [sample_094d](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM6433594)
 
 For convenience, the data is also available at our [spatialGE_Data
 GitHub repository](https://github.com/FridleyLab/spatialGE_Data). During
@@ -90,37 +107,52 @@ provided by 10X Genomics to process raw Visium data.
 In this tutorial, data will be deposited in a temporary directory. The
 data is downloaded from this link:
 
-``` r
+<div id="cb4" class="sourceCode">
 
-lk='https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/tnbc_bassiouni.zip?download='
+``` r
+# Use media.githubusercontent.com for Git LFS files
+lk='https://media.githubusercontent.com/media/FridleyLab/spatialGE_Data/main/tnbc_bassiouni.zip'
 ```
+
+</div>
 
 The following code block creates a temporary directory:
 
-``` r
+<div id="cb5" class="sourceCode">
 
+``` r
 visium_tmp = tempdir()
 unlink(visium_tmp, recursive=TRUE)
 dir.create(visium_tmp)
 ```
 
+</div>
+
 The data will be downloaded to the temporary directory. The data is
 compressed in a zip file, which will be unzipped into a sub-directory
 called `tnbc_bassiouni`:
 
-``` r
+<div id="cb6" class="sourceCode">
 
+``` r
 tryCatch({ # In case data is not available from network
   download.file(lk, destfile=paste0(visium_tmp, '/', 'tnbc_bassiouni.zip'), mode='wb')
   zip_tmp = list.files(visium_tmp, pattern='tnbc_bassiouni.zip$', full.names=TRUE)
-  unzip(zipfile=zip_tmp, exdir=thrane_tmp)
+  unzip(zipfile=zip_tmp, exdir=visium_tmp)
   net_check <<- TRUE
+  message("Successfully downloaded tnbc_bassiouni dataset")
 }, error = function(e) {
   message("Could not download data. Are you connected to the internet?")
   net_check <<- FALSE
 })
-#> Could not download data. Are you connected to the internet?
+#> Successfully downloaded tnbc_bassiouni dataset
 ```
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Creating an STList (Spatial Transcriptomics List)
 
@@ -128,10 +160,8 @@ In `spatialGE`, raw and processed data are stored in an ***STlist*** (S4
 class object). As previously mentioned, an STlist can be created with
 the function `STlist`, from a variety of data formats (see
 [here](https://fridleylab.github.io/spatialGE/reference/STlist.html) for
-more info or type
-[`?STlist`](https://acsoupir-oc.github.io/spatialGE/reference/STlist.md)
-in the R console). In this tutorial we will provide the file paths to
-the folders downloaded in the previous step.
+more info or type `?STlist` in the R console). In this tutorial we will
+provide the file paths to the folders downloaded in the previous step.
 
 Additionally, we will input meta data associated with each sample. The
 meta data is provided in the form of a comma-delimited file. We have
@@ -144,55 +174,114 @@ important aspect when constructing this file is that the sample names
 are in the first column, and they match the names of the folders
 containing the data:
 
+![](img/metadata_file.png)
+
 From the temporary directory, we can use R to generate the file paths to
 be passed to the `STlist` function:
 
-``` r
+<div id="cb7" class="sourceCode">
 
+``` r
 visium_folders <- list.dirs(paste0(visium_tmp, '/tnbc_bassiouni'), full.names=TRUE, recursive=FALSE)
 ```
+
+</div>
 
 The meta data can be accessed directly from the `spatialGE` package
 installed in the computer like so:
 
-``` r
+<div id="cb8" class="sourceCode">
 
+``` r
 clin_file <- list.files(paste0(visium_tmp, '/tnbc_bassiouni'), full.names=TRUE, recursive=FALSE, pattern='clinical')
 ```
 
+</div>
+
 We can load the files into an STlist using this command:
 
-``` r
+<div id="cb9" class="sourceCode">
 
+``` r
 tnbc <- STlist(rnacounts=visium_folders, samples=clin_file, cores=2)
+#> Ingesting source 1: Type=visium Format=
+#> Ingesting source 2: Type=visium Format=
+#> Ingesting source 3: Type=visium Format=
+#> Ingesting source 4: Type=visium Format=
+#> Ingesting source 5: Type=visium Format=
+#> Ingesting source 6: Type=visium Format=
+#> Ingesting source 7: Type=visium Format=
+#> Ingesting source 8: Type=visium Format=
+#> Matching gene expression and coordinate data...
+#> Completed STlist!
 ```
+
+</div>
 
 The `tnbc` object is an STlist that contains the count data, spot
 coordinates, and clinical meta data.
 
-``` r
+<div id="cb10" class="sourceCode">
 
+``` r
 tnbc
+#> Spatial Transcriptomics List (STlist).
+#> 8 spatial array(s):
+#>  sample_092a (1289 ROIs|spots|cells x 36601 genes)
+#>  sample_092b (1376 ROIs|spots|cells x 36601 genes)
+#>  sample_094c (1542 ROIs|spots|cells x 36601 genes)
+#>  sample_094d (1391 ROIs|spots|cells x 36601 genes)
+#>  sample_117d (1949 ROIs|spots|cells x 36601 genes)
+#>  sample_117e (754 ROIs|spots|cells x 36601 genes)
+#>  sample_120d (1359 ROIs|spots|cells x 36601 genes)
+#>  sample_120e (844 ROIs|spots|cells x 36601 genes)
+#> 
+#> 0 variables in sample-level data:
+#>  
 ```
+
+</div>
 
 As observed, by calling the `tnbc` object, information on the number of
 spots and genes per sample is displayed. For count statistics, the
 `summarize_STlist` function can be used:
 
-``` r
+<div id="cb11" class="sourceCode">
 
+``` r
 summarize_STlist(tnbc)
+#> # A tibble: 8 x 9
+#>   sample_name spotscells genes min_counts_per_spotcell mean_counts_per_spotcell
+#>   <chr>            <int> <int>                   <dbl>                    <dbl>
+#> 1 sample_092a       1289 36601                     559                   43225.
+#> 2 sample_092b       1376 36601                    1413                   34809.
+#> 3 sample_094c       1542 36601                      71                   45805.
+#> 4 sample_094d       1391 36601                     298                   37157.
+#> 5 sample_117d       1949 36601                     828                   35264.
+#> 6 sample_117e        754 36601                    1022                   34607.
+#> 7 sample_120d       1359 36601                     171                   13831.
+#> 8 sample_120e        844 36601                      42                    9997.
+#> # i 4 more variables: max_counts_per_spotcell <dbl>,
+#> #   min_genes_per_spotcell <int>, mean_genes_per_spotcell <dbl>,
+#> #   max_genes_per_spotcell <int>
 ```
+
+</div>
 
 The minimum number of counts per spot is 42, which seems low. We can
 look at the distribution of counts and genes per spot using the
 `distribution_plots` function:
 
-``` r
+<div id="cb12" class="sourceCode">
 
+``` r
 cp <- distribution_plots(tnbc, plot_type='violin', plot_meta='total_counts')
 cp[['total_counts']]
 ```
+
+</div>
+
+![](basic_functions_vignette_files/figure-html/count_dstr-1.png)
 
 Now, let us remove spots with low counts by keeping only those spots
 with at least 5000 counts. We will also restrict the data set to spots
@@ -204,13 +293,22 @@ differences in counts, especially for sample_120d and samples_120e.
 
 We run this filter with the `filter_data` function:
 
-``` r
+<div id="cb13" class="sourceCode">
 
+``` r
 tnbc <- filter_data(tnbc, spot_minreads=5000, spot_mingenes=1000, spot_maxreads=150000)
 
 cp2 <- distribution_plots(tnbc, plot_type='violin', plot_meta='total_counts')
 cp2[['total_counts']]
 ```
+
+</div>
+
+![](basic_functions_vignette_files/figure-html/filter_chunk-1.png)
+
+</div>
+
+<div class="section level2">
 
 ## Exploring variation between spatial arrays
 
@@ -225,10 +323,13 @@ exploratory analysis analysis. The `max_var_genes` argument is used to
 specify the maximum number of genes used for computation of PCA. The
 genes are selected based on their standard deviation across samples.
 
-``` r
+<div id="cb14" class="sourceCode">
 
+``` r
 tnbc <- pseudobulk_samples(tnbc, max_var_genes=5000)
 ```
+
+</div>
 
 In this case, we apply the function to look for agreement between
 samples from the same patient: It is expected that tissue slices from
@@ -237,20 +338,30 @@ other patients. The `pseudobulk_pca` allows to map a sample-level
 variable to the points in the PCA by including the name of the column
 from the sample metadata (`patient_id` in this example).
 
-``` r
+<div id="cb15" class="sourceCode">
 
+``` r
 pseudobulk_dim_plot(tnbc, plot_meta='patient_id')
 ```
+
+</div>
 
 Users can also generate a heatmap from pseudobulk counts by calling the
 `pseudobulk_heatmap` function, which also requires prior use of the
 `pseudobulk_samples` function. The number of variable genes to show can
 be controlled via the `hm_display_genes` argument.
 
-``` r
+<div id="cb16" class="sourceCode">
 
+``` r
 hm_p <- pseudobulk_heatmap(tnbc, plot_meta='patient_id', hm_display_genes=30)
 ```
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Transformation of spatially-resolved transcriptomics data
 
@@ -261,16 +372,23 @@ separately. Similar to
 [Seurat](https://satijalab.org/seurat/reference/normalizedata), it
 applies a scaling factor (`scale_f=10000` by default).
 
-``` r
+<div id="cb17" class="sourceCode">
 
+``` r
 tnbc <- transform_data(tnbc, method='log', cores=2)
 ```
+
+</div>
 
 Users also can apply variance-stabilizing transformation (SCT;
 Hafemeister and Satija (2019)), which is another method increasingly
 used in single-cell and spatial transcriptomics studies. See
 [here](https://fridleylab.github.io/spatialGE/reference/transform_data.html)
 for details.
+
+</div>
+
+<div class="section level2">
 
 ## Visualization of gene expression from spatially-resolved transcriptomics data
 
@@ -287,8 +405,9 @@ Let’s produce a quilt plot for the genes *NDRG1* and *IGKC* (hypoxia and
 B-cell markers, respectively), for sample number 1 of patient 14
 (`samples=sample_094c`).
 
-``` r
+<div id="cb18" class="sourceCode">
 
+``` r
 quilts1 <- STplot(tnbc, 
                   genes=c('NDRG1', 'IGKC'), 
                   samples='sample_094c', 
@@ -296,13 +415,18 @@ quilts1 <- STplot(tnbc,
                   ptsize=0.8)
 ```
 
+</div>
+
 Because `spatialGE` functions output lists of ggplot objects, we can
 plot the results side-by-side using functions such as `ggarrange()`:
 
-``` r
+<div id="cb19" class="sourceCode">
 
+``` r
 ggpubr::ggarrange(plotlist=quilts1, nrow=1, ncol=2, legend='bottom')
 ```
+
+</div>
 
 We can see that gene expression patterns of both genes are
 non-overlapping: *IGKC* is expressed in the upper right portion of the
@@ -312,6 +436,8 @@ white-colored spots). The location of gene expression of those two genes
 may be indicative of an immune-infiltrated area and a tumor area. With
 the help of spatial interpolation, visualization of these regions can be
 easier as will be showed next.
+
+<div class="section level3">
 
 ### Spatial interpolation of gene expression
 
@@ -328,27 +454,38 @@ The function `gene_interpolation` performs kriging of gene expression
 via the `fields` package. We specify that kriging will be performed for
 two of the spatial samples (`samples=c('sample_094c', 'sample_117e')`):
 
-``` r
+<div id="cb20" class="sourceCode">
 
+``` r
 tnbc <- gene_interpolation(tnbc, 
                            genes=c('NDRG1', 'IGKC'),
                            samples=c('sample_094c', 'sample_117e'), cores=2)
+#> Gene interpolation started.
+#> [using ordinary kriging]
+#> [using ordinary kriging]
+#> [using ordinary kriging]
+#> [using ordinary kriging]
+#> Gene interpolation completed in 0.55 min.
 ```
+
+</div>
 
 Generating gene expression surfaces can be time consuming. The finer
 resolution to which the surface is to be predicted (`ngrid` argument),
 the longer the time it takes. The execution time also depends on the
 number of spots/cells. The surfaces can be visualized using the
-[`STplot_interpolation()`](https://acsoupir-oc.github.io/spatialGE/reference/STplot_interpolation.md)
-function:
+`STplot_interpolation()` function:
+
+<div id="cb21" class="sourceCode">
 
 ``` r
-
 kriges1 <- STplot_interpolation(tnbc,
                                 genes=c('NDRG1', 'IGKC'),
                                 samples='sample_094c')
 #ggpubr::ggarrange(plotlist=kriges1, nrow=1, ncol=2, common.legend=TRUE, legend='bottom')
 ```
+
+</div>
 
 By looking at the transcriptomic surfaces of the two genes, it is easier
 to detect where “pockets” of high and low expression are located within
@@ -360,12 +497,21 @@ If tissue images were uploaded to the STlist
 (`tissue_hires_image.png.gz`), it can be displayed for comparison using
 the `plot_image` function:
 
-``` r
+<div id="cb22" class="sourceCode">
 
+``` r
 ip = plot_image(tnbc, samples='sample_094c')
 
 ip[['image_sample_094c']]
 ```
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Unsupervised spatially-informed clustering (*STclust*)
 
@@ -384,31 +530,37 @@ solution is, given that the clusters would only reflect the physical
 distances between the spots/cells and less information on the
 transcriptomic profiles will be used. After many tests, we have found
 that weights between 0.025 - 0.25 are enough to capture the tissue
-heterogeneity. By default, `STclust` uses dynamic tree cuts (Langfelder
-et al. 2007) to define the number of clusters. But users can also test a
-series of k values (`ks`). For a more detailed description of the
-method, please refer to the paper describing `spatialGE` and `STclust`
-(Ospina et al. 2022).
+heterogeneity. By default, `STclust` uses dynamic tree cuts (Langfelder,
+Zhang, and Horvath 2007) to define the number of clusters. But users can
+also test a series of k values (`ks`). For a more detailed description
+of the method, please refer to the paper describing `spatialGE` and
+`STclust` (Ospina et al. 2022).
 
 We’ll try several weights to see it’s effect on the cluster assignments:
 
-``` r
+<div id="cb23" class="sourceCode">
 
+``` r
 tnbc <- STclust(tnbc, 
                 ks='dtc', 
                 ws=c(0, 0.025, 0.05, 0.2), cores=2)
 ```
 
+</div>
+
 Results of clustering can be plotted via the `STplot` function:
 
-``` r
+<div id="cb24" class="sourceCode">
 
+``` r
 cluster_p <- STplot(tnbc, 
                     samples='sample_094c', 
                     ws=c(0, 0.025, 0.05, 0.2),
                     color_pal='highcontrast')
 ggpubr::ggarrange(plotlist=cluster_p, nrow=2, ncol=2, legend='right')
 ```
+
+</div>
 
 We can see that from `w=0` and `w=0.05`, we can only detect two tissue
 niches. At `w=0.025`, we gain higher resolution as one of the clusters
@@ -421,29 +573,34 @@ in very coarse resolution tissue niches, however, users can define their
 own range of k to be evaluated, allowing further detection of tissue
 compartments.
 
+</div>
+
+<div class="section level2">
+
 ## Association between spatial heterogeneity and sample-level variables
 
 To explore the relationship between a clinical (sample-level) variable
 of interest and the level of gene expression spatial uniformity within a
-sample, we can use the
-[`SThet()`](https://acsoupir-oc.github.io/spatialGE/reference/SThet.md)
-function:
+sample, we can use the `SThet()` function:
+
+<div id="cb25" class="sourceCode">
 
 ``` r
-
 tnbc <- SThet(tnbc, 
               genes=c('NDRG1', 'IGKC'),
               method='moran', cores=2)
 ```
 
+</div>
+
 The `SThet` function calculates the Moran’s I statsitic (or Geary’s C)
 to measure the level of spatial heterogeneity in the expression of the
 genes ( *NDRG1*, *IGKC*). The estimates can be compared across samples
-using the function
-[`compare_SThet()`](https://acsoupir-oc.github.io/spatialGE/reference/compare_SThet.md)
+using the function `compare_SThet()`
+
+<div id="cb26" class="sourceCode">
 
 ``` r
-
 p <- compare_SThet(tnbc, 
                    samplemeta='overall_survival_days', 
                    color_by='patient_id',
@@ -453,6 +610,8 @@ p <- compare_SThet(tnbc,
 
 p
 ```
+
+</div>
 
 The calculation of spatial statistics with `SThet` and and multi-sample
 comparison with `compare_SThet` provides and easy way to identify
@@ -474,10 +633,13 @@ analysis/plotting that the user may want to complete. The statistics
 value can be accessed as a data frame using the `get_gene_meta`
 function:
 
-``` r
+<div id="cb27" class="sourceCode">
 
+``` r
 get_gene_meta(tnbc, sthet_only=TRUE)
 ```
+
+</div>
 
 **How can the statistics generated by `SThet` can be interpreted?**
 
@@ -489,14 +651,17 @@ spatial heterogeneity, tissue can be simulated using the `scSpatialSIM`
 and `spatstat` packages. Also `tidyverse` and `janitor` for some data
 manipulation.
 
-``` r
+<div id="cb28" class="sourceCode">
 
+``` r
 library('rpart')
 library('spatstat')
 library('scSpatialSIM')
 library('tidyverse')
 library('janitor')
 ```
+
+</div>
 
 The `sc.SpatialSIM` package uses spatial point processes to simulate the
 locations of spots/cells within a tissue. To facilitate interpretability
@@ -505,18 +670,22 @@ simulated, and then gene expression values will be simulated.
 
 The first step is to create a `spatstat` observation window:
 
-``` r
+<div id="cb29" class="sourceCode">
 
+``` r
 wdw <- owin(xrange=c(0, 3), yrange=c(0, 3))
 sim_visium <- CreateSimulationObject(sims=1, cell_types=1, window=wdw)
 ```
+
+</div>
 
 Next, the `sc.SpatialSIM` is used to generate the spatial point process
 (positions of the spots) within the observation window. Then,
 assignments of spots to tissue domains are simulated and visualized:
 
-``` r
+<div id="cb30" class="sourceCode">
 
+``` r
 # Generate point process
 # Then, simulate tissue compartments
 set.seed(12345)
@@ -527,25 +696,28 @@ PlotSimulation(sim_visium, which=1, what="tissue points") +
   scale_shape_manual(values=c(19, 1))
 ```
 
+</div>
+
 Now, the simulated tissue domain assignments are extracted from the
 `SpatSimObj` object. Gene counts will be simulated in such a way that:
 
-- Expression of “gene_1” is exclusive to “Tissue_1”. If a spot was
-  assigned to “Tissue 1”, expression of “gene_1” is 1 (high expression).
-  If assigned to “Tissue 2”, expression of “gene_1” is 0.1 (low
-  expression). Given “Tissue 1” spots are aggregated towards the center
-  of the tissue, it is expected that Moran’s I \> 0 and Geary’s C \< 1
-  for “gene_1”.\
-- Spots with high expression of “gene_2” (expression = 1) are equally
-  separated from spots with low expression (expression = 0.1). This
-  pattern is highly unlikely in a biological tissue. It is expected this
-  pattern yields a Moran’s I \< 0 and a Geary’s \> 1.
-- Expression of “gene_3” results from randomly assigning expression of
-  “gene_2” across the entire tissue. This pattern should result in
-  Moran’s I closer to 0 and Geary’s C closer to 1.
+-   Expression of “gene_1” is exclusive to “Tissue_1”. If a spot was
+    assigned to “Tissue 1”, expression of “gene_1” is 1 (high
+    expression). If assigned to “Tissue 2”, expression of “gene_1” is
+    0.1 (low expression). Given “Tissue 1” spots are aggregated towards
+    the center of the tissue, it is expected that Moran’s I \> 0 and
+    Geary’s C \< 1 for “gene_1”.  
+-   Spots with high expression of “gene_2” (expression = 1) are equally
+    separated from spots with low expression (expression = 0.1). This
+    pattern is highly unlikely in a biological tissue. It is expected
+    this pattern yields a Moran’s I \< 0 and a Geary’s \> 1.
+-   Expression of “gene_3” results from randomly assigning expression of
+    “gene_2” across the entire tissue. This pattern should result in
+    Moran’s I closer to 0 and Geary’s C closer to 1.
+
+<div id="cb31" class="sourceCode">
 
 ``` r
-
 # Extract tissue assignments from the `SpatSimObj` object
 # Simulate expression of 'gene_1'
 sim_visium_df <- sim_visium@`Spatial Files`[[1]] %>%
@@ -567,11 +739,14 @@ set.seed(12345)
 sim_visium_df[['gene_3']] <- sample(sim_visium_df[['gene_2']])
 ```
 
+</div>
+
 To visualize the simulated expression and run `SThet`, an STlist is
 created:
 
-``` r
+<div id="cb32" class="sourceCode">
 
+``` r
 # Extract simulated expression data
 sim_expr <- sim_visium_df %>% 
   add_column(libname=paste0('spot', seq(1:nrow(.)))) %>%
@@ -593,13 +768,16 @@ ps <- STplot(simulated, genes=c('gene_1', 'gene_2', 'gene_3'), data_type='raw', 
 ggpubr::ggarrange(plotlist=ps, ncol=3)
 ```
 
+</div>
+
 As expected, simulated expression of “gene_1” is aggregated (i.e.,
 clustered, red spots concentrated towards the center of the tissue).
 This result was intently obtained by setting the simulation parameters
 to `xmin=2`, `xmax=3`, `ymin=2`, `ymax=3` in `sc.SpatialSIM`.
 
-``` r
+<div id="cb33" class="sourceCode">
 
+``` r
 # The `SThet` function requires normalized data
 simulated <- transform_data(simulated, cores=2)
 
@@ -610,6 +788,8 @@ simulated <- SThet(simulated, genes=c('gene_1', 'gene_2', 'gene_3'), method=c('m
 get_gene_meta(simulated, sthet_only=TRUE)
 ```
 
+</div>
+
 The results for each of the metrics are as expected: “gene_1” shows
 aggregation/clustering, indicative of “hot-spot” expression. “gene_2”
 and “gene_3” show uniform and random expression respectively. Notice
@@ -619,33 +799,60 @@ effect of library-size normalization. In addition, obtaining extreme
 values of I and C require extreme spatial patterns, which are unlikely
 to be observed even in the way data has been simulated here.
 
+</div>
+
+<div class="section level2">
+
 ## References
 
-Bassiouni, Rania, Michael O. Idowu, Lee D. Gibbs, et al. 2023. “Spatial
-Transcriptomic Analysis of a Diverse Patient Cohort Reveals a Conserved
-Architecture in Triple-Negative Breast Cancer.” *Cancer Research* 83:
-34–48. <https://doi.org/10.1158/0008-5472.CAN-22-2682>.
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-bassiouni_2023" class="csl-entry">
+
+Bassiouni, Rania, Michael O. Idowu, Lee D. Gibbs, Valentina Robila,
+Pamela J. Grizzard, Michelle G. Webb, Jiarong Song, Ashley Noriega,
+David W. Craig, and John D. Carpten. 2023. “Spatial Transcriptomic
+Analysis of a Diverse Patient Cohort Reveals a Conserved Architecture in
+Triple-Negative Breast Cancer.” *Cancer Research* 83: 34–48.
+<https://doi.org/10.1158/0008-5472.CAN-22-2682>.
+
+</div>
+
+<div id="ref-hafemeister_2019" class="csl-entry">
 
 Hafemeister, Christoph, and Rahul Satija. 2019. “Normalization and
 Variance Stabilization of Single-Cell RNA-Seq Data Using Regularized
 Negative Binomial Regression.” *Genome Biology* 20: 296.
 <https://doi.org/10.1186/s13059-019-1874-1>.
 
+</div>
+
+<div id="ref-langfelder_2008" class="csl-entry">
+
 Langfelder, Peter, Bin Zhang, and Steve Horvath. 2007. “Defining
 clusters from a hierarchical cluster tree: the Dynamic Tree Cut package
 for R.” *Bioinformatics* 24: 719–20.
 <https://doi.org/10.1093/bioinformatics/btm563>.
 
-Ospina, Oscar E, Christopher M Wilson, Alex C Soupir, et al. 2022.
-“spatialGE: quantification and visualization of the tumor
-microenvironment heterogeneity using spatial transcriptomics.”
-*Bioinformatics* 38: 2645–47.
-<https://doi.org/10.1093/bioinformatics/btac145>.
+</div>
+
+<div id="ref-ospina_2022" class="csl-entry">
+
+Ospina, Oscar E, Christopher M Wilson, Alex C Soupir, Anders Berglund,
+Inna Smalley, Kenneth Y Tsai, and Brooke L Fridley. 2022. “spatialGE:
+quantification and visualization of the tumor microenvironment
+heterogeneity using spatial transcriptomics.” *Bioinformatics* 38:
+2645–47. <https://doi.org/10.1093/bioinformatics/btac145>.
+
+</div>
+
+</div>
 
 **Session Info**
 
-``` r
+<div id="cb34" class="sourceCode">
 
+``` r
 sessionInfo()
 #> R version 4.4.2 (2024-10-31)
 #> Platform: x86_64-conda-linux-gnu
@@ -667,28 +874,41 @@ sessionInfo()
 #> [1] spatialGE_2.0.0
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] sass_0.4.10           generics_0.1.4        slam_0.1-55          
-#>  [4] fastcluster_1.3.0     lattice_0.22-9        digest_0.6.39        
-#>  [7] magrittr_2.0.4        evaluate_1.0.5        grid_4.4.2           
-#> [10] RColorBrewer_1.1-3    dynamicTreeCut_1.63-1 fastmap_1.2.0        
-#> [13] jsonlite_2.0.0        Matrix_1.7-4          backports_1.5.0      
-#> [16] scales_1.4.0          pbapply_1.7-4         numDeriv_2016.8-1.1  
-#> [19] textshaping_0.4.0     jquerylib_0.1.4       registry_0.5-1       
-#> [22] reformulas_0.4.4      Rdpack_2.6.6          cli_3.6.5            
-#> [25] rlang_1.1.7           rbibutils_2.4.1       ROI_1.0-2            
-#> [28] cachem_1.1.0          yaml_2.3.12           otel_0.2.0           
-#> [31] tools_4.4.2           parallel_4.4.2        checkmate_2.3.4      
-#> [34] minqa_1.2.8           dplyr_1.2.0           ggplot2_4.0.2        
-#> [37] boot_1.3-32           png_0.1-9             vctrs_0.7.1          
-#> [40] R6_2.6.1              proxy_0.4-29          lifecycle_1.0.5      
-#> [43] iotools_0.4-0         fs_1.6.7              htmlwidgets_1.6.4    
-#> [46] MASS_7.3-65           sparsesvd_0.2-3       cluster_2.1.8.2      
-#> [49] ragg_1.5.0            pkgconfig_2.0.3       desc_1.4.3           
-#> [52] pkgdown_2.2.0         pillar_1.11.1         bslib_0.10.0         
-#> [55] gtable_0.3.6          glue_1.8.0            Rcpp_1.1.1           
-#> [58] systemfonts_1.3.2     wordspace_0.2-9       xfun_0.56            
-#> [61] tibble_3.3.1          tidyselect_1.2.1      knitr_1.51           
-#> [64] ggpolypath_0.4.0      dichromat_2.0-0.1     farver_2.1.2         
-#> [67] nlme_3.1-168          htmltools_0.5.9       rmarkdown_2.30       
-#> [70] spaMM_4.6.1           compiler_4.4.2        S7_0.2.1
+#>  [1] tidyselect_1.2.1      khroma_1.17.0         concaveman_1.2.0     
+#>  [4] dplyr_1.2.0           farver_2.1.2          S7_0.2.1             
+#>  [7] fastmap_1.2.0         tweenr_2.0.3          digest_0.6.39        
+#> [10] sparsesvd_0.2-3       lifecycle_1.0.5       sf_1.1-0             
+#> [13] cluster_2.1.8.2       magrittr_2.0.4        compiler_4.4.2       
+#> [16] rlang_1.1.7           sass_0.4.10           tools_4.4.2          
+#> [19] utf8_1.2.6            yaml_2.3.12           data.table_1.17.8    
+#> [22] knitr_1.51            labeling_0.4.3        htmlwidgets_1.6.4    
+#> [25] classInt_0.4-11       bit_4.6.0             curl_7.0.0           
+#> [28] RColorBrewer_1.1-3    KernSmooth_2.23-26    wordspace_0.2-9      
+#> [31] registry_0.5-1        withr_3.0.2           numDeriv_2016.8-1.1  
+#> [34] desc_1.4.3            dynamicTreeCut_1.63-1 grid_4.4.2           
+#> [37] polyclip_1.10-7       e1071_1.7-17          fastcluster_1.3.0    
+#> [40] ggplot2_4.0.2         scales_1.4.0          MASS_7.3-65          
+#> [43] dichromat_2.0-0.1     ggpolypath_0.4.0      cli_3.6.5            
+#> [46] rmarkdown_2.30        ragg_1.5.0            reformulas_0.4.4     
+#> [49] generics_0.1.4        otel_0.2.0            minqa_1.2.8          
+#> [52] DBI_1.3.0             pbapply_1.7-4         cachem_1.1.0         
+#> [55] ggforce_0.5.0         proxy_0.4-29          parallel_4.4.2       
+#> [58] vctrs_0.7.1           V8_8.0.1              boot_1.3-32          
+#> [61] Matrix_1.7-4          jsonlite_2.0.0        slam_0.1-55          
+#> [64] spaMM_4.6.1           bit64_4.6.0-1         hdf5r_1.3.12         
+#> [67] systemfonts_1.3.2     jquerylib_0.1.4       units_1.0-0          
+#> [70] glue_1.8.0            ROI_1.0-2             pkgdown_2.2.0        
+#> [73] gtable_0.3.6          iotools_0.4-0         tibble_3.3.1         
+#> [76] pillar_1.11.1         htmltools_0.5.9       R6_2.6.1             
+#> [79] textshaping_0.4.0     Rdpack_2.6.6          evaluate_1.0.5       
+#> [82] lattice_0.22-9        rbibutils_2.4.1       png_0.1-9            
+#> [85] backports_1.5.0       bslib_0.10.0          class_7.3-23         
+#> [88] Rcpp_1.1.1            nlme_3.1-168          checkmate_2.3.4      
+#> [91] xfun_0.56             fs_1.6.7              pkgconfig_2.0.3
 ```
+
+</div>
+
+</div>
+
+</div>

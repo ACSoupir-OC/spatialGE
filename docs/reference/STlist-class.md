@@ -1,33 +1,45 @@
+<div id="main" class="col-md-9" role="main">
+
 # Definition of an STlist object class.
+
+<div class="ref-description section level2">
 
 Definition of an STlist object class.
 
+</div>
+
+<div class="section level2">
+
 ## Slots
 
-- `counts`:
+-   `counts`:
 
-  per spot RNA counts
+    per spot RNA counts
 
-- `spatial_meta`:
+-   `spatial_meta`:
 
-  per spot x,y coordinates
+    per spot x,y coordinates
 
-- `gene_meta`:
+-   `gene_meta`:
 
-  per gene statistics (e.g., average expression, variance, Moran's I)
+    per gene statistics (e.g., average expression, variance, Moran's I)
 
-- `sample_meta`:
+-   `sample_meta`:
 
-  dataframe with metadata per sample
+    dataframe with metadata per sample
 
-- `tr_counts`:
+-   `tr_counts`:
 
-  transfromed per spot counts
+    transfromed per spot counts
 
-- `gene_krige`:
+-   `gene_krige`:
 
-  results from kriging on gene expression
+    results from kriging on gene expression
 
-- `misc`:
+-   `misc`:
 
-  Parameters and images from ST data
+    Parameters and images from ST data
+
+</div>
+
+</div>

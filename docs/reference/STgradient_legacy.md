@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # STgradient_legacy: Tests of gene expression spatial gradients (legacy)
+
+<div class="ref-description section level2">
 
 **\[superseded\]**
 
 Calculates Spearman's coefficients to detect genes showing expression
 spatial gradients
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STgradient_legacy(
@@ -27,95 +37,110 @@ STgradient_legacy(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with transformed gene expression
+    an STlist with transformed gene expression
 
-- samples:
+-   samples:
 
-  the samples on which the test should be executed
+    the samples on which the test should be executed
 
-- topgenes:
+-   topgenes:
 
-  the number of high-variance genes to be tested. These genes are
-  selected in descending order of variance as caclulated using Seurat's
-  vst method
+    the number of high-variance genes to be tested. These genes are
+    selected in descending order of variance as caclulated using
+    Seurat's vst method
 
-- annot:
+-   annot:
 
-  the name of a column in `@spatial_meta` containing the tissue domain
-  assignments for each spot or cell. These assignments can be generated
-  using the `STclust` function
+    the name of a column in `@spatial_meta` containing the tissue domain
+    assignments for each spot or cell. These assignments can be
+    generated using the `STclust` function
 
-- ref:
+-   ref:
 
-  one of the tissue domains in the column specified in `annot`,
-  corresponding to the "reference" cluster or domain. Spearman's
-  correlations will be calculated using spots assigned to domains other
-  than this reference domain (or domains specified in `exclude`).
+    one of the tissue domains in the column specified in `annot`,
+    corresponding to the "reference" cluster or domain. Spearman's
+    correlations will be calculated using spots assigned to domains
+    other than this reference domain (or domains specified in
+    `exclude`).
 
-- exclude:
+-   exclude:
 
-  optional, a cluster/domain to exclude from the analysis
+    optional, a cluster/domain to exclude from the analysis
 
-- out_rm:
+-   out_rm:
 
-  logical (optional), remove gene expression outliers defined by the
-  interquartile method. This option is only valid when `robust=F`
+    logical (optional), remove gene expression outliers defined by the
+    interquartile method. This option is only valid when `robust=F`
 
-- limit:
+-   limit:
 
-  limite the analysis to spots/cells with distances to `ref` shorther
-  than the value specified here. Useful when gradients might occur at
-  smaller scales or when the domain in `ref` is scattered through the
-  tissue. Caution must be used due to difficult interpretation of
-  imposed limits. It is suggested to run analysis without restricted
-  distances in addition for comparison.
+    limite the analysis to spots/cells with distances to `ref` shorther
+    than the value specified here. Useful when gradients might occur at
+    smaller scales or when the domain in `ref` is scattered through the
+    tissue. Caution must be used due to difficult interpretation of
+    imposed limits. It is suggested to run analysis without restricted
+    distances in addition for comparison.
 
-- distsumm:
+-   distsumm:
 
-  the distance summary metric to use in correlations. One of `min` or
-  `avg`
+    the distance summary metric to use in correlations. One of `min` or
+    `avg`
 
-- min_nb:
+-   min_nb:
 
-  the minimum number of immediate neighbors a spot or cell has to have
-  in order to be included in the analysis. This parameter seeks to
-  reduce the effect of isolated `ref` spots on the correlation
+    the minimum number of immediate neighbors a spot or cell has to have
+    in order to be included in the analysis. This parameter seeks to
+    reduce the effect of isolated `ref` spots on the correlation
 
-- robust:
+-   robust:
 
-  logical, whether to use robust regression (`MASS` and `sfsmisc`
-  packages)
+    logical, whether to use robust regression (`MASS` and `sfsmisc`
+    packages)
 
-- nb_dist_thr:
+-   nb_dist_thr:
 
-  a numeric vector of length two indicating the tolerance interval to
-  assign spots/cells to neighborhoods. The wider the range of the
-  interval, the more likely distinct neighbors to be considered. If
-  NULL, `c(0.75, 1.25)` and `c(0.25, 3)` is assigned for Visium and
-  CosMx respectively.
+    a numeric vector of length two indicating the tolerance interval to
+    assign spots/cells to neighborhoods. The wider the range of the
+    interval, the more likely distinct neighbors to be considered. If
+    NULL, `c(0.75, 1.25)` and `c(0.25, 3)` is assigned for Visium and
+    CosMx respectively.
 
-- log_dist:
+-   log_dist:
 
-  logical, whether to apply the natural logarithm to the spot/cell
-  distances. It applies to all distances a constant (1e-200) to avoid
-  log(0)
+    logical, whether to apply the natural logarithm to the spot/cell
+    distances. It applies to all distances a constant (1e-200) to avoid
+    log(0)
 
-- cores:
+-   cores:
 
-  the number of cores used during parallelization. If NULL (default),
-  the number of cores is defined automatically
+    the number of cores used during parallelization. If NULL (default),
+    the number of cores is defined automatically
 
-- verbose:
+-   verbose:
 
-  logical, whether to print text to console
+    logical, whether to print text to console
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a list of data frames with the results of the test
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -129,3 +154,7 @@ the `STgradient` function can be used to investigate if a gene is
 expressed higher in spots/cells closer to a specific reference tissue
 domain, compared to spots/cells farther from the reference domain (or
 viceversa as indicated by the Spearman's cofficient).
+
+</div>
+
+</div>

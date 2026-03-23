@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # STdiff_volcano: Generates volcano plots from STdiff results
+
+<div class="ref-description section level2">
 
 Generates volcano plots of differential expression results from STdiff
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STdiff_volcano(
@@ -14,34 +24,52 @@ STdiff_volcano(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  the output of `STdiff`
+    the output of `STdiff`
 
-- samples:
+-   samples:
 
-  samples to create plots
+    samples to create plots
 
-- clusters:
+-   clusters:
 
-  names of the clusters to generate comparisons
+    names of the clusters to generate comparisons
 
-- pval_thr:
+-   pval_thr:
 
-  the p-value threshold to color genes with differential expression
+    the p-value threshold to color genes with differential expression
 
-- color_pal:
+-   color_pal:
 
-  the palette to color genes by significance
+    the palette to color genes by significance
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a list of ggplot objects
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
 The function generated volcano plots (p-value vs. log-fold change) for
 genes tested with `STdiff`. Colors can be customized to show
 significance from spatial and non-spatial models
+
+</div>
+
+</div>

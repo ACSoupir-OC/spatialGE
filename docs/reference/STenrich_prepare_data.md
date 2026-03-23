@@ -1,41 +1,65 @@
+<div id="main" class="col-md-9" role="main">
+
 # STenrich_prepare_data: Prepare data for enrichment analysis
+
+<div class="ref-description section level2">
 
 Extract tissue spots, coordinates, and gene sets from STlist
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STenrich_prepare_data(x, samples, gene_sets, annot, domain, min_units)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with transformed gene expression
+    an STlist with transformed gene expression
 
-- samples:
+-   samples:
 
-  a vector with sample names to run analysis
+    a vector with sample names to run analysis
 
-- gene_sets:
+-   gene_sets:
 
-  a named list of gene sets to test
+    a named list of gene sets to test
 
-- annot:
+-   annot:
 
-  name of the annotation within `x@spatial_meta` containing spot/cell
-  categories
+    name of the annotation within `x@spatial_meta` containing spot/cell
+    categories
 
-- domain:
+-   domain:
 
-  the domain to restrict the analysis
+    the domain to restrict the analysis
 
-- min_units:
+-   min_units:
 
-  Minimum number of spots with high expression (default: 20)
+    Minimum number of spots with high expression (default: 20)
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 list with prepared data including tissue_spots, coords_df, combo,
 pw_genes
+
+</div>
+
+</div>

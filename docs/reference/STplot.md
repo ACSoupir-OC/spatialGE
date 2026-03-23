@@ -1,4 +1,8 @@
+<div id="main" class="col-md-9" role="main">
+
 # STplot: Plots of gene expression, cluster memberships, and metadata in spatial context
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
@@ -6,7 +10,13 @@ Generates a plot of the location of spots/cells within an spatial
 sample, and colors them according to gene expression levels or
 spot/cell-level metadata
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STplot(
@@ -24,62 +34,76 @@ STplot(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
 
-- samples:
+-   samples:
 
-  a vector of numbers indicating the ST samples to plot, or their sample
-  names. If vector of numbers, it follow the order of samples in
-  `names(x@counts)`. If NULL, the function plots all samples
+    a vector of numbers indicating the ST samples to plot, or their
+    sample names. If vector of numbers, it follow the order of samples
+    in `names(x@counts)`. If NULL, the function plots all samples
 
-- genes:
+-   genes:
 
-  a vector of gene names or a named list of gene sets. In the latter
-  case, the averaged expression of genes within the sets is plotted
+    a vector of gene names or a named list of gene sets. In the latter
+    case, the averaged expression of genes within the sets is plotted
 
-- plot_meta:
+-   plot_meta:
 
-  a column name in `x@spatial_meta` to plot
+    a column name in `x@spatial_meta` to plot
 
-- ks:
+-   ks:
 
-  the k values to plot or 'dtc' to plot results from `dynamicTreeCut`
-  clustering solutions. Requires previous analysis with `STclust`
+    the k values to plot or 'dtc' to plot results from `dynamicTreeCut`
+    clustering solutions. Requires previous analysis with `STclust`
 
-- ws:
+-   ws:
 
-  the spatial weights to plot samples if `STclust` was used
+    the spatial weights to plot samples if `STclust` was used
 
-- deepSplit:
+-   deepSplit:
 
-  a logical or positive number indicating the `deepSplit`, if samples
-  were analyzed with `STclust`
+    a logical or positive number indicating the `deepSplit`, if samples
+    were analyzed with `STclust`
 
-- color_pal:
+-   color_pal:
 
-  a string of a color palette from `khroma` or `RColorBrewer`, or a
-  vector with enough color names or HEX values
+    a string of a color palette from `khroma` or `RColorBrewer`, or a
+    vector with enough color names or HEX values
 
-- data_type:
+-   data_type:
 
-  one of 'tr' or 'raw', to plot transformed or raw counts respectively
+    one of 'tr' or 'raw', to plot transformed or raw counts respectively
 
-- ptsize:
+-   ptsize:
 
-  a number specifying the size of the points. Passed to the `size`
+    a number specifying the size of the points. Passed to the `size`
 
-- txsize:
+-   txsize:
 
-  a number controlling the size of the text in the plot title and legend
-  title. Passed to the `element_text` aesthetic.
+    a number controlling the size of the text in the plot title and
+    legend title. Passed to the `element_text` aesthetic.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a list of plots
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -89,37 +113,32 @@ expression of selected genes, cluster memberships, or any spot/cell
 level metadata included in `x@spatial_meta`. The function also can
 average expression of gene sets.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
 
+<div class="sourceCode">
+
 ``` r
-# \donttest{
-# Using included melanoma example (Thrane et al.)
-# Download example data set from spatialGE_Data
-thrane_tmp = tempdir()
-unlink(thrane_tmp, recursive=TRUE)
-dir.create(thrane_tmp)
-lk='https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
-tryCatch({ # In case data is not available from network
-  download.file(lk, destfile=paste0(thrane_tmp, '/', 'melanoma_thrane.zip'), mode='wb')
-  #' zip_tmp = list.files(thrane_tmp, pattern='melanoma_thrane.zip$', full.names=TRUE)
-  unzip(zipfile=zip_tmp, exdir=thrane_tmp)
-  # Generate the file paths to be passed to the STlist function
-  count_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'),
-                            full.names=TRUE, pattern='counts')
-  coord_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'),
-                            full.names=TRUE, pattern='mapping')
-  clin_file <- list.files(paste0(thrane_tmp, '/melanoma_thrane'),
-                          full.names=TRUE, pattern='clinical')
-  # Create STlist
-  library('spatialGE')
-  melanoma <- STlist(rnacounts=count_files,
-                     spotcoords=coord_files,
-                     samples=clin_file)
-  melanoma <- transform_data(melanoma)
-  STplot(melanoma, gene='MLANA', samples='ST_mel1_rep2', ptsize=1)
-}, error = function(e) {
-  message("Could not run example. Are you connected to the internet?")
-  return(NULL)
-})
-# }
+# Load TNBC dataset (from spatialGE_Data package)
+# library(spatialGE_Data)
+# data(tnbc_bassiouni)
+#
+# Basic gene expression plot
+# STplot(tnbc, genes='CD3E', samples=1, ptsize=1)
+#
+# Multiple genes
+# STplot(tnbc, genes=c('CD3E', 'MS4A1'), samples=1, ptsize=1)
+#
+# Cluster membership (requires STclust first)
+# tnbc_clust <- STclust(tnbc, samples=1)
+# STplot(tnbc, samples=1, ks='dtc', ptsize=1)
 ```
+
+</div>
+
+</div>
+
+</div>

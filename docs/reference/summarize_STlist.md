@@ -1,29 +1,59 @@
+<div id="main" class="col-md-9" role="main">
+
 # summarize_STlist: Generates a data frame with summary statistics
+
+<div class="ref-description section level2">
 
 Produces a data frame with counts per gene and counts per ROI/spot/cell
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 summarize_STlist(x = NULL)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a data frame
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
 The function creates a table with counts per gene and counts per region
 of interest (ROI), spot, or cell in the samples stored in the STlist
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -54,5 +84,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?.")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?.
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

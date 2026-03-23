@@ -1,10 +1,14 @@
+<div id="main" class="col-md-9" role="main">
+
 # Seurat Integration: Bidirectional Workflows
+
+<div class="section level2">
 
 ## Overview
 
 This vignette demonstrates how to integrate **spatialGE** with
 **Seurat** for seamless spatial transcriptomics workflows. The
-`spatialGE` package now provides bidirectional conversion utilities that
+`spatialGE` package provides bidirectional conversion utilities that
 allow you to:
 
 1.  **Convert Seurat objects to STlist** - Run spatialGE analyses on
@@ -15,502 +19,377 @@ allow you to:
 4.  **Transfer results back to Seurat** - Add cluster assignments,
     spatial statistics to Seurat metadata
 
+</div>
+
+<div class="section level2">
+
 ## Installation
 
 Make sure both packages are installed:
 
-``` r
+<div id="cb1" class="sourceCode">
 
+``` r
 # Install spatialGE
-# install.packages("spatialGE")  # CRAN version
-# devtools::install_github("ACSoupir-OC/spatialGE")  # Development version
+devtools::install_github("ACSoupir-OC/spatialGE")
 
 # Install Seurat (if not already installed)
 install.packages("Seurat")
 ```
 
+</div>
+
 Load the required libraries:
 
-``` r
+<div id="cb2" class="sourceCode">
 
+``` r
 library(spatialGE)
-
-# Seurat is required for the examples in this vignette
-# Install with: install.packages("Seurat")
-if (requireNamespace("Seurat", quietly = TRUE)) {
-  library(Seurat)
-  has_seurat <- TRUE
-} else {
-  has_seurat <- FALSE
-  message("Seurat not installed. Examples will be skipped.")
-}
+library(Seurat)
+library(Matrix)
+library(tibble)
 ```
 
-## Workflow 1: Seurat → STlist → spatialGE Analysis
+</div>
 
-### Starting with a Seurat Object
+</div>
 
-Assume you have a Seurat object that has been processed through the
-standard Seurat workflow:
+<div class="section level2">
 
-``` r
+## Creating Example Data
 
-# Example: Create or load a Seurat object
-# seurat_obj <- readRDS("my_seurat_object.rds")
+For this vignette, we’ll create a synthetic STlist object to demonstrate
+the workflow:
 
-# Or create from 10X Visium data
-# seurat_obj <- Load10X_Spatial(data.dir = "path/to/visium/data")
-
-# Standard Seurat preprocessing
-# seurat_obj <- SCTransform(seurat_obj)
-# seurat_obj <- RunPCA(seurat_obj)
-# seurat_obj <- FindNeighbors(seurat_obj)
-# seurat_obj <- FindClusters(seurat_obj)
-```
-
-For this vignette, we’ll show code examples. To run them, you’ll
-need: 1. spatialGE installed: `install.packages("spatialGE")` 2. Seurat
-installed: `install.packages("Seurat")` 3. Example data (see code below)
+<div id="cb3" class="sourceCode">
 
 ``` r
+set.seed(42)
 
-# Load example data that comes with spatialGE
-data("melanoma_thrane", package = "spatialGE")
+# Create synthetic count matrix (20 genes x 100 cells)
+n_genes <- 20
+n_cells <- 100
 
-# melanoma_thrane is an STlist object
-# Let's see what's in it
-print(melanoma_thrane)
-summary(melanoma_thrane)
+counts_mat <- Matrix::Matrix(
+  matrix(rnbinom(n_genes * n_cells, mu = 5, size = 2), 
+         nrow = n_genes, ncol = n_cells), 
+  sparse = TRUE
+)
+rownames(counts_mat) <- paste0("Gene", 1:n_genes)
+colnames(counts_mat) <- paste0("Cell", 1:n_cells)
 
-# Or load your own STlist object
-# st_obj <- readRDS("my_spatial_data.rds")
-```
+# Add some marker gene names
+rownames(counts_mat)[1:5] <- c("MLANA", "CD37", "TP53", "GAPDH", "ACTB")
 
-### Convert Seurat to STlist
-
-Use
-[`as.STlist.Seurat()`](https://acsoupir-oc.github.io/spatialGE/reference/as.STlist.Seurat.md)
-to convert:
-
-``` r
-
-# Convert Seurat object to STlist
-st_obj <- as.STlist.Seurat(
-  seurat_obj,
-  assay = "RNA",      # Which assay to use
-  slot = "counts",    # Which slot (counts, data, scale.data)
-  use.spatial = TRUE, # Extract spatial coordinates
-  verbose = TRUE
+# Create spatial coordinates
+coords_df <- data.frame(
+  barcode = paste0("Cell", 1:n_cells),
+  xpos = runif(n_cells, 0, 1000),
+  ypos = runif(n_cells, 0, 1000)
 )
 
-# Inspect the STlist object
-print(st_obj)
-summary(st_obj)
+# Create STlist object
+st_obj <- methods::new("STlist",
+  counts = list(test_sample = counts_mat),
+  spatial_meta = list(test_sample = coords_df),
+  sample_meta = tibble::tibble(sample_name = "test_sample"),
+  gene_meta = list()
+)
+
+cat(sprintf("Created STlist: %d genes x %d cells\n", n_genes, n_cells))
+#> Created STlist: 20 genes x 100 cells
 ```
 
-**Key Parameters:**
+</div>
 
-| Parameter     | Description                   | Default    |
-|---------------|-------------------------------|------------|
-| `assay`       | Which Seurat assay to extract | `"RNA"`    |
-| `slot`        | Which slot within the assay   | `"counts"` |
-| `use.spatial` | Extract spatial coordinates   | `TRUE`     |
-| `verbose`     | Print progress messages       | `TRUE`     |
+</div>
 
-### Run spatialGE Analysis
+<div class="section level2">
 
-Now run any spatialGE analysis on the converted object:
+## Workflow 1: STlist to Seurat Conversion
 
-``` r
+Convert your STlist object to Seurat for visualization:
 
-# Run spatial heterogeneity analysis
-genes_of_interest <- c("MLANA", "CD37", "TP53")
-st_obj <- SThet(st_obj, genes = genes_of_interest)
-
-# View results
-print(st_obj@gene_meta[[1]])
-
-# Run spatial clustering
-st_obj <- STclust(st_obj)
-
-# View cluster assignments
-head(st_obj@spatial_meta[[1]])
-```
-
-## Workflow 2: STlist → Seurat → Visualization
-
-### Convert STlist to Seurat
-
-After running spatialGE analysis, convert back to Seurat for
-visualization:
+<div id="cb4" class="sourceCode">
 
 ``` r
-
 # Convert STlist to Seurat object
-seurat_obj <- as.Seurat.STlist(
-  st_obj,
-  samples = NULL,           # All samples, or specify c("sample1", "sample2")
-  assay.name = "RNA",       # Name for the assay
-  add.spatial.info = TRUE,  # Include spatial coordinates
-  verbose = TRUE
-)
+seurat_obj <- as.Seurat.STlist(st_obj, verbose = FALSE)
 
 # Inspect the Seurat object
-print(seurat_obj)
+cat(sprintf("Seurat object:\n"))
+#> Seurat object:
+cat(sprintf("  Cells: %d\n", ncol(seurat_obj)))
+#>   Cells: 100
+cat(sprintf("  Features: %d\n", nrow(seurat_obj)))
+#>   Features: 20
+
+# View metadata
+head(seurat_obj@meta.data)
+#>        orig.ident nCount_RNA nFeature_RNA         x        y barcode      xpos
+#> Cell1 test_sample        148           19 948.00454 445.0047   Cell1 948.00454
+#> Cell2 test_sample         53           16 197.91424 534.5598   Cell2 197.91424
+#> Cell3 test_sample         76           17  89.54941 923.2419   Cell3  89.54941
+#> Cell4 test_sample         73           16  67.94101 429.1973   Cell4  67.94101
+#> Cell5 test_sample        116           18 673.35430 847.3947   Cell5 673.35430
+#> Cell6 test_sample        103           18 483.77301 846.9969   Cell6 483.77301
+#>           ypos
+#> Cell1 445.0047
+#> Cell2 534.5598
+#> Cell3 923.2419
+#> Cell4 429.1973
+#> Cell5 847.3947
+#> Cell6 846.9969
 ```
 
-### Visualize in Seurat
+</div>
 
-Leverage Seurat’s powerful visualization tools:
+</div>
+
+<div class="section level2">
+
+## Workflow 2: Seurat to STlist Conversion
+
+Convert back from Seurat to STlist (round-trip validation):
+
+<div id="cb5" class="sourceCode">
 
 ``` r
+# Convert Seurat back to STlist
+st_obj2 <- as.STlist.Seurat(seurat_obj, verbose = FALSE)
 
-# FeaturePlot for gene expression
-FeaturePlot(seurat_obj, features = c("MLANA", "CD37"))
-
-# DimPlot for clustering (if clusters were added)
-DimPlot(seurat_obj, group.by = "spatialGE_cluster")
-
-# Spatial plotting (for Visium data)
-SpatialDimPlot(seurat_obj, group.by = "spatialGE_cluster")
-SpatialFeaturePlot(seurat_obj, features = "MLANA")
+cat(sprintf("Round-trip validation:\n"))
+#> Round-trip validation:
+cat(sprintf("  Original: %d genes x %d cells\n", 
+            nrow(st_obj@counts[[1]]), ncol(st_obj@counts[[1]])))
+#>   Original: 20 genes x 100 cells
+cat(sprintf("  After round-trip: %d genes x %d cells\n", 
+            nrow(st_obj2@counts[[1]]), ncol(st_obj2@counts[[1]])))
+#>   After round-trip: 20 genes x 100 cells
+cat(sprintf("  Match: %s\n", 
+            all(dim(st_obj@counts[[1]]) == dim(st_obj2@counts[[1]]))))
+#>   Match: TRUE
 ```
 
-## Workflow 3: Direct Analysis with `spatialGE_from_seurat()`
+</div>
 
-For quick analyses, use the wrapper function:
+</div>
+
+<div class="section level2">
+
+## Workflow 3: Add Results to Seurat Metadata
+
+You can add custom analysis results to Seurat metadata:
+
+<div id="cb6" class="sourceCode">
 
 ``` r
+# Add cluster assignments
+set.seed(42)
+seurat_obj$spatialGE_cluster <- sample(c("A", "B", "C"), ncol(seurat_obj), replace = TRUE)
 
-# One-step heterogeneity analysis
-result <- spatialGE_from_seurat(
-  seurat_obj,
-  analysis = "SThet",
-  genes = c("MLANA", "CD37", "TP53"),
-  assay = "RNA",
-  verbose = TRUE
-)
+# Add spatial statistics
+seurat_obj$moran_I <- runif(ncol(seurat_obj), 0, 0.5)
 
-# One-step clustering
-result <- spatialGE_from_seurat(
-  seurat_obj,
-  analysis = "STclust",
-  assay = "RNA"
-)
-
-# One-step differential expression
-result <- spatialGE_from_seurat(
-  seurat_obj,
-  analysis = "STdiff",
-  annot = "cell_type"  # Metadata column for grouping
-)
+cat("Metadata columns added:\n")
+#> Metadata columns added:
+head(seurat_obj@meta.data[, c("orig.ident", "spatialGE_cluster", "moran_I")])
+#>        orig.ident spatialGE_cluster   moran_I
+#> Cell1 test_sample                 A 0.2899104
+#> Cell2 test_sample                 A 0.4107020
+#> Cell3 test_sample                 A 0.0568593
+#> Cell4 test_sample                 A 0.3822539
+#> Cell5 test_sample                 B 0.3118067
+#> Cell6 test_sample                 B 0.0742233
 ```
 
-**Available Analyses:**
+</div>
 
-- `"SThet"` - Spatial heterogeneity (Moran’s I, Geary’s C)
-- `"STclust"` - Spatial domain detection
-- `"STdiff"` - Spatial differential expression
-- `"STenrich"` - Spatial enrichment analysis
-- `"STgradient"` - Expression gradient analysis
+</div>
 
-## Workflow 4: Adding Results Back to Seurat
+<div class="section level2">
 
-Use
-[`add_spatialGE_to_seurat()`](https://acsoupir-oc.github.io/spatialGE/reference/add_spatialGE_to_seurat.md)
-to transfer analysis results:
+## Workflow 4: Gene Set Integration
+
+Convert spatialGE enrichment results for Seurat GSEA or AddModuleScore:
+
+<div id="cb7" class="sourceCode">
 
 ``` r
-
-# After running SThet
-st_obj <- SThet(st_obj, genes = c("MLANA", "CD37"))
-
-# Add Moran's I values to Seurat feature metadata
-seurat_obj <- add_spatialGE_to_seurat(
-  seurat_obj,
-  st_obj,
-  result_type = "moran",  # or "geary"
-  verbose = TRUE
-)
-
-# View in Seurat
-head(seurat_obj@assays$RNA@meta.features)
-
-# After running STclust
-st_obj <- STclust(st_obj)
-
-# Add cluster assignments to Seurat cell metadata
-seurat_obj <- add_spatialGE_to_seurat(
-  seurat_obj,
-  st_obj,
-  result_type = "clusters",
-  verbose = TRUE
-)
-
-# View cluster assignments
-head(seurat_obj$spatialGE_cluster)
-```
-
-**Result Types:**
-
-| Type | Description | Location in Seurat |
-|----|----|----|
-| `"clusters"` | Spatial domain assignments | `seurat_obj$spatialGE_cluster` |
-| `"moran"` | Moran’s I statistics | `seurat_obj@assays$RNA@meta.features` |
-| `"geary"` | Geary’s C statistics | `seurat_obj@assays$RNA@meta.features` |
-| `"custom"` | Custom metadata | User-specified |
-
-## Workflow 5: Gene Set Analysis Integration
-
-Convert spatialGE enrichment results for Seurat GSEA:
-
-``` r
-
-# Run enrichment analysis
+# Define pathway gene sets
 pathway_list <- list(
-  "EMT" = c("VIM", "CDH2", "FN1", "SNAI1"),
-  "CellCycle" = c("MKI67", "TOP2A", "PCNA")
+  "Pathway1" = c("MLANA", "CD37", "TP53"),
+  "Pathway2" = c("GAPDH", "ACTB")
 )
 
-enrich_result <- STenrich(st_obj, gene_sets = pathway_list)
-
-# Convert to Seurat gene sets
+# Convert to Seurat format
 gene_sets <- spatialGE_to_seurat_genesets(
-  enrich_result,
+  list(test_sample = data.frame(
+    geneset = names(pathway_list),
+    genes = I(pathway_list),
+    pval = c(0.01, 0.05),
+    stringsAsFactors = FALSE
+  )),
   pval.thr = 0.05,
   return.type = "list"
 )
 
-# Add module scores to Seurat
-seurat_obj <- AddModuleScore(
-  seurat_obj,
-  features = gene_sets,
-  name = "spatialGE_"
-)
-
-# View module scores
-head(seurat_obj$spatialGE_1)
+cat(sprintf("Generated %d gene sets\n", length(gene_sets)))
+#> Generated 1 gene sets
+for (i in seq_along(gene_sets)) {
+  cat(sprintf("  - %s: %d genes\n", names(gene_sets)[i], length(gene_sets[[i]])))
+}
+#>   - test_sample_Pathway1: 1 genes
 ```
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Complete Example: End-to-End Workflow
 
 Here’s a complete workflow from start to finish:
 
+<div id="cb8" class="sourceCode">
+
 ``` r
+# ============================================================
+# Complete workflow from STlist to Seurat and back
+# ============================================================
 
-# ============================================================
-# Step 1: Start with Seurat object (already preprocessed)
-# ============================================================
-# seurat_obj <- Load10X_Spatial(data.dir = "visium_data/")
-# seurat_obj <- SCTransform(seurat_obj)
+# Step 1: Create or load STlist object
+# st_obj <- STlist(rnacounts = count_files, spotcoords = coord_files)
 
-# ============================================================
-# Step 2: Convert to STlist
-# ============================================================
-st_obj <- as.STlist.Seurat(seurat_obj, verbose = TRUE)
+# Step 2: Run spatialGE analysis
+st_obj <- SThet(st_obj, genes = c("MLANA", "CD37", "TP53"))
+st_obj <- STclust(st_obj, k = 3)
 
-# ============================================================
-# Step 3: Run spatial heterogeneity analysis
-# ============================================================
-genes <- c("MLANA", "CD37", "TP53", "GAPDH", "ACTB")
-st_obj <- SThet(st_obj, genes = genes)
-
-# ============================================================
-# Step 4: Run spatial clustering
-# ============================================================
-st_obj <- STclust(st_obj, k = 5)
-
-# ============================================================
-# Step 5: Convert back to Seurat
-# ============================================================
+# Step 3: Convert to Seurat for visualization
 seurat_obj <- as.Seurat.STlist(st_obj, verbose = TRUE)
 
-# ============================================================
-# Step 6: Add results to Seurat metadata
-# ============================================================
-seurat_obj <- add_spatialGE_to_seurat(
-  seurat_obj, st_obj,
-  result_type = "clusters"
-)
-seurat_obj <- add_spatialGE_to_seurat(
-  seurat_obj, st_obj,
-  result_type = "moran"
-)
+# Step 4: Add results to Seurat metadata
+seurat_obj <- add_spatialGE_to_seurat(seurat_obj, st_obj, result_type = "clusters")
 
-# ============================================================
-# Step 7: Visualize in Seurat
-# ============================================================
+# Step 5: Visualize in Seurat
 # SpatialDimPlot(seurat_obj, group.by = "spatialGE_cluster")
 # FeaturePlot(seurat_obj, features = c("MLANA", "CD37"))
 
-# ============================================================
-# Step 8: Save results
-# ============================================================
+# Step 6: Save results
 # saveRDS(seurat_obj, "seurat_with_spatialge_results.rds")
 ```
 
-## Handling Multi-Sample Objects
+</div>
 
-### Merged Seurat Objects
+</div>
 
-When working with merged Seurat objects (multiple samples):
-
-``` r
-
-# Seurat object with multiple samples
-# seurat_merged <- merge(seurat1, seurat2, seurat3)
-
-# Convert to STlist (preserves sample structure)
-st_obj <- as.STlist.Seurat(seurat_merged)
-
-# Check samples
-names(st_obj@counts)  # Sample names preserved
-
-# Run analysis on all samples
-st_obj <- SThet(st_obj, genes = c("MLANA", "CD37"))
-
-# Convert back (will merge automatically)
-seurat_merged <- as.Seurat.STlist(st_obj)
-
-# Or specify specific samples
-seurat_sample1 <- as.Seurat.STlist(st_obj, samples = "sample_1")
-```
-
-### Batch Processing
-
-``` r
-
-# Process samples individually
-results_list <- list()
-
-for (sample_name in names(st_obj@counts)) {
-  # Single sample analysis
-  st_single <- st_obj[, sample_name]  # Subset if supported
-  st_single <- SThet(st_single, genes = genes_of_interest)
-  results_list[[sample_name]] <- st_single@gene_meta
-}
-
-# Combine results
-combined_results <- do.call(rbind, results_list)
-```
+<div class="section level2">
 
 ## Troubleshooting
 
-### Issue: “Seurat package is required”
-
-``` r
-
-# Install Seurat
-install.packages("Seurat")
-
-# Or development version
-# remotes::install_github("satijalab/seurat")
-```
+<div class="section level3">
 
 ### Issue: No spatial coordinates found
 
-``` r
+Check if your object has spatial information:
 
-# Check if Seurat object has images
+<div id="cb9" class="sourceCode">
+
+``` r
+# For Seurat objects, check images slot
 names(seurat_obj@images)
 
-# If empty, coordinates won't be extracted
-# Solution: Load spatial data properly with Load10X_Spatial()
-
-# Or add coordinates manually after conversion
-st_obj@spatial_meta[[1]] <- your_coordinates_df
+# For STlist objects, check spatial_meta
+names(st_obj@spatial_meta)
 ```
 
-### Issue: Cell barcode mismatch
+</div>
 
-When converting between formats, cell barcodes may not match exactly:
+</div>
 
-``` r
-
-# Check barcodes
-head(colnames(seurat_obj))
-head(st_obj@spatial_meta[[1]]$barcode)
-
-# The conversion functions handle this automatically
-# by matching common barcodes
-
-# If issues persist, check for sample prefixes
-# Seurat merged objects: SampleID_CellBarcode
-# STlist: CellBarcode only
-```
+<div class="section level3">
 
 ### Issue: Memory errors with large objects
 
+Process samples individually:
+
+<div id="cb10" class="sourceCode">
+
 ``` r
-
-# Process samples individually instead of merged
-for (sample in names(seurat_obj@images)) {
-  seurat_single <- subset(seurat_obj, images = sample)
-  st_single <- as.STlist.Seurat(seurat_single)
-  # ... analysis ...
+# Process one sample at a time
+for (sample in names(st_obj@counts)) {
+  st_single <- st_obj[, sample]
+  st_single <- SThet(st_single, genes = genes_of_interest)
 }
-
-# Or use sparse matrices (default in spatialGE)
-# Check memory usage
-pryr::mem_used()
 ```
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Best Practices
 
 1.  **Always validate after conversion**
 
-    ``` r
+    <div id="cb11" class="sourceCode">
 
+    ``` r
     st_obj <- as.STlist.Seurat(seurat_obj)
     print(st_obj)
     summary(st_obj)
     ```
 
+    </div>
+
 2.  **Preserve original objects**
 
-    ``` r
+    <div id="cb12" class="sourceCode">
 
+    ``` r
     seurat_original <- seurat_obj  # Keep backup
     seurat_obj <- as.Seurat.STlist(st_obj)  # Overwrite carefully
     ```
 
-3.  **Check assay compatibility**
+    </div>
+
+3.  **Use raw counts for spatialGE**
+
+    <div id="cb13" class="sourceCode">
 
     ``` r
+    # Check available assays
+    Seurat::Assays(seurat_obj)
 
-    # Use raw counts for spatialGE
-    Seurat::Assays(seurat_obj)  # Check available assays
+    # Use raw counts
     st_obj <- as.STlist.Seurat(seurat_obj, assay = "RNA", slot = "counts")
     ```
 
-4.  **Document your workflow**
+    </div>
 
-    ``` r
+</div>
 
-    # Save conversion metadata
-    st_obj@misc$conversion_info <- list(
-      source = "seurat",
-      assay = "RNA",
-      timestamp = Sys.time(),
-      seurat_version = packageVersion("Seurat")
-    )
-    ```
+<div class="section level2">
 
 ## See Also
 
-- `vignette("basic_functions_vignette", package = "spatialGE")` - Core
-  spatialGE functions
-- `vignette("spatial_differential_expression", package = "spatialGE")` -
-  STdiff tutorial
-- `vignette("spatial_enrichment_gradients_smi", package = "spatialGE")` -
-  STenrich and STgradient
-- Seurat website: <https://satijalab.org/seurat/>
+-   `vignette("basic_functions_vignette", package = "spatialGE")` - Core
+    spatialGE functions
+-   Seurat website: <https://satijalab.org/seurat/>
+
+</div>
+
+<div class="section level2">
 
 ## References
 
-- Hao Y, et al. (2024). “Seurat v5: A comprehensive toolkit for
-  single-cell and spatial data analysis.” *Nature Biotechnology*.
-- Stuart T, et al. (2019). “Comprehensive Integration of Single-Cell
-  Data.” *Cell*.
-- Soupir AC, et al. (2024). “spatialGE: Spatial transcriptomics analysis
-  tools.” *bioRxiv*.
+-   Hao Y, et al. (2024). “Seurat v5.” *Nature Biotechnology*.
+-   Stuart T, et al. (2019). “Single-Cell Data Integration.” *Cell*.
+
+</div>
+
+</div>

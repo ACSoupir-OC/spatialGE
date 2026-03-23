@@ -1,33 +1,57 @@
+<div id="main" class="col-md-9" role="main">
+
 # Create Seurat-compatible gene sets from spatialGE results
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
 Converts STenrich or STgradient results to gene set format for Seurat
 GSEA.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 spatialGE_to_seurat_genesets(st_result, pval.thr = 0.05, return.type = "list")
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- st_result:
+-   st_result:
 
-  results from STenrich or STgradient analysis
+    results from STenrich or STgradient analysis
 
-- pval.thr:
+-   pval.thr:
 
-  p-value threshold for significance (default: 0.05)
+    p-value threshold for significance (default: 0.05)
 
-- return.type:
+-   return.type:
 
-  'list' (gene sets) or 'data.frame' (summary table)
+    'list' (gene sets) or 'data.frame' (summary table)
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 gene sets in Seurat-compatible format
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -35,12 +59,25 @@ This function extracts significant gene sets from spatialGE enrichment
 analysis and formats them for use with Seurat's AddModuleScore or
 similar functions.
 
+</div>
+
+<div class="section level2">
+
 ## See also
 
-[`STenrich`](https://acsoupir-oc.github.io/spatialGE/reference/STenrich.md),
-[`STgradient`](https://acsoupir-oc.github.io/spatialGE/reference/STgradient.md)
+<div class="dont-index">
+
+`STenrich`, `STgradient`
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 if (FALSE) { # \dontrun{
@@ -54,3 +91,9 @@ gene_sets <- spatialGE_to_seurat_genesets(enrich_result, pval.thr = 0.05)
 seurat_obj <- Seurat::AddModuleScore(seurat_obj, features = gene_sets)
 } # }
 ```
+
+</div>
+
+</div>
+
+</div>

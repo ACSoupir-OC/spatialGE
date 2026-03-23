@@ -1,4 +1,8 @@
+<div id="main" class="col-md-9" role="main">
+
 # STdiff: Differential gene expression analysis for spatial transcriptomics
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
@@ -10,7 +14,13 @@ of DE genes.
 
 Public wrapper function that calls the modular STdiff functions
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STdiff(
@@ -50,81 +60,97 @@ STdiff(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist object containing spatial transcriptomics data
+    an STlist object containing spatial transcriptomics data
 
-- samples:
+-   samples:
 
-  vector of sample names or indices to test. If NULL, uses all samples
+    vector of sample names or indices to test. If NULL, uses all samples
 
-- annot:
+-   annot:
 
-  column name in spatial_meta for cluster annotations. Required if w/k
-  not specified
+    column name in spatial_meta for cluster annotations. Required if w/k
+    not specified
 
-- w:
+-   w:
 
-  spatial weight parameter for STclust (required if annot is NULL)
+    spatial weight parameter for STclust (required if annot is NULL)
 
-- k:
+-   k:
 
-  number of clusters for STclust, or 'dtc' for dynamicTreeCut (required
-  if annot is NULL)
+    number of clusters for STclust, or 'dtc' for dynamicTreeCut
+    (required if annot is NULL)
 
-- deepSplit:
+-   deepSplit:
 
-  deepSplit parameter for dynamicTreeCut clusters (required if k='dtc')
+    deepSplit parameter for dynamicTreeCut clusters (required if
+    k='dtc')
 
-- topgenes:
+-   topgenes:
 
-  number of top variable genes to select (default=5000). If NULL, all
-  genes used
+    number of top variable genes to select (default=5000). If NULL, all
+    genes used
 
-- pval_thr:
+-   pval_thr:
 
-  p-value threshold for selecting DE genes from non-spatial tests
-  (default=0.05)
+    p-value threshold for selecting DE genes from non-spatial tests
+    (default=0.05)
 
-- pval_adj:
+-   pval_adj:
 
-  p-value adjustment method (default='fdr', passed to stats::p.adjust)
+    p-value adjustment method (default='fdr', passed to stats::p.adjust)
 
-- test_type:
+-   test_type:
 
-  type of test: 'mm' (linear models), 't_test', or 'wilcoxon'
+    type of test: 'mm' (linear models), 't_test', or 'wilcoxon'
 
-- sp_topgenes:
+-   sp_topgenes:
 
-  proportion (0-1) of DE genes to fit spatial models on. If 0, no
-  spatial tests
+    proportion (0-1) of DE genes to fit spatial models on. If 0, no
+    spatial tests
 
-- clusters:
+-   clusters:
 
-  optional vector of specific cluster names to test (vs all clusters)
+    optional vector of specific cluster names to test (vs all clusters)
 
-- pairwise:
+-   pairwise:
 
-  whether to perform pairwise tests (TRUE) or reference-based (FALSE)
+    whether to perform pairwise tests (TRUE) or reference-based (FALSE)
 
-- verbose:
+-   verbose:
 
-  verbosity level (0=silent, 1=progress, 2=detailed)
+    verbosity level (0=silent, 1=progress, 2=detailed)
 
-- cores:
+-   cores:
 
-  number of cores for parallelization. If NULL, auto-detected
+    number of cores for parallelization. If NULL, auto-detected
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a list with one data frame per sample containing differential expression
 results. Each data frame includes columns: sample, gene, cluster_1,
-cluster_2 (if pairwise), avg_log2fc, mm_p_val/ttest_p_val/wilcox_p_val,
-adj_p_val, exp_p_val, exp_adj_p_val, comments (indicating spatial model
-status: 'no_spatial_test', 'time_out', 'no_convergence', or NA for
-successful spatial models)
+cluster_2 (if pairwise), avg_log2fc,
+mm_p\_val/ttest_p\_val/wilcox_p\_val, adj_p\_val, exp_p\_val,
+exp_adj_p\_val, comments (indicating spatial model status:
+'no_spatial_test', 'time_out', 'no_convergence', or NA for successful
+spatial models)
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -136,17 +162,40 @@ sp_topgenes=0 to run non-spatial tests only.
 
 Maintains the original API while using the new modular implementation
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 if (FALSE) { # \dontrun{
-# Run non-spatial tests only
+# Load TNBC test data
+data_dir <- "tests/testthat/data/tnbc_bassiouni"
+count_files <- list.files(data_dir, pattern='counts', full.names=TRUE)[1:2]
+coord_files <- list.files(data_dir, pattern='mapping', full.names=TRUE)[1:2]
+clin_file <- file.path(data_dir, "bassiouni_clinical.csv")
+
+# Create STlist
+tnbc <- STlist(rnacounts=count_files, spotcoords=coord_files, samples=clin_file)
+tnbc <- transform_data(tnbc)
+
+# Run non-spatial DE (Wilcoxon)
+tnbc <- STdiff(tnbc, test='wilcoxon', group='tissue_type')
+
+# Extract and view results
+res <- STdiff_compile_results(tnbc)
+head(res)
+
+# Alternative: Run non-spatial tests only
 result = STdiff(x=stlist_obj, annot='cluster', test_type='mm', sp_topgenes=0)
-
-# Run with spatial models on top 20% of DE genes
-result = STdiff(x=stlist_obj, annot='cluster', sp_topgenes=0.2)
-
-# Run pairwise tests with t-test
-result = STdiff(x=stlist_obj, annot='cluster', pairwise=TRUE, test_type='t_test')
 } # }
 ```
+
+</div>
+
+</div>
+
+</div>

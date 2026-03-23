@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # Add spatialGE results to Seurat object
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
 Adds spatial analysis results (e.g., cluster assignments, Moran's I) to
 a Seurat object's metadata.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 add_spatialGE_to_seurat(
@@ -17,31 +27,45 @@ add_spatialGE_to_seurat(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- seurat_obj:
+-   seurat_obj:
 
-  original Seurat object
+    original Seurat object
 
-- st_obj:
+-   st_obj:
 
-  STlist object with analysis results
+    STlist object with analysis results
 
-- result_type:
+-   result_type:
 
-  type of results to add: 'clusters', 'moran', 'geary', 'custom'
+    type of results to add: 'clusters', 'moran', 'geary', 'custom'
 
-- custom.metadata:
+-   custom.metadata:
 
-  named list of metadata columns to add
+    named list of metadata columns to add
 
-- verbose:
+-   verbose:
 
-  logical, whether to print progress
+    logical, whether to print progress
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 Seurat object with added metadata
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -49,12 +73,25 @@ After running spatialGE analysis on an STlist, this function transfers
 the results back to the original Seurat object for integrated
 visualization and downstream analysis.
 
+</div>
+
+<div class="section level2">
+
 ## See also
 
-[`as.STlist.Seurat`](https://acsoupir-oc.github.io/spatialGE/reference/as.STlist.Seurat.md),
-[`as.Seurat.STlist`](https://acsoupir-oc.github.io/spatialGE/reference/as.Seurat.STlist.md)
+<div class="dont-index">
+
+`as.STlist.Seurat`, `as.Seurat.STlist`
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 if (FALSE) { # \dontrun{
@@ -69,3 +106,9 @@ seurat_obj <- add_spatialGE_to_seurat(seurat_obj, st_obj, result_type = 'cluster
 Seurat::DimPlot(seurat_obj, group.by = 'spatialGE_cluster')
 } # }
 ```
+
+</div>
+
+</div>
+
+</div>

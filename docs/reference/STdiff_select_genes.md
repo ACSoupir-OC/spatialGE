@@ -1,9 +1,19 @@
+<div id="main" class="col-md-9" role="main">
+
 # STdiff_select_genes: Gene filtering and non-spatial differential testing
+
+<div class="ref-description section level2">
 
 Selects variable genes and performs non-spatial differential expression
 testing (linear models, t-tests, or Wilcoxon tests)
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STdiff_select_genes(
@@ -24,65 +34,79 @@ STdiff_select_genes(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist object
+    an STlist object
 
-- samples:
+-   samples:
 
-  vector of sample names to test
+    vector of sample names to test
 
-- annot:
+-   annot:
 
-  column name in spatial_meta for cluster annotations
+    column name in spatial_meta for cluster annotations
 
-- w:
+-   w:
 
-  spatial weight parameter (used if annot is NULL)
+    spatial weight parameter (used if annot is NULL)
 
-- k:
+-   k:
 
-  number of clusters (used if annot is NULL)
+    number of clusters (used if annot is NULL)
 
-- deepSplit:
+-   deepSplit:
 
-  deepSplit parameter for dynamicTreeCut clusters
+    deepSplit parameter for dynamicTreeCut clusters
 
-- topgenes:
+-   topgenes:
 
-  number of top variable genes to select
+    number of top variable genes to select
 
-- pval_thr:
+-   pval_thr:
 
-  p-value threshold for selecting DE genes
+    p-value threshold for selecting DE genes
 
-- pval_adj:
+-   pval_adj:
 
-  p-value adjustment method
+    p-value adjustment method
 
-- test_type:
+-   test_type:
 
-  type of test: 'mm', 't_test', or 'wilcoxon'
+    type of test: 'mm', 't_test', or 'wilcoxon'
 
-- clusters:
+-   clusters:
 
-  optional vector of specific clusters to test
+    optional vector of specific clusters to test
 
-- pairwise:
+-   pairwise:
 
-  whether to perform pairwise tests
+    whether to perform pairwise tests
 
-- verbose:
+-   verbose:
 
-  verbosity level
+    verbosity level
 
-- cores:
+-   cores:
 
-  number of cores for parallelization
+    number of cores for parallelization
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 list containing: combo_df, meta_dict, non_spatial_results, pval_thr,
 test_type
+
+</div>
+
+</div>

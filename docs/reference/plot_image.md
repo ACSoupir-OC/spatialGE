@@ -1,29 +1,53 @@
+<div id="main" class="col-md-9" role="main">
+
 # plot_image: Generate a ggplot object of the tissue image
+
+<div class="ref-description section level2">
 
 Creates ggplot objects of the tissue images when available within the
 STlist
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 plot_image(x = NULL, samples = NULL)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
 
-- samples:
+-   samples:
 
-  a vector of numbers indicating the ST samples to plot, or their sample
-  names. If vector of numbers, it follow the order of `names(x@counts)`.
-  If NULL, the function plots all samples
+    a vector of numbers indicating the ST samples to plot, or their
+    sample names. If vector of numbers, it follow the order of
+    `names(x@counts)`. If NULL, the function plots all samples
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a list of plots
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -31,3 +55,7 @@ If the STlist contains tissue images in the `@misc` slot, the
 `plot_image` function can be used to generate ggplot objects. These
 ggplot objects can be plotted next to quilt plots (`STplot` function)
 for comparative analysis.
+
+</div>
+
+</div>

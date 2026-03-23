@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # STclust: Detect clusters of spots/cells (legacy)
+
+<div class="ref-description section level2">
 
 **\[superseded\]**
 
 Perform unsupervised spatially-informed clustering on the spots/cells of
 a ST sample
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STclust_legacy(
@@ -22,60 +32,73 @@ STclust_legacy(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with normalized expression data
+    an STlist with normalized expression data
 
-- samples:
+-   samples:
 
-  a vector with strings or a vector with integers indicating the samples
-  to run STclust
+    a vector with strings or a vector with integers indicating the
+    samples to run STclust
 
-- ws:
+-   ws:
 
-  a double (0-1) indicating the weight to be applied to spatial
-  distances. Defaults to 0.025
+    a double (0-1) indicating the weight to be applied to spatial
+    distances. Defaults to 0.025
 
-- dist_metric:
+-   dist_metric:
 
-  the distance metric to be used. Defaults to 'euclidean'. Other options
-  are the same as in
-  [`wordspace::dist.matrix`](https://rdrr.io/pkg/wordspace/man/dist_matrix.html)
+    the distance metric to be used. Defaults to 'euclidean'. Other
+    options are the same as in `wordspace::dist.matrix`
 
-- linkage:
+-   linkage:
 
-  the linkage method applied to hierarchical clustering. Passed to
-  `hclust` and defaults to 'ward.D'
+    the linkage method applied to hierarchical clustering. Passed to
+    `hclust` and defaults to 'ward.D'
 
-- ks:
+-   ks:
 
-  the range of k values to assess. Defaults to `dtc`, meaning
-  `cutreeDynamic` is applied
+    the range of k values to assess. Defaults to `dtc`, meaning
+    `cutreeDynamic` is applied
 
-- topgenes:
+-   topgenes:
 
-  the number of genes with highest spot-to-spot expression variation.
-  The variance is calculated via `Seurat::FindVariableFeatures`.
+    the number of genes with highest spot-to-spot expression variation.
+    The variance is calculated via `Seurat::FindVariableFeatures`.
 
-- deepSplit:
+-   deepSplit:
 
-  a logical or integer (1-4), to be passed to `cutreeDynamic` and
-  control cluster resolution
+    a logical or integer (1-4), to be passed to `cutreeDynamic` and
+    control cluster resolution
 
-- cores:
+-   cores:
 
-  an integer indicating the number of cores to use in parallelization
-  (Unix only)
+    an integer indicating the number of cores to use in parallelization
+    (Unix only)
 
-- verbose:
+-   verbose:
 
-  either logical or an integer (0, 1, or 2) to increase verbosity
+    either logical or an integer (0, 1, or 2) to increase verbosity
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist with cluster assignments
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -91,7 +114,13 @@ performed on the sum of the weighted distance matrices. The `STclust`
 method allows for identification of tissue niches/domains that are
 spatially cohesive.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -124,5 +153,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

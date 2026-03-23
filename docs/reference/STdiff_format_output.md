@@ -1,9 +1,19 @@
+<div id="main" class="col-md-9" role="main">
+
 # STdiff_format_output: Format results for user consumption
+
+<div class="ref-description section level2">
 
 Formats DE results into a user-friendly structure with consistent column
 naming, proper ordering, and optional filtering
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STdiff_format_output(
@@ -16,32 +26,46 @@ STdiff_format_output(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- results:
+-   results:
 
-  a list of data frames containing DE results per sample
+    a list of data frames containing DE results per sample
 
-- select_cols:
+-   select_cols:
 
-  optional vector of columns to include in output
+    optional vector of columns to include in output
 
-- filter_sig:
+-   filter_sig:
 
-  logical whether to filter for significant results only
+    logical whether to filter for significant results only
 
-- adj_pval_thr:
+-   adj_pval_thr:
 
-  p-value threshold for filtering (if filter_sig=TRUE)
+    p-value threshold for filtering (if filter_sig=TRUE)
 
-- order_by:
+-   order_by:
 
-  column name to order results by
+    column name to order results by
 
-- ascending:
+-   ascending:
 
-  logical indicating sort order
+    logical indicating sort order
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 formatted list of data frames ready for user consumption
+
+</div>
+
+</div>

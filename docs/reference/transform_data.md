@@ -1,9 +1,19 @@
+<div id="main" class="col-md-9" role="main">
+
 # transform_data: Transformation of spatial transcriptomics data
+
+<div class="ref-description section level2">
 
 Applies data transformation methods to spatial transcriptomics samples
 within an STlist
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 transform_data(
@@ -16,46 +26,57 @@ transform_data(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with raw count matrices.
+    an STlist with raw count matrices.
 
-- method:
+-   method:
 
-  one of `log` or `sct`. If `log`, log-normalization is performed. If
-  `sct`, then the SCTransform method is applied by calling
-  [`sctransform::vst`](https://rdrr.io/pkg/sctransform/man/vst.html)
+    one of `log` or `sct`. If `log`, log-normalization is performed. If
+    `sct`, then the SCTransform method is applied by calling
+    `sctransform::vst`
 
-- scale_f:
+-   scale_f:
 
-  the scale factor used in logarithmic transformation
+    the scale factor used in logarithmic transformation
 
-- sct_n_regr_genes:
+-   sct_n\_regr_genes:
 
-  the number of genes to be used in the regression model during
-  SCTransform. The function
-  [`sctransform::vst`](https://rdrr.io/pkg/sctransform/man/vst.html)
-  makes a random gene selection based on this number
+    the number of genes to be used in the regression model during
+    SCTransform. The function `sctransform::vst` makes a random gene
+    selection based on this number
 
-- sct_min_cells:
+-   sct_min_cells:
 
-  The minimum number of spots/cells to be used in the regression model
-  fit by
-  [`sctransform::vst`](https://rdrr.io/pkg/sctransform/man/vst.html)
+    The minimum number of spots/cells to be used in the regression model
+    fit by `sctransform::vst`
 
-- cores:
+-   cores:
 
-  integer indicating the number of cores to use during parallelization.
-  If NULL, the function uses half of the available cores at a maximum.
-  The parallelization uses
-  [`parallel::mclapply`](https://rdrr.io/r/parallel/mclapply.html) and
-  works only in Unix systems.
+    integer indicating the number of cores to use during
+    parallelization. If NULL, the function uses half of the available
+    cores at a maximum. The parallelization uses `parallel::mclapply`
+    and works only in Unix systems.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 x an updated STlist with transformed counts.
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -68,7 +89,13 @@ parallelization using "forking" (not available in Windows OS). Note that
 the method `sct` returns a matrix with less genes as filtering is done
 for low expression genes.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -99,5 +126,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # STgradient_calculate_correlations: Calculate correlations
+
+<div class="ref-description section level2">
 
 For each gene, fit linear models and calculate Spearman correlations
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STgradient_calculate_correlations(
@@ -14,28 +24,42 @@ STgradient_calculate_correlations(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- vargenes_expr:
+-   vargenes_expr:
 
-  data.frame with expression and distance data
+    data.frame with expression and distance data
 
-- outs_dist2ref:
+-   outs_dist2ref:
 
-  list of outlier barcodes per gene
+    list of outlier barcodes per gene
 
-- robust:
+-   robust:
 
-  logical whether to use robust regression
+    logical whether to use robust regression
 
-- log_dist:
+-   log_dist:
 
-  logical whether to log-transform distances
+    logical whether to log-transform distances
 
-- sample_name:
+-   sample_name:
 
-  name of sample
+    name of sample
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 data.frame with correlation results
+
+</div>
+
+</div>

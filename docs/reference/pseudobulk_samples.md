@@ -1,32 +1,56 @@
+<div id="main" class="col-md-9" role="main">
+
 # pseudobulk_samples: Aggregates counts into "pseudo bulk" samples
+
+<div class="ref-description section level2">
 
 Aggregates spot/cell counts into "pseudo bulk" samples for data
 exploration
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 pseudobulk_samples(x = NULL, max_var_genes = 5000, calc_umap = FALSE)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist.
+    an STlist.
 
-- max_var_genes:
+-   max_var_genes:
 
-  number of most variable genes (standard deviation) to use in
-  pseudobulk analysis
+    number of most variable genes (standard deviation) to use in
+    pseudobulk analysis
 
-- calc_umap:
+-   calc_umap:
 
-  logical, whether to calculate UMAP embeddings in addition to PCs
+    logical, whether to calculate UMAP embeddings in addition to PCs
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist with appended pseudobulk counts and PCA coordinates
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -35,7 +59,13 @@ This function takes an STlist and aggregates the spot/cell counts into
 gene. Then performs Principal Component Analysis (PCA) to explore
 non-spatial sample-to-sample variation
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -67,5 +97,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

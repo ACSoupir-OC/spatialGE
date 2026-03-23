@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # Run spatialGE analysis on Seurat object
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
 Convenience wrapper that converts Seurat to STlist and runs spatial
 analysis.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 spatialGE_from_seurat(
@@ -18,46 +28,60 @@ spatialGE_from_seurat(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  a Seurat object (spatial or non-spatial)
+    a Seurat object (spatial or non-spatial)
 
-- analysis:
+-   analysis:
 
-  type of analysis: 'SThet', 'STclust', 'STdiff', 'STenrich',
-  'STgradient'
+    type of analysis: 'SThet', 'STclust', 'STdiff', 'STenrich',
+    'STgradient'
 
-- genes:
+-   genes:
 
-  vector of gene names to analyze (required for SThet, STgradient)
+    vector of gene names to analyze (required for SThet, STgradient)
 
-- assay:
+-   assay:
 
-  which assay to use for counts (default: 'RNA')
+    which assay to use for counts (default: 'RNA')
 
-- verbose:
+-   verbose:
 
-  logical, whether to print progress
+    logical, whether to print progress
 
-- ...:
+-   ...:
 
-  additional arguments passed to the analysis function
+    additional arguments passed to the analysis function
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 depends on analysis type:
 
-- SThet: STlist with gene_meta updated
+-   SThet: STlist with gene_meta updated
 
-- STclust: STlist with spatial_meta updated (cluster assignments)
+-   STclust: STlist with spatial_meta updated (cluster assignments)
 
-- STdiff: list of differential expression results
+-   STdiff: list of differential expression results
 
-- STenrich: list of enrichment results
+-   STenrich: list of enrichment results
 
-- STgradient: list of gradient analysis results
+-   STgradient: list of gradient analysis results
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -69,12 +93,25 @@ This function provides a seamless workflow from Seurat to spatialGE:
 
 3.  Optionally converts results back to Seurat format
 
+</div>
+
+<div class="section level2">
+
 ## See also
 
-[`as.STlist.Seurat`](https://acsoupir-oc.github.io/spatialGE/reference/as.STlist.Seurat.md),
-[`as.Seurat.STlist`](https://acsoupir-oc.github.io/spatialGE/reference/as.Seurat.STlist.md)
+<div class="dont-index">
+
+`as.STlist.Seurat`, `as.Seurat.STlist`
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 if (FALSE) { # \dontrun{
@@ -90,3 +127,9 @@ result <- spatialGE_from_seurat(seurat_obj, analysis = 'STdiff',
                                  annot = 'cell_type')
 } # }
 ```
+
+</div>
+
+</div>
+
+</div>

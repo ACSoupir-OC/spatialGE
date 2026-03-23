@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # STlist (Legacy): Creation of STlist objects for spatial transcriptomics analysis
+
+<div class="ref-description section level2">
 
 **\[superseded\]**
 
 Creates an STlist object from one or multiple spatial transcriptomic
 samples.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STList_legacy(
@@ -17,31 +27,45 @@ STList_legacy(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- rnacounts:
+-   rnacounts:
 
-  the count data.
+    the count data.
 
-- spotcoords:
+-   spotcoords:
 
-  the cell/spot coordinates.
+    the cell/spot coordinates.
 
-- samples:
+-   samples:
 
-  the sample names/IDs.
+    the sample names/IDs.
 
-- cores:
+-   cores:
 
-  integer indicating the number of cores to use.
+    integer indicating the number of cores to use.
 
-- verbose:
+-   verbose:
 
-  logical, whether to print text to console.
+    logical, whether to print text to console.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist object.
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -49,11 +73,25 @@ an STlist object.
 version 2.0.0.** It is preserved here for reproducibility of older
 workflows. Please use `STList` for new projects.
 
+</div>
+
+<div class="section level2">
+
 ## See also
+
+<div class="dont-index">
 
 `STList`
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -84,5 +122,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

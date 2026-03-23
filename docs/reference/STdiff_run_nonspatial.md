@@ -1,10 +1,20 @@
+<div id="main" class="col-md-9" role="main">
+
 # STdiff_run_nonspatial: Run non-spatial differential expression tests
+
+<div class="ref-description section level2">
 
 Main entry point for non-spatial DE testing. Runs linear models,
 t-tests, or Wilcoxon tests for selected genes between groups of
 spots/cells
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STdiff_run_nonspatial(
@@ -25,65 +35,79 @@ STdiff_run_nonspatial(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist object
+    an STlist object
 
-- samples:
+-   samples:
 
-  vector of sample names to test
+    vector of sample names to test
 
-- annot:
+-   annot:
 
-  column name in spatial_meta for cluster annotations
+    column name in spatial_meta for cluster annotations
 
-- w:
+-   w:
 
-  spatial weight parameter (used if annot is NULL)
+    spatial weight parameter (used if annot is NULL)
 
-- k:
+-   k:
 
-  number of clusters (used if annot is NULL)
+    number of clusters (used if annot is NULL)
 
-- deepSplit:
+-   deepSplit:
 
-  deepSplit parameter for dynamicTreeCut clusters
+    deepSplit parameter for dynamicTreeCut clusters
 
-- topgenes:
+-   topgenes:
 
-  number of top variable genes to select
+    number of top variable genes to select
 
-- pval_thr:
+-   pval_thr:
 
-  p-value threshold for selecting DE genes
+    p-value threshold for selecting DE genes
 
-- pval_adj:
+-   pval_adj:
 
-  p-value adjustment method
+    p-value adjustment method
 
-- test_type:
+-   test_type:
 
-  type of test: 'mm', 't_test', or 'wilcoxon'
+    type of test: 'mm', 't_test', or 'wilcoxon'
 
-- clusters:
+-   clusters:
 
-  optional vector of specific clusters to test
+    optional vector of specific clusters to test
 
-- pairwise:
+-   pairwise:
 
-  whether to perform pairwise tests (TRUE) or reference-based (FALSE)
+    whether to perform pairwise tests (TRUE) or reference-based (FALSE)
 
-- verbose:
+-   verbose:
 
-  verbosity level (0, 1, or 2)
+    verbosity level (0, 1, or 2)
 
-- cores:
+-   cores:
 
-  number of cores for parallelization
+    number of cores for parallelization
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 list containing: combo_df, meta_dict, non_spatial_results, pval_thr,
 test_type, pairwise
+
+</div>
+
+</div>

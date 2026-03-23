@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # pseudobulk_dim_plot: Plot PCA of pseudobulk samples
+
+<div class="ref-description section level2">
 
 Generates a PCA plot after computation of "pseudobulk" counts
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 pseudobulk_dim_plot(
@@ -16,44 +26,58 @@ pseudobulk_dim_plot(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with pseudobulk PCA results in the `@misc` slot (generated
-  by `pseudobulk_samples`)
+    an STlist with pseudobulk PCA results in the `@misc` slot (generated
+    by `pseudobulk_samples`)
 
-- color_pal:
+-   color_pal:
 
-  a string of a color palette from khroma or RColorBrewer, or a vector
-  of color names or HEX values. Each color represents a category in the
-  variable specified in `plot_meta`
+    a string of a color palette from khroma or RColorBrewer, or a vector
+    of color names or HEX values. Each color represents a category in
+    the variable specified in `plot_meta`
 
-- plot_meta:
+-   plot_meta:
 
-  a string indicating the name of the variable in the sample metadata to
-  color points in the PCA plot
+    a string indicating the name of the variable in the sample metadata
+    to color points in the PCA plot
 
-- dim:
+-   dim:
 
-  one of `umap` or `pca`. The dimension reduction to plot
+    one of `umap` or `pca`. The dimension reduction to plot
 
-- pcx:
+-   pcx:
 
-  integer indicating the principal component to plot in the x axis
+    integer indicating the principal component to plot in the x axis
 
-- pcy:
+-   pcy:
 
-  integer indicating the principal component to plot in the y axis
+    integer indicating the principal component to plot in the y axis
 
-- ptsize:
+-   ptsize:
 
-  the size of the points in the PCA plot. Passed to the `size` aesthetic
-  from `ggplot2`
+    the size of the points in the PCA plot. Passed to the `size`
+    aesthetic from `ggplot2`
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a ggplot object
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -62,7 +86,13 @@ exploration of differences among samples. The points in the plot
 represent "pseudobulk" samples. This function follows after usage of
 `pseudobulk_samples`.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -94,5 +124,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # STenrich_validate_input: Validate input parameters
+
+<div class="ref-description section level2">
 
 Check all input parameters and return validated values
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STenrich_validate_input(
@@ -19,51 +29,66 @@ STenrich_validate_input(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with transformed gene expression
+    an STlist with transformed gene expression
 
-- samples:
+-   samples:
 
-  a vector with sample names or indexes to run analysis
+    a vector with sample names or indexes to run analysis
 
-- gene_sets:
+-   gene_sets:
 
-  a named list of gene sets to test
+    a named list of gene sets to test
 
-- score_type:
+-   score_type:
 
-  Controls how gene set expression is calculated. Options: 'avg' or
-  'gsva'
+    Controls how gene set expression is calculated. Options: 'avg' or
+    'gsva'
 
-- annot:
+-   annot:
 
-  name of the annotation within `x@spatial_meta` containing spot/cell
-  categories
+    name of the annotation within `x@spatial_meta` containing spot/cell
+    categories
 
-- domain:
+-   domain:
 
-  the domain to restrict the analysis
+    the domain to restrict the analysis
 
-- num_sds:
+-   num_sds:
 
-  number of standard deviations to set minimum gene set expression
-  threshold (default: 1)
+    number of standard deviations to set minimum gene set expression
+    threshold (default: 1)
 
-- min_units:
+-   min_units:
 
-  Minimum number of spots with high expression (default: 20)
+    Minimum number of spots with high expression (default: 20)
 
-- min_genes:
+-   min_genes:
 
-  the minimum number of genes of a gene set present in data (default: 5)
+    the minimum number of genes of a gene set present in data (default:
+    5)
 
-- pval_adj_method:
+-   pval_adj_method:
 
-  the method for multiple comparison adjustment (default: 'BH')
+    the method for multiple comparison adjustment (default: 'BH')
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 list with validated parameters
+
+</div>
+
+</div>

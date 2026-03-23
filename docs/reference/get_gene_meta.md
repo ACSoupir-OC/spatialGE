@@ -1,27 +1,51 @@
+<div id="main" class="col-md-9" role="main">
+
 # get_gene_meta: Extract gene-level metadata and statistics
+
+<div class="ref-description section level2">
 
 Extracts gene-level metadata and spatial statistics (if already
 computed)
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 get_gene_meta(x = NULL, sthet_only = FALSE)
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
 
-- sthet_only:
+-   sthet_only:
 
-  logical, return only genes with spatial statistics
+    logical, return only genes with spatial statistics
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a data frame with gene-level data
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -30,7 +54,13 @@ subsetting only to those genes for which spatial statistics (Moran's I
 or Geary's C, see `SThet`) have been calculated. The output is a data
 frame with data from all samples in the STlist
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -63,5 +93,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

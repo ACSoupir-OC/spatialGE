@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # STgradient_validate_input: Validate STgradient inputs
+
+<div class="ref-description section level2">
 
 Validate inputs for STgradient function
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STgradient_validate_input(
@@ -19,48 +29,62 @@ STgradient_validate_input(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  STlist object
+    STlist object
 
-- samples:
+-   samples:
 
-  samples to process
+    samples to process
 
-- topgenes:
+-   topgenes:
 
-  number of top genes
+    number of top genes
 
-- annot:
+-   annot:
 
-  annotation column
+    annotation column
 
-- ref:
+-   ref:
 
-  reference cluster
+    reference cluster
 
-- exclude:
+-   exclude:
 
-  optional exclude cluster
+    optional exclude cluster
 
-- min_nb:
+-   min_nb:
 
-  minimum neighbors
+    minimum neighbors
 
-- nb_dist_thr:
+-   nb_dist_thr:
 
-  neighborhood distance threshold
+    neighborhood distance threshold
 
-- cores:
+-   cores:
 
-  number of cores
+    number of cores
 
-- verbose:
+-   verbose:
 
-  verbosity
+    verbosity
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 validated parameters list
+
+</div>
+
+</div>

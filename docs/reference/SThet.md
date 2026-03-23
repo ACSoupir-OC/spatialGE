@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # SThet: Computes global spatial autocorrelation statistics on gene expression
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
 Computes the global spatial autocorrelation statistics Moran's I and/or
 Geary's C for a set of genes
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 SThet(
@@ -20,53 +30,67 @@ SThet(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
 
-- genes:
+-   genes:
 
-  a vector of gene names to compute statistics
+    a vector of gene names to compute statistics
 
-- samples:
+-   samples:
 
-  the samples to compute statistics
+    the samples to compute statistics
 
-- method:
+-   method:
 
-  The spatial statistic(s) to estimate. It can be set to 'moran',
-  'geary' or both. Default is 'moran'
+    The spatial statistic(s) to estimate. It can be set to 'moran',
+    'geary' or both. Default is 'moran'
 
-- k:
+-   k:
 
-  the number of neighbors to estimate weights. By default NULL, meaning
-  that spatial weights will be estimated from Euclidean distances. If an
-  positive integer is entered, then the faster k nearest-neighbors
-  approach is used. Please keep in mind that estimates are not as
-  accurate as when using the default distance-based method.
+    the number of neighbors to estimate weights. By default NULL,
+    meaning that spatial weights will be estimated from Euclidean
+    distances. If an positive integer is entered, then the faster k
+    nearest-neighbors approach is used. Please keep in mind that
+    estimates are not as accurate as when using the default
+    distance-based method.
 
-- overwrite:
+-   overwrite:
 
-  logical indicating if previous statistics should be overwritten.
-  Default to FALSE (do not overwrite)
+    logical indicating if previous statistics should be overwritten.
+    Default to FALSE (do not overwrite)
 
-- cores:
+-   cores:
 
-  integer indicating the number of cores to use during parallelization.
-  If NULL, the function uses half of the available cores at a maximum.
-  The parallelization uses
-  [`parallel::mclapply`](https://rdrr.io/r/parallel/mclapply.html) and
-  works only in Unix systems
+    integer indicating the number of cores to use during
+    parallelization. If NULL, the function uses half of the available
+    cores at a maximum. The parallelization uses `parallel::mclapply`
+    and works only in Unix systems
 
-- verbose:
+-   verbose:
 
-  logical, whether to print text to console
+    logical, whether to print text to console
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist containing spatial statistics
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -77,38 +101,43 @@ stored in the STlist, which can be accessed with the `get_gene_meta`
 function. For visual comparative analysis, the function `compare_SThet`
 can be used afterwards.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
 
+<div class="sourceCode">
+
 ``` r
-# \donttest{
-# Using included melanoma example (Thrane et al.)
-# Download example data set from spatialGE_Data
-thrane_tmp = tempdir()
-unlink(thrane_tmp, recursive=TRUE)
-dir.create(thrane_tmp)
-lk='https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
-tryCatch({ # In case data is not available from network
-  download.file(lk, destfile=paste0(thrane_tmp, '/', 'melanoma_thrane.zip'), mode='wb')
-  #' zip_tmp = list.files(thrane_tmp, pattern='melanoma_thrane.zip$', full.names=TRUE)
-  unzip(zipfile=zip_tmp, exdir=thrane_tmp)
-  # Generate the file paths to be passed to the STlist function
-  count_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'),
-                            full.names=TRUE, pattern='counts')
-  coord_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'),
-                            full.names=TRUE, pattern='mapping')
-  clin_file <- list.files(paste0(thrane_tmp, '/melanoma_thrane'),
-                          full.names=TRUE, pattern='clinical')
-  # Create STlist
-  library('spatialGE')
-  melanoma <- STlist(rnacounts=count_files,
-                     spotcoords=coord_files,
-                     samples=clin_file)
-  melanoma <- transform_data(melanoma)
-  melanoma <- SThet(melanoma, genes=c('MLANA', 'TP53'), method='moran')
-  get_gene_meta(melanoma, sthet_only=TRUE)
-}, error = function(e) {
-  message("Could not run example. Are you connected to the internet?")
-  return(NULL)
-})
-# }
+# Example with TNBC data showing heterogeneity calculation
+# Load TNBC test data
+data_dir = system.file("tests/testthat/data/tnbc_bassiouni", package="spatialGE")
+count_files <- list.files(data_dir, pattern='counts', full.names=TRUE)
+coord_files <- list.files(data_dir, pattern='mapping', full.names=TRUE)
+clin_file <- list.files(data_dir, pattern='clinical', full.names=TRUE)
+
+# Create STlist and transform
+tnb <- STlist(rnacounts=count_files, spotcoords=coord_files, samples=clin_file)
+#> Matching gene expression and coordinate data...
+#> Error in counts_df_list[[name_i]]: attempt to select less than one element in get1index
+tnb <- transform_data(tnb)
+#> Error: object 'tnb' not found
+
+# Calculate spatial autocorrelation for genes of interest
+tnb <- SThet(tnb, genes=c('ESR1', 'PGR', 'ERBB2'), method='moran')
+#> SThet started.
+#> Error: object 'tnb' not found
+
+# Extract and view heterogeneity statistics
+meta <- get_gene_meta(tnb, sthet_only=TRUE)
+#> Error: object 'tnb' not found
+print(meta)
+#> Error: object 'meta' not found
 ```
+
+</div>
+
+</div>
+
+</div>

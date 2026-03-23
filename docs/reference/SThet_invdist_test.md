@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # SThet_invdist_test: Computes spatial autocorrelation with statistical tests
+
+<div class="ref-description section level2">
 
 Alternative implementation using spdep::moran.test and spdep::geary.test
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 SThet_invdist_test(
@@ -17,37 +27,51 @@ SThet_invdist_test(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
 
-- genes:
+-   genes:
 
-  a vector of gene names to compute statistics
+    a vector of gene names to compute statistics
 
-- samples:
+-   samples:
 
-  the samples to compute statistics
+    the samples to compute statistics
 
-- method:
+-   method:
 
-  The spatial statistic(s) to estimate. It can be set to 'moran',
-  'geary' or both. Default is 'moran'
+    The spatial statistic(s) to estimate. It can be set to 'moran',
+    'geary' or both. Default is 'moran'
 
-- k:
+-   k:
 
-  the number of neighbors to estimate weights
+    the number of neighbors to estimate weights
 
-- overwrite:
+-   overwrite:
 
-  logical indicating if previous statistics should be overwritten
+    logical indicating if previous statistics should be overwritten
 
-- cores:
+-   cores:
 
-  the number of cores to use during computations
+    the number of cores to use during computations
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist containing spatial statistics
+
+</div>
+
+</div>

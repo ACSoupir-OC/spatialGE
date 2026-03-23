@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # Convert Seurat Object to STlist
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
 Converts a Seurat object (particularly spatial Seurat objects) to STlist
 format.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 as.STlist.Seurat(
@@ -17,49 +27,77 @@ as.STlist.Seurat(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  a Seurat object to convert
+    a Seurat object to convert
 
-- assay:
+-   assay:
 
-  which assay to use for counts (default: 'RNA')
+    which assay to use for counts (default: 'RNA')
 
-- slot:
+-   slot:
 
-  which slot to use for counts (default: 'counts')
+    which slot to use for counts (default: 'counts')
 
-- use.spatial:
+-   use.spatial:
 
-  logical, whether to extract spatial coordinates
+    logical, whether to extract spatial coordinates
 
-- verbose:
+-   verbose:
 
-  logical, whether to print progress messages
+    logical, whether to print progress messages
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist object
 
+</div>
+
+<div class="section level2">
+
 ## Details
 
 This function extracts data from a Seurat object and creates an STlist:
 
-- Counts from the default assay (usually 'RNA' or 'SCT')
+-   Counts from the default assay (usually 'RNA' or 'SCT')
 
-- Spatial coordinates from images slot (for Visium/Visium HD)
+-   Spatial coordinates from images slot (for Visium/Visium HD)
 
-- Sample metadata from Seurat meta.data
+-   Sample metadata from Seurat meta.data
 
 Works with both single-sample and multi-sample Seurat objects.
 
+</div>
+
+<div class="section level2">
+
 ## See also
 
-[`as.Seurat.STlist`](https://acsoupir-oc.github.io/spatialGE/reference/as.Seurat.STlist.md)
+<div class="dont-index">
+
+`as.Seurat.STlist`
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 if (FALSE) { # \dontrun{
@@ -71,3 +109,9 @@ st_obj <- SThet(st_obj, genes = c("GENE1", "GENE2"))
 compare_SThet(st_obj)
 } # }
 ```
+
+</div>
+
+</div>
+
+</div>

@@ -1,9 +1,19 @@
+<div id="main" class="col-md-9" role="main">
+
 # STplot_interpolation: Visualize gene expression surfaces
+
+<div class="ref-description section level2">
 
 Produces a gene expression surface from kriging interpolation of ST
 data.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STplot_interpolation(
@@ -15,43 +25,64 @@ STplot_interpolation(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist containing results from `gene_krige` for the genes selected.
+    an STlist containing results from `gene_krige` for the genes
+    selected.
 
-- genes:
+-   genes:
 
-  a vector of gene names (one or several) to plot. If 'top', the 10
-  genes with highest standard deviation from each spatial sample are
-  plotted.
+    a vector of gene names (one or several) to plot. If 'top', the 10
+    genes with highest standard deviation from each spatial sample are
+    plotted.
 
-- top_n:
+-   top_n:
 
-  an integer indicating how many top genes to perform kriging. Default
-  is 10.
+    an integer indicating how many top genes to perform kriging. Default
+    is 10.
 
-- samples:
+-   samples:
 
-  a vector indicating the spatial samples to plot. If vector of numbers,
-  it follows the order of `names(x@counts)`. If NULL, the function plots
-  all samples
+    a vector indicating the spatial samples to plot. If vector of
+    numbers, it follows the order of `names(x@counts)`. If NULL, the
+    function plots all samples
 
-- color_pal:
+-   color_pal:
 
-  a color scheme from `khroma` or `RColorBrewer`.
+    a color scheme from `khroma` or `RColorBrewer`.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a list of plots
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
 This function produces a gene expression surface plot via kriging for
 one or several genes and spatial samples
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -85,5 +116,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

@@ -1,9 +1,19 @@
+<div id="main" class="col-md-9" role="main">
+
 # plot_counts: Generates plots for the distribution of counts
+
+<div class="ref-description section level2">
 
 Generates density plots, violin plots, and/or boxplots for the
 distribution of count values
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 plot_counts(
@@ -18,49 +28,63 @@ plot_counts(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
 
-- samples:
+-   samples:
 
-  samples to include in the plot. Default (NULL) includes all samples
+    samples to include in the plot. Default (NULL) includes all samples
 
-- data_type:
+-   data_type:
 
-  one of `tr` or `raw`, to plot transformed or raw counts
+    one of `tr` or `raw`, to plot transformed or raw counts
 
-- plot_type:
+-   plot_type:
 
-  one or several of `density`, `violin`, and `box`, to generate density
-  plots, violin plots, and/or boxplots
+    one or several of `density`, `violin`, and `box`, to generate
+    density plots, violin plots, and/or boxplots
 
-- color_pal:
+-   color_pal:
 
-  a string of a color palette from `khroma` or `RColorBrewer`, or a
-  vector with colors
+    a string of a color palette from `khroma` or `RColorBrewer`, or a
+    vector with colors
 
-- cvalpha:
+-   cvalpha:
 
-  the transparency of the density plots
+    the transparency of the density plots
 
-- distrib_subset:
+-   distrib_subset:
 
-  the proportion of spots/cells to plot. Generating these plots can be
-  time consuming due to the large amount of elements to plot. This
-  argument provides control on how many randomly values to show to speed
-  plotting
+    the proportion of spots/cells to plot. Generating these plots can be
+    time consuming due to the large amount of elements to plot. This
+    argument provides control on how many randomly values to show to
+    speed plotting
 
-- subset_seed:
+-   subset_seed:
 
-  related to `distrib_subset`. Sets the seed number to ensure the same
-  subset of values is selected for plotting
+    related to `distrib_subset`. Sets the seed number to ensure the same
+    subset of values is selected for plotting
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a list of ggplot objects
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -71,7 +95,13 @@ assessment of the effect of filtering and data transformations and to
 assess zero-inflation. To plot counts or genes per spot/cell, the
 function `distribution_plots` should be used instead.
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -103,5 +133,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

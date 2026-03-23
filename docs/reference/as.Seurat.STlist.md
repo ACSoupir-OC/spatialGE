@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # Convert STlist to Seurat Object
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
 Converts an STlist object to a Seurat object for integration with Seurat
 workflows.
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 as.Seurat.STlist(
@@ -17,52 +27,81 @@ as.Seurat.STlist(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist object to convert
+    an STlist object to convert
 
-- samples:
+-   samples:
 
-  vector of sample names to include. If NULL, all samples are converted
+    vector of sample names to include. If NULL, all samples are
+    converted
 
-- assay.name:
+-   assay.name:
 
-  name for the assay in the Seurat object (default: 'RNA')
+    name for the assay in the Seurat object (default: 'RNA')
 
-- add.spatial.info:
+-   add.spatial.info:
 
-  logical, whether to add spatial coordinates to Seurat object
+    logical, whether to add spatial coordinates to Seurat object
 
-- verbose:
+-   verbose:
 
-  logical, whether to print progress messages
+    logical, whether to print progress messages
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 a Seurat object containing the STlist data
 
+</div>
+
+<div class="section level2">
+
 ## Details
 
 This function creates a Seurat object from an STlist, preserving:
 
-- Count data in the 'RNA' assay
+-   Count data in the 'RNA' assay
 
-- Spatial coordinates in the 'spatial' reduction
+-   Spatial coordinates in the 'spatial' reduction
 
-- Sample metadata in Seurat meta.data
+-   Sample metadata in Seurat meta.data
 
-- Gene metadata in feature-level metadata
+-   Gene metadata in feature-level metadata
 
 For multi-sample STlist objects, returns a merged Seurat object with
 sample barcodes preserved.
 
+</div>
+
+<div class="section level2">
+
 ## See also
 
-[`as.STlist.Seurat`](https://acsoupir-oc.github.io/spatialGE/reference/as.STlist.Seurat.md)
+<div class="dont-index">
+
+`as.STlist.Seurat`
+
+</div>
+
+</div>
+
+<div class="section level2">
 
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 if (FALSE) { # \dontrun{
@@ -77,3 +116,9 @@ seurat_obj <- SCTransform(seurat_obj)
 seurat_obj <- RunPCA(seurat_obj)
 } # }
 ```
+
+</div>
+
+</div>
+
+</div>

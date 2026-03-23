@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # STenrich_core: Core workflow for spatial enrichment analysis
+
+<div class="ref-description section level2">
 
 Main workflow function that orchestrates the enrichment analysis
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STenrich_core(
@@ -23,71 +33,86 @@ STenrich_core(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with transformed gene expression
+    an STlist with transformed gene expression
 
-- samples:
+-   samples:
 
-  a vector with sample names or indexes to run analysis
+    a vector with sample names or indexes to run analysis
 
-- gene_sets:
+-   gene_sets:
 
-  a named list of gene sets to test
+    a named list of gene sets to test
 
-- score_type:
+-   score_type:
 
-  Controls how gene set expression is calculated. Options: 'avg' or
-  'gsva'
+    Controls how gene set expression is calculated. Options: 'avg' or
+    'gsva'
 
-- reps:
+-   reps:
 
-  the number of random samples to be extracted. Default is 1000
-  replicates
+    the number of random samples to be extracted. Default is 1000
+    replicates
 
-- annot:
+-   annot:
 
-  name of the annotation within `x@spatial_meta` containing spot/cell
-  categories
+    name of the annotation within `x@spatial_meta` containing spot/cell
+    categories
 
-- domain:
+-   domain:
 
-  the domain to restrict the analysis
+    the domain to restrict the analysis
 
-- num_sds:
+-   num_sds:
 
-  number of standard deviations to set minimum gene set expression
-  threshold (default: 1)
+    number of standard deviations to set minimum gene set expression
+    threshold (default: 1)
 
-- min_units:
+-   min_units:
 
-  Minimum number of spots with high expression (default: 20)
+    Minimum number of spots with high expression (default: 20)
 
-- min_genes:
+-   min_genes:
 
-  the minimum number of genes of a gene set present in data (default: 5)
+    the minimum number of genes of a gene set present in data (default:
+    5)
 
-- pval_adj_method:
+-   pval_adj_method:
 
-  the method for multiple comparison adjustment (default: 'BH')
+    the method for multiple comparison adjustment (default: 'BH')
 
-- seed:
+-   seed:
 
-  the seed number for random sampling (default: 12345)
+    the seed number for random sampling (default: 12345)
 
-- cores:
+-   cores:
 
-  the number of cores for parallelization. If NULL, auto-detected
+    the number of cores for parallelization. If NULL, auto-detected
 
-- verbose:
+-   verbose:
 
-  logical, whether to print text to console
+    logical, whether to print text to console
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 list of data frames with p-values and adjusted p-values per sample
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -100,3 +125,7 @@ This function performs the core workflow:
 3.  Perform permutation testing
 
 4.  Format results with adjusted p-values
+
+</div>
+
+</div>

@@ -1,8 +1,18 @@
+<div id="main" class="col-md-9" role="main">
+
 # gene_interpolation: Spatial interpolation of gene expression
+
+<div class="ref-description section level2">
 
 Performs spatial interpolation ("kriging") of transformed gene counts
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 gene_interpolation(
@@ -15,43 +25,56 @@ gene_interpolation(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with transformed RNA counts
+    an STlist with transformed RNA counts
 
-- genes:
+-   genes:
 
-  a vector of gene names or 'top'. If 'top' (default), interpolation of
-  the 10 genes (`top_n` default) with highest standard deviation in each
-  ST sample is estimated.
+    a vector of gene names or 'top'. If 'top' (default), interpolation
+    of the 10 genes (`top_n` default) with highest standard deviation in
+    each ST sample is estimated.
 
-- top_n:
+-   top_n:
 
-  an integer indicating how many top genes to perform interpolation.
-  Default is 10.
+    an integer indicating how many top genes to perform interpolation.
+    Default is 10.
 
-- samples:
+-   samples:
 
-  the spatial samples for which interpolations will be performed. If
-  NULL (Default), all samples are interpolated.
+    the spatial samples for which interpolations will be performed. If
+    NULL (Default), all samples are interpolated.
 
-- cores:
+-   cores:
 
-  integer indicating the number of cores to use during parallelization.
-  If NULL, the function uses half of the available cores at a maximum.
-  The parallelization uses
-  [`parallel::mclapply`](https://rdrr.io/r/parallel/mclapply.html) and
-  works only in Unix systems.
+    integer indicating the number of cores to use during
+    parallelization. If NULL, the function uses half of the available
+    cores at a maximum. The parallelization uses `parallel::mclapply`
+    and works only in Unix systems.
 
-- verbose:
+-   verbose:
 
-  either logical or an integer (0, 1, or 2) to increase verbosity.
+    either logical or an integer (0, 1, or 2) to increase verbosity.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 x a STlist including spatial interpolations.
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -61,7 +84,13 @@ genes='top', then the 10 genes (default) with the highest standard
 deviation for each ST sample are interpolated. The resulting
 interpolations can be visualized via the `STplot_interpolation` function
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -95,5 +124,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

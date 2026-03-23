@@ -10,7 +10,7 @@ template:
     font_scale: 1.1
   includes:
     in_header: |
-      <link href="pkgdown/extra.css" rel="stylesheet">
+      <link rel="stylesheet" href="https://acsoupir-oc.github.io/spatialGE/extra.css">
     before_body: |
       <!-- Custom header content -->
     after_body: |
@@ -31,22 +31,8 @@ template:
           </p>
         </div>
       </footer>
-
-exclude:
-  - AGENTS/**
-  - DEVELOPMENT.md
-  - OPTIMIZATION_REPORT.md
-  - OPTIMIZATION_SUMMARY.md
-  - PERFORMANCE_ANALYSIS.md
-  - RefactoringPlan.md
-  - STDIFF_PERFORMANCE_ANALYSIS.md
-  - STclust_RefactoringPlan.md
-  - TASKS.md
-  - TEST_SETUP_ISSUES.md
-  - fastcluster-verification.md
-  - vignettes/spatial_differential_expression.Rmd
-  - vignettes/spatial_enrichment_gradients_smi.Rmd
-  - vignettes/troubleshooting.Rmd
+  default_assets: true
+  light-switch: true
 
 home:
   title: "spatialGE: Spatial Genomics Analysis"
@@ -69,151 +55,10 @@ authors:
 
 navbar:
   structure:
-    left: [intro, reference, articles, news, search]
+    left: [intro, reference, news, search]
     right: [github]
-  components:
-    articles:
-      text: Articles
-      menu:
-        - text: "Getting Started"
-          href: articles/getting_started.html
-        - text: "STlist Object Structure"
-          href: articles/stlist_object_structure.html
-        - text: "Basic Functions"
-          href: articles/basic_functions_vignette.html
-        - text: "Seurat Integration"
-          href: articles/seurat_integration.html
-        - text: "Troubleshooting"
-          href: articles/troubleshooting.html
-    reference:
-      text: Reference
-      href: reference/index.html
-    news:
-      text: News
-      href: news/index.html
 
-reference:
-  - title: "Core Analysis Functions"
-    desc: "Main spatial analysis workflows"
-    contents:
-      - STclust
-      - STdiff
-      - STenrich
-      - STgradient
-      - SThet
-      - STplot
 
-  - title: "Differential Expression (STdiff)"
-    desc: "Spatial and non-spatial differential expression testing"
-    contents:
-      - STdiff_run_nonspatial
-      - STdiff_run_spatial
-      - STdiff_fit_ttest
-      - STdiff_fit_wilcoxon
-      - STdiff_fit_mm
-      - STdiff_fit_spatial_models
-      - STdiff_adjust_pvalues
-      - STdiff_add_metadata
-      - STdiff_compile_results
-      - STdiff_format_output
-      - STdiff_extract_spatial_pvalues
-      - STdiff_check_convergence
-      - STdiff_volcano
-
-  - title: "Heterogeneity Analysis (SThet)"
-    desc: "Spatial heterogeneity statistics (Moran's I, Geary's C)"
-    contents:
-      - SThet
-      - SThet_invdist_test
-      - compare_SThet
-
-  - title: "Gradient Analysis (STgradient)"
-    desc: "Spatial gradient correlation analysis"
-    contents:
-      - STgradient
-
-  - title: "Enrichment Analysis (STenrich)"
-    desc: "Gene set enrichment analysis with spatial permutation"
-    contents:
-      - STenrich
-
-  - title: "Clustering (STclust)"
-    desc: "Spatial clustering with hierarchical methods"
-    contents:
-      - STclust
-      - get_hier_clusters_dtc
-      - get_hier_clusters_ks
-
-  - title: "Data Import & Management"
-    desc: "Create and manage STlist objects"
-    contents:
-      - STlist
-      - summarize_STlist
-      - spatial_metadata
-      - filter_data
-      - transform_data
-      - get_gene_meta
-
-  - title: "Visualization"
-    desc: "Plotting and visualization functions"
-    contents:
-      - STplot
-      - STplot_interpolation
-      - plot_counts
-      - plot_image
-      - distribution_plots
-      - pseudobulk_dim_plot
-      - pseudobulk_heatmap
-      - pseudobulk_samples
-      - gene_interpolation
-
-  - title: "Legacy Functions"
-    desc: "Original implementations for reproducibility"
-    contents:
-      - STList_legacy
-      - STclust_legacy
-      - STdiff_legacy
-      - STenrich_legacy
-      - STgradient_legacy
-      - SThet_legacy
-
-  - title: "Seurat Integration"
-    desc: "Convert between STlist and Seurat objects"
-    contents:
-      - as.Seurat.STlist
-      - as.STlist.Seurat
-      - spatialGE_from_seurat
-      - add_spatialGE_to_seurat
-      - spatialGE_to_seurat_genesets
-
-  - title: "Helper Functions"
-    desc: "Utility functions for spatial analysis"
-    contents:
-      - calculate_dist_matrices
-      - calculate_weighted_dist
-      - load_images
-      - tissue_names
-      - can_convert_to_STlist
-
-articles:
-  - title: "Getting Started"
-    desc: "Introduction and basic workflows"
-    contents:
-      - getting_started
-      - stlist_object_structure
-      - basic_functions_vignette
-  
-  - title: "Advanced Analysis"
-    desc: "In-depth analysis workflows"
-    contents:
-      - seurat_integration
-      - spatial_differential_expression
-      - spatial_enrichment_gradients_smi
-  
-  - title: "Support"
-    desc: "Help and troubleshooting"
-    contents:
-      - troubleshooting
 
 news:
   releases:

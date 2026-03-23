@@ -1,11 +1,21 @@
+<div id="main" class="col-md-9" role="main">
+
 # STclust: Spatial clustering (modular implementation)
+
+<div class="ref-description section level2">
 
 **\[stable\]**
 
 Perform unsupervised spatially-informed clustering on the spots/cells of
 an ST sample
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 STclust(
@@ -22,53 +32,67 @@ STclust(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist with normalized expression data
+    an STlist with normalized expression data
 
-- samples:
+-   samples:
 
-  a vector with strings or integers indicating samples to cluster
+    a vector with strings or integers indicating samples to cluster
 
-- ws:
+-   ws:
 
-  a double (0-1) indicating weight for spatial distances (default:
-  0.025)
+    a double (0-1) indicating weight for spatial distances (default:
+    0.025)
 
-- dist_metric:
+-   dist_metric:
 
-  distance metric to use (default: 'euclidean')
+    distance metric to use (default: 'euclidean')
 
-- linkage:
+-   linkage:
 
-  linkage method for hclust (default: 'ward.D2')
+    linkage method for hclust (default: 'ward.D2')
 
-- ks:
+-   ks:
 
-  clustering method: 'dtc' for DynamicTreeCut, or numeric vector for
-  fixed k values
+    clustering method: 'dtc' for DynamicTreeCut, or numeric vector for
+    fixed k values
 
-- topgenes:
+-   topgenes:
 
-  number of top variable genes to use (default: 2000)
+    number of top variable genes to use (default: 2000)
 
-- deepSplit:
+-   deepSplit:
 
-  deepSplit parameter for cutreeDynamic (if ks='dtc')
+    deepSplit parameter for cutreeDynamic (if ks='dtc')
 
-- cores:
+-   cores:
 
-  number of cores for parallelization
+    number of cores for parallelization
 
-- verbose:
+-   verbose:
 
-  verbosity level (0, 1, or 2)
+    verbosity level (0, 1, or 2)
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist with cluster assignments added to @spatial_meta
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -82,32 +106,43 @@ on:
 These distances are weighted and combined, then hierarchical clustering
 is performed. Supports two clustering modes:
 
-- DTC (DynamicTreeCut): Adaptive cluster detection
+-   DTC (DynamicTreeCut): Adaptive cluster detection
 
-- Fixed k: User-specified number of clusters
+-   Fixed k: User-specified number of clusters
+
+</div>
+
+<div class="section level2">
 
 ## Examples
 
+<div class="sourceCode">
+
 ``` r
 # \donttest{
-# Using included melanoma example (Thrane et al.)
-thrane_tmp = tempdir()
-unlink(thrane_tmp, recursive=TRUE)
-dir.create(thrane_tmp)
-lk='https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/melanoma_thrane.zip?download='
+# TNBC dataset (Bassiouni et al.)
+tnbc_tmp = tempdir()
+unlink(tnbc_tmp, recursive=TRUE)
+dir.create(tnbc_tmp)
+lk = 'https://github.com/FridleyLab/spatialGE_Data/raw/refs/heads/main/tnbc_bassiouni.zip?download='
 tryCatch({
-  download.file(lk, destfile=paste0(thrane_tmp, '/', 'melanoma_thrane.zip'), mode='wb')
-  unzip(file=paste0(thrane_tmp, '/melanoma_thrane.zip'), exdir=thrane_tmp)
-  count_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='counts')
-  coord_files <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='mapping')
-  clin_file <- list.files(paste0(thrane_tmp, '/melanoma_thrane'), full.names=TRUE, pattern='clinical')
-  melanoma <- STlist(rnacounts=count_files[1], spotcoords=coord_files[1], samples=clin_file)
-  melanoma <- transform_data(melanoma)
-  melanoma <- STclust(melanoma, ks=2:3, ws=0.025)
-  STplot(melanoma, ws=0.025, samples='ST_mel1_rep2', ptsize=1)
+  download.file(lk, destfile=file.path(tnbc_tmp, 'tnbc.zip'), mode='wb')
+  unzip(file.path(tnbc_tmp, 'tnbc.zip'), exdir=tnbc_tmp)
+  tnbc = STlist(rnacounts=list.files(file.path(tnbc_tmp, 'tnbc_bassiouni'), pattern='counts', full.names=TRUE)[1],
+                spotcoords=list.files(file.path(tnbc_tmp, 'tnbc_bassiouni'), pattern='mapping', full.names=TRUE)[1],
+                samples='TNBC')
+  tnbc = transform_data(tnbc)
+  tnbc = STclust(tnbc, ks=3, ws=0.025)
 }, error = function(e) {
   message("Could not run example. Are you connected to the internet?")
-  return(NULL)
 })
+#> Matching gene expression and coordinate data...
+#> Could not run example. Are you connected to the internet?
 # }
 ```
+
+</div>
+
+</div>
+
+</div>

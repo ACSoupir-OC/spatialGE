@@ -1,7 +1,14 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/404.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/CONTRIBUTING.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/EXAMPLE_UPDATE.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/LICENSE-text.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/LICENSE.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/PHASE5_COMPLETE.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/SEURAT_VALIDATION.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/SUPPORT.html</loc></url>
+<url><loc>https://acsoupir-oc.github.io/spatialGE/TASKS_DOCUMENTATION.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/basic_functions_vignette.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/index.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/articles/seurat_integration.html</loc></url>
@@ -97,13 +104,11 @@
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/load_images.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/new_input_source.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/non_spatial_de.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/old_SThet.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/plot_counts.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/plot_image.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/prepare_stdiff_combo.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/pseudobulk_dim_plot.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/pseudobulk_heatmap.html</loc></url>
-<url><loc>https://acsoupir-oc.github.io/spatialGE/reference/pseudobulk_pca_plot.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/pseudobulk_samples.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/raise_err.html</loc></url>
 <url><loc>https://acsoupir-oc.github.io/spatialGE/reference/read_mtx_safe.html</loc></url>

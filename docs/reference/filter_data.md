@@ -1,9 +1,19 @@
+<div id="main" class="col-md-9" role="main">
+
 # filter_data: Filters cells/spots, genes, or samples
+
+<div class="ref-description section level2">
 
 Filtering of spots/cells, genes or samples, as well as count-based
 filtering
 
+</div>
+
+<div class="section level2">
+
 ## Usage
+
+<div class="sourceCode">
 
 ``` r
 filter_data(
@@ -29,99 +39,113 @@ filter_data(
 )
 ```
 
+</div>
+
+</div>
+
+<div class="section level2">
+
 ## Arguments
 
-- x:
+-   x:
 
-  an STlist
+    an STlist
 
-- spot_minreads:
+-   spot_minreads:
 
-  the minimum number of total reads for a spot to be retained
+    the minimum number of total reads for a spot to be retained
 
-- spot_maxreads:
+-   spot_maxreads:
 
-  the maximum number of total reads for a spot to be retained
+    the maximum number of total reads for a spot to be retained
 
-- spot_mingenes:
+-   spot_mingenes:
 
-  the minimum number of non-zero counts for a spot to be retained
+    the minimum number of non-zero counts for a spot to be retained
 
-- spot_maxgenes:
+-   spot_maxgenes:
 
-  the maximum number of non-zero counts for a spot to be retained
+    the maximum number of non-zero counts for a spot to be retained
 
-- spot_minpct:
+-   spot_minpct:
 
-  the minimum percentage of counts for features defined by
-  `spot_pct_expr` for a spot to be retained.
+    the minimum percentage of counts for features defined by
+    `spot_pct_expr` for a spot to be retained.
 
-- spot_maxpct:
+-   spot_maxpct:
 
-  the maximum percentage of counts for features defined by
-  `spot_pct_expr` for a spot to be retained.
+    the maximum percentage of counts for features defined by
+    `spot_pct_expr` for a spot to be retained.
 
-- gene_minreads:
+-   gene_minreads:
 
-  the minimum number of total reads for a gene to be retained
+    the minimum number of total reads for a gene to be retained
 
-- gene_maxreads:
+-   gene_maxreads:
 
-  the maximum number of total reads for a gene to be retained
+    the maximum number of total reads for a gene to be retained
 
-- gene_minspots:
+-   gene_minspots:
 
-  he minimum number of spots with non-zero counts for a gene to be
-  retained
+    he minimum number of spots with non-zero counts for a gene to be
+    retained
 
-- gene_maxspots:
+-   gene_maxspots:
 
-  the maximum number of spots with non-zero counts for a gene to be
-  retained
+    the maximum number of spots with non-zero counts for a gene to be
+    retained
 
-- gene_minpct:
+-   gene_minpct:
 
-  the minimum percentage of spots with non-zero counts for a gene to be
-  retained
+    the minimum percentage of spots with non-zero counts for a gene to
+    be retained
 
-- gene_maxpct:
+-   gene_maxpct:
 
-  the maximum percentage of spots with non-zero counts for a gene to be
-  retained
+    the maximum percentage of spots with non-zero counts for a gene to
+    be retained
 
-- samples:
+-   samples:
 
-  samples (as in `names(x@counts)`) to perform filtering.
+    samples (as in `names(x@counts)`) to perform filtering.
 
-- rm_tissue:
+-   rm_tissue:
 
-  sample (as in `names(x@counts)`) to remove from STlist. Removes
-  samples in `x@counts`, `x@tr_counts`, `x@spatial_meta`, `x@gene_meta`,
-  and `x@sample_meta`
+    sample (as in `names(x@counts)`) to remove from STlist. Removes
+    samples in `x@counts`, `x@tr_counts`, `x@spatial_meta`,
+    `x@gene_meta`, and `x@sample_meta`
 
-- rm_spots:
+-   rm_spots:
 
-  vector of spot/cell IDs to remove. Removes spots/cells in `x@counts`,
-  `x@tr_counts`, and `x@spatial_meta`
+    vector of spot/cell IDs to remove. Removes spots/cells in
+    `x@counts`, `x@tr_counts`, and `x@spatial_meta`
 
-- rm_genes:
+-   rm_genes:
 
-  vector of gene names to remove from STlist. Removes genes in
-  `x@counts`, `x@tr_counts`, and `x@gene_meta`
+    vector of gene names to remove from STlist. Removes genes in
+    `x@counts`, `x@tr_counts`, and `x@gene_meta`
 
-- rm_genes_expr:
+-   rm_genes_expr:
 
-  a regular expression that matches genes to remove. Removes genes in
-  `x@counts`, `x@tr_counts`, and `x@gene_meta`
+    a regular expression that matches genes to remove. Removes genes in
+    `x@counts`, `x@tr_counts`, and `x@gene_meta`
 
-- spot_pct_expr:
+-   spot_pct_expr:
 
-  a expression to use with `spot_minpct` and `spot_maxpct`. By default
-  '^MT-'.
+    a expression to use with `spot_minpct` and `spot_maxpct`. By default
+    '^MT-'.
+
+</div>
+
+<div class="section level2">
 
 ## Value
 
 an STlist containing the filtered data
+
+</div>
+
+<div class="section level2">
 
 ## Details
 
@@ -144,7 +168,13 @@ in the following order:
 
 5.  Min and max counts
 
+</div>
+
+<div class="section level2">
+
 ## Examples
+
+<div class="sourceCode">
 
 ``` r
 # \donttest{
@@ -175,5 +205,13 @@ tryCatch({ # In case data is not available from network
   message("Could not run example. Are you connected to the internet?")
   return(NULL)
 })
+#> Could not run example. Are you connected to the internet?
+#> NULL
 # }
 ```
+
+</div>
+
+</div>
+
+</div>
