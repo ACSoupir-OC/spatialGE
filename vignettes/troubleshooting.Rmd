@@ -19,6 +19,16 @@ knitr::opts_chunk$set(
 options(rmarkdown.html_vignette.check_title=F)
 ```
 
+## What you'll learn
+
+This troubleshooting guide helps you solve common issues:
+
+- Installation errors and dependency problems
+- Data loading issues with different platforms
+- Memory and performance optimization
+- Interpreting error messages
+- Getting help when stuck
+
 <details>
 <summary> **When installing `spatialGE`, I get `Error in utils::download.file(url, path, method = method, quiet = quiet`. How can I solve this error?** </summary>
 

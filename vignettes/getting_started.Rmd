@@ -1,0 +1,216 @@
+---
+title: "Getting Started with spatialGE"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with spatialGE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: vignette_references.bib
+---
+
+## What you'll learn
+
+This quick-start guide will get you analyzing spatial transcriptomics data in under 10 minutes. You'll learn:
+
+- How to load spatial transcriptomics data into an `STlist` object
+- How to visualize gene expression and cluster patterns with `STplot`
+- How to calculate spatial autocorrelation with `SThet`
+- How to identify spatially variable genes
+- Where to go next for advanced analyses
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5,
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Installation
+
+```{r install, eval=FALSE}
+# Install from Bioconductor (recommended)
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("spatialGE")
+
+# Or install development version from GitHub
+# remotes::install_github("ACSoupir-OC/spatialGE")
+```
+
+```{r load-library}
+library(spatialGE)
+```
+
+## Loading Your Data
+
+The core data structure in spatialGE is the `STlist` object, which stores:
+- Count matrices for one or more samples
+- Spot/cell coordinates
+- Sample metadata
+- Analysis results
+
+### Example: Loading Visium Data
+
+```{r load-data}
+# For this vignette, we'll use the built-in test dataset
+# In practice, replace with your data path
+data_dir <- system.file("tests/testthat/data/tnbc_bassiouni", 
+                        package = "spatialGE")
+
+# Create STlist from Visium count matrices
+st_obj <- STlist(
+  data_dir = data_dir,
+  data_type = "visium",
+  min_spots = 100,
+  min_counts = 500
+)
+
+# Inspect the object
+st_obj
+```
+
+The `STlist` constructor automatically:
+1. Reads count matrices from each sample directory
+2. Loads spot coordinates from `spatial/tissue_positions_list.csv`
+3. Filters spots and genes based on quality thresholds
+4. Stores metadata for downstream analysis
+
+### Supported Data Types
+
+spatialGE supports multiple spatial transcriptomics platforms:
+
+```{r data-types, eval=FALSE}
+# Visium (10x Genomics)
+STlist(data_dir = "path/to/visium", data_type = "visium")
+
+# Xenium (10x Genomics)
+STlist(data_dir = "path/to/xenium", data_type = "xenium")
+
+# CosMx (Nanostring)
+STlist(data_dir = "path/to/cosmx", data_type = "cosmx")
+
+# Generic matrix format
+STlist(data_dir = "path/to/matrices", 
+       data_type = "generic",
+       counts_file = "counts.mtx",
+       coords_file = "coordinates.csv")
+```
+
+## Visualizing Gene Expression
+
+Once your data is loaded, visualization is straightforward with `STplot`.
+
+### Plot a Single Gene
+
+```{r plot-gene, eval=FALSE}
+# Visualize CD8A expression (T cell marker)
+STplot(st_obj, 
+       gene = "CD8A", 
+       plot_type = "gene")
+```
+
+### Plot Multiple Genes
+
+```{r plot-multi-gene, eval=FALSE}
+# Visualize multiple genes side-by-side
+genes_of_interest <- c("CD8A", "CD4", "MS4A1", "EPCAM")
+STplot(st_obj, 
+       gene = genes_of_interest, 
+       plot_type = "gene",
+       ncol = 2)
+```
+
+### Plot Clusters
+
+After clustering, visualize the spatial patterns:
+
+```{r plot-clusters, eval=FALSE}
+# First, cluster the data (see next section)
+st_obj <- STclust(st_obj, k = 8)
+
+# Then visualize clusters
+STplot(st_obj, plot_type = "clusters")
+```
+
+## Identifying Spatially Variable Genes
+
+Spatial heterogeneity analysis (`SThet`) identifies genes with non-random spatial patterns using Moran's I spatial autocorrelation.
+
+```{r sthet}
+# Calculate spatial autocorrelation for all genes
+# This may take a few minutes for large datasets
+st_obj <- SThet(st_obj, 
+                method = "moran",
+                min_expr = 0.1)  # Filter lowly expressed genes
+
+# Extract results
+het_results <- st_obj@spatial_het
+
+# View top spatially variable genes
+head(het_results[order(-het_results$moranI), ])
+```
+
+The output includes:
+- `moranI`: Moran's I statistic (higher = more spatially structured)
+- `pval`: Statistical significance
+- `fdr`: FDR-adjusted p-value
+
+### Visualize Top Spatial Genes
+
+```{r plot-spatial-genes, eval=FALSE}
+# Get top 4 spatially variable genes
+top_genes <- head(het_results$gene, 4)
+
+# Visualize their spatial patterns
+STplot(st_obj, gene = top_genes, plot_type = "gene", ncol = 2)
+```
+
+## Clustering and Spatial Domains
+
+Identify spatially coherent tissue domains with `STclust`:
+
+```{r stclust}
+# Cluster spots into spatial domains
+st_obj <- STclust(st_obj, 
+                  k = 8,  # Number of clusters
+                  method = "dynamicTreeCut")
+
+# Access cluster assignments
+clusters <- st_obj@clusters
+head(clusters)
+```
+
+## What's Next?
+
+You've completed the basic spatialGE workflow! For more advanced analyses, see:
+
+- **Spatial Differential Expression**: `vignette("spatial_differential_expression")`
+  - Compare gene expression between tissue domains
+  - Account for spatial autocorrelation in statistical tests
+
+- **Spatial Enrichment & Gradients**: `vignette("spatial_enrichment_gradients_smi")`
+  - Gene set enrichment analysis with spatial context
+  - Identify genes with directional expression patterns
+
+- **Seurat Integration**: `vignette("seurat_integration")`
+  - Convert between spatialGE and Seurat objects
+  - Combine spatial and single-cell data
+
+- **Troubleshooting**: `vignette("troubleshooting")`
+  - Common issues and solutions
+  - Performance optimization tips
+
+## Need Help?
+
+- **Documentation**: `browseVignettes("spatialGE")`
+- **Function reference**: `?STlist`, `?STplot`, `?SThet`, `?STclust`
+- **Issues**: Report bugs on [GitHub](https://github.com/ACSoupir-OC/spatialGE)
+- **Citation**: `citation("spatialGE")`
+
+## References
+
+See `vignette("vignette_references")` for full bibliography.

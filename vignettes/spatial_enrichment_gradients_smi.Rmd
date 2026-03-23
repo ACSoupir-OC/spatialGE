@@ -29,6 +29,16 @@ The package ***`spatialGE`*** can be used to detect spatial patterns in gene exp
 
 In this tutorial, the functions `STenrich`, `STclust`, and `STgradient` will be used to test for spatial gene set enrichment and genes showing expression gradients on a [CosMx-SMI data set](https://nanostring.com/products/cosmx-spatial-molecular-imager/ffpe-dataset/nsclc-ffpe-dataset/) from Non-Small Cell Lung Cancer (NSCLC).
 
+## What you'll learn
+
+This advanced tutorial covers spatial pattern detection:
+
+- Running gene set enrichment analysis with `STenrich`
+- Using MSigDB pathway databases for spatial enrichment
+- Identifying genes with directional expression gradients using `STgradient`
+- Visualizing enrichment results and spatial gradient patterns
+- Applying these methods to CosMx-SMI and other single-cell resolution platforms
+
 
 
 <details>

@@ -23,6 +23,16 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 
 This vignette demonstrates how to integrate **spatialGE** with **Seurat** for seamless spatial transcriptomics workflows. The `spatialGE` package provides bidirectional conversion utilities that allow you to:
 
+## What you'll learn
+
+This integration guide covers:
+
+- Converting `STlist` objects to Seurat objects with `STtoSeurat()`
+- Converting Seurat objects back to `STlist` with `SeuratToST()`
+- Preserving spatial coordinates and metadata during conversion
+- Running Seurat analysis on spatialGE data and vice versa
+- When to use each package's strengths in your workflow
+
 1. **Convert Seurat objects to STlist** - Run spatialGE analyses on Seurat-processed data
 2. **Convert STlist to Seurat** - Leverage Seurat's visualization and downstream analysis tools
 3. **Run spatialGE directly from Seurat** - One-step analysis workflows

@@ -1,0 +1,384 @@
+---
+title: "Developer Guide for spatialGE"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Developer Guide for spatialGE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: vignette_references.bib
+---
+
+## What you'll learn
+
+This guide is for developers who want to:
+
+- Understand the spatialGE package architecture
+- Learn how the `STlist` S4 class is structured
+- Add new analysis functions to the package
+- Write tests that follow package conventions
+- Optimize performance for large datasets
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
+)
+```
+
+## Package Architecture
+
+### Overview
+
+spatialGE is organized around a central S4 class (`STlist`) that stores all data and analysis results. The package follows a modular design:
+
+```
+spatialGE/
+├── R/                      # R source files
+│   ├── STlist-class.R      # S4 class definition
+│   ├── STlist-methods.R    # Constructor and accessors
+│   ├── STplot.R            # Visualization functions
+│   ├── SThet.R             # Spatial heterogeneity
+│   ├── STclust.R           # Clustering
+│   ├── STdiff.R            # Differential expression
+│   ├── STenrich.R          # Gene set enrichment
+│   ├── STgradient.R        # Spatial gradients
+│   └── utils.R             # Helper functions
+├── src/                    # C++ code (Rcpp)
+│   ├── RcppExports.cpp
+│   ├── spatialge_helpers.cpp
+│   └── seurat_helpers.cpp
+├── inst/                   # Installed files
+│   ├── extdata/            # Example datasets
+│   └── tests/testthat/     # Test data
+├── tests/testthat/         # Unit tests
+└── vignettes/              # Documentation
+```
+
+### The STlist Class
+
+The `STlist` class is the core data structure:
+
+```r
+setClass("STlist",
+  slots = c(
+    # Data slots
+    counts = "list",           # List of count matrices (samples)
+    coords = "list",           # List of coordinate matrices
+    metadata = "data.frame",   # Sample-level metadata
+    
+    # Analysis results
+    spatial_het = "data.frame",    # SThet results
+    clusters = "data.frame",       # STclust assignments
+    diff_expr = "list",            # STdiff results
+    enrichment = "list",           # STenrich results
+    
+    # Processing history
+    log = "list"             # Analysis log
+  )
+)
+```
+
+### Key Design Principles
+
+1. **Immutability**: Analysis functions return modified copies, not in-place changes
+2. **Lazy evaluation**: Expensive computations are cached in slots
+3. **Modularity**: Each analysis function is independent
+4. **Reproducibility**: All parameters and random seeds are logged
+
+## Adding New Analysis Functions
+
+### Step 1: Create the R File
+
+Create a new file in `R/` following the naming convention:
+
+```r
+# R/STnewfunc.R
+
+#' Title of Your Function
+#'
+#' Detailed description of what the function does.
+#' Explain the statistical method or algorithm.
+#'
+#' @param st_obj An STlist object
+#' @param param1 Description of parameter 1
+#' @param param2 Description of parameter 2 (with default)
+#' @param ... Additional arguments passed to other methods
+#'
+#' @return An STlist object with results stored in @new_slot
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   st_obj <- STnewfunc(st_obj, param1 = "value")
+#' }
+#'
+#' @references
+#' Author et al. (2023). Paper title. Journal. doi:xxx
+STnewfunc <- function(st_obj, param1, param2 = "default", ...) {
+  # Input validation
+  if (!inherits(st_obj, "STlist")) {
+    stop("st_obj must be an STlist object")
+  }
+  
+  # Your analysis code here
+  results <- your_analysis(st_obj@counts, param1, param2)
+  
+  # Store results in the object
+  st_obj@new_slot <- results
+  
+  # Log the analysis
+  st_obj@log[[length(st_obj@log) + 1]] <- list(
+    function = "STnewfunc",
+    timestamp = Sys.time(),
+    params = list(param1 = param1, param2 = param2)
+  )
+  
+  return(st_obj)
+}
+```
+
+### Step 2: Add C++ Code (Optional)
+
+For performance-critical functions, add C++ code in `src/`:
+
+```cpp
+// src/spatialge_helpers.cpp
+
+#include <Rcpp.h>
+#include <RcppEigen.h>
+// [[Rcpp::depends(RcppEigen)]]
+
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericVector your_cpp_function(NumericMatrix counts, double param) {
+  // Your optimized C++ code
+  int n = counts.nrow();
+  NumericVector result(n);
+  
+  for (int i = 0; i < n; i++) {
+    // Computation here
+  }
+  
+  return result;
+}
+```
+
+Then export the function:
+
+```r
+# R/RcppExports.R (auto-generated)
+# Run: Rcpp::compileAttributes()
+```
+
+### Step 3: Write Tests
+
+Create tests in `tests/testthat/`:
+
+```r
+# tests/testthat/test-STnewfunc.R
+
+test_that("STnewfunc works with standard input", {
+  # Load test data
+  st_obj <- load_test_data()
+  
+  # Run function
+  result <- STnewfunc(st_obj, param1 = "test")
+  
+  # Check output
+  expect_s4_class(result, "STlist")
+  expect_true("new_slot" %in% slotNames(result))
+  expect_true(nrow(result@new_slot) > 0)
+})
+
+test_that("STnewfunc handles edge cases", {
+  # Test with empty input
+  st_obj <- create_empty_stlist()
+  expect_error(STnewfunc(st_obj, param1 = "test"))
+})
+```
+
+### Step 4: Document and Build
+
+```bash
+# Generate documentation
+devtools::document()
+
+# Run tests
+devtools::test()
+
+# Build vignettes
+devtools::build_vignettes()
+
+# Check package
+devtools::check()
+```
+
+## Testing Guidelines
+
+### Test Data
+
+Use the built-in test datasets:
+
+```r
+# In test files
+test_data_path <- system.file("tests/testthat/data/tnbc_bassiouni", 
+                              package = "spatialGE")
+```
+
+### Test Structure
+
+Follow the AAA pattern (Arrange, Assert, Act):
+
+```r
+test_that("function does what it should", {
+  # Arrange: Set up inputs
+  input <- create_test_input()
+  
+  # Act: Run the function
+  result <- your_function(input)
+  
+  # Assert: Check outputs
+  expect_equal(length(result), expected_length)
+  expect_true(all(result > 0))
+})
+```
+
+### Test Coverage
+
+Aim for >80% coverage:
+
+```bash
+# Run with coverage
+devtools::test_coverage()
+```
+
+## Performance Optimization
+
+### Profiling
+
+Identify bottlenecks:
+
+```r
+# Profile your function
+library(profvis)
+profvis({
+  result <- your_function(large_dataset)
+})
+```
+
+### Optimization Strategies
+
+1. **Use C++ for loops**: R is slow for iteration
+2. **Vectorize operations**: Use matrix operations when possible
+3. **Avoid copying**: Use data.table for large data frames
+4. **Parallel processing**: Use `parallel::mclapply()` for independent tasks
+
+Example: Converting R loop to C++
+
+```r
+# Slow R version
+for (i in 1:n) {
+  result[i] <- sum(counts[i, ] * weights)
+}
+
+# Fast C++ version
+// [[Rcpp::export]]
+NumericMatrix fast_compute(NumericMatrix counts, NumericVector weights) {
+  int n = counts.nrow();
+  int m = counts.ncol();
+  NumericVector result(n);
+  
+  for (int i = 0; i < n; i++) {
+    double sum = 0;
+    for (int j = 0; j < m; j++) {
+      sum += counts(i, j) * weights[j];
+    }
+    result[i] = sum;
+  }
+  
+  return result;
+}
+```
+
+## Contributing to spatialGE
+
+### Workflow
+
+1. **Fork** the repository on GitHub
+2. **Clone** your fork locally
+3. **Create a branch**: `git checkout -b feature/your-feature`
+4. **Make changes** with tests
+5. **Run checks**: `devtools::check()`
+6. **Push** and create a pull request
+
+### Code Style
+
+Follow tidyverse style:
+
+- Use `<-` for assignment
+- Snake_case for function and variable names
+- Spaces around operators: `x <- 1:10`
+- Maximum line length: 80 characters
+
+```r
+# Good
+calculate_moran_i <- function(x, weights) {
+  result <- sum(x * weights) / length(x)
+  return(result)
+}
+
+# Bad
+calculateMoranI <- function(x,weights){
+  result=sum(x*weights)/length(x)
+  return(result)
+}
+```
+
+### Documentation
+
+- All exported functions need roxygen2 documentation
+- Include examples with test data
+- Add `@references` for methods from papers
+- Use `@note` for important caveats
+
+## Debugging Tips
+
+### Common Issues
+
+**Issue**: "object not found" error
+**Solution**: Check that all dependencies are imported in NAMESPACE
+
+**Issue**: C++ compilation errors
+**Solution**: Run `Rcpp::compileAttributes()` and check includes
+
+**Issue**: S4 slot access errors
+**Solution**: Verify slot name with `slotNames(object)`
+
+### Interactive Debugging
+
+```r
+# Set breakpoints
+debug(STyourfunction)
+
+# Step through code
+result <- STyourfunction(st_obj)
+
+# Exit debug mode
+undebug(STyourfunction)
+```
+
+## Resources
+
+- **R Packages** (r-pkgs.org): Comprehensive guide to package development
+- **Rcpp Gallery** (gallery.rcpp.org): C++ examples for R
+- **Bioconductor Workflows**: Best practices for bioinformatics packages
+- **spatialGE GitHub**: Issue tracker and source code
+
+## Getting Help
+
+- **File an issue**: https://github.com/ACSoupir-OC/spatialGE/issues
+- **Email**: See `maintainer` field in DESCRIPTION
+- **Discussions**: GitHub Discussions tab

@@ -23,6 +23,16 @@ The package ***`spatialGE`*** provides a collection of tools for the visualizati
 
 This tutorial covers basic analysis possible within spatialGE. Tutorials explaining more advanced spatial analyses and other data input types can be found in the documentation site of the [spatialGE GitHub repository](https://fridleylab.github.io/spatialGE/). A point-and-click, user-friendly interface is also available at https://spatialge.moffitt.org.
 
+## What you'll learn
+
+This comprehensive tutorial will teach you:
+
+- How to load and quality-control spatial transcriptomics data
+- How to visualize gene expression patterns with `STplot`
+- How to identify spatially variable genes using `SThet` (Moran's I)
+- How to detect spatial tissue domains with `STclust`
+- Best practices for analyzing Visium, Xenium, and CosMx data
+
 ## Installation
 
 The `spatialGE` repository is available at the Comprehensive R Archive Network (CRAN) repository and can be installed via `install.packages`:
