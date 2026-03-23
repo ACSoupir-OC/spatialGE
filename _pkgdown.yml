@@ -66,7 +66,7 @@ navbar:
 news:
   releases:
     - text: "Version 2.0.0 — 2026-03-22"
-      href: https://github.com/FridleyLab/spatialGE/releases/tag/v2.0.0
+      href: https://github.com/FridleyLab/spatialGE/commits/main
     - text: "Version 1.2.0"
       href: https://github.com/FridleyLab/spatialGE/releases/tag/v1.2.0
     - text: "Version 1.0.0"
