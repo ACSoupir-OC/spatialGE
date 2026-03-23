@@ -4,7 +4,7 @@
 
 <div class="section">
 
-### All vignettes
+### Vignettes
 
 <div class="section-desc">
 

@@ -465,7 +465,7 @@ tnbc <- gene_interpolation(tnbc,
 #> [using ordinary kriging]
 #> [using ordinary kriging]
 #> [using ordinary kriging]
-#> Gene interpolation completed in 0.55 min.
+#> Gene interpolation completed in 0.57 min.
 ```
 
 </div>

@@ -55,8 +55,22 @@ authors:
 
 navbar:
   structure:
-    left: [intro, reference, news, search]
+    left: [intro, reference, articles, news, search]
     right: [github]
+  components:
+    articles:
+      text: Articles
+      menu:
+        - text: "Basic Functions"
+          href: articles/basic_functions_vignette.html
+        - text: "Seurat Integration"
+          href: articles/seurat_integration.html
+        - text: "Spatial Differential Expression"
+          href: articles/spatial_differential_expression.html
+        - text: "Spatial Enrichment & Gradients"
+          href: articles/spatial_enrichment_gradients_smi.html
+        - text: "Troubleshooting"
+          href: articles/troubleshooting.html
 
 
 
@@ -68,5 +82,14 @@ news:
       href: https://github.com/FridleyLab/spatialGE/releases/tag/v1.2.0
     - text: "Version 1.0.0"
       href: https://github.com/FridleyLab/spatialGE/releases/tag/v1.0.0
+
+articles:
+  - title: "Vignettes"
+    contents:
+      - basic_functions_vignette
+      - seurat_integration
+      - spatial_differential_expression
+      - spatial_enrichment_gradients_smi
+      - troubleshooting
 
 lang: en

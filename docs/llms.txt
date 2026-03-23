@@ -239,7 +239,7 @@ transcriptomics. Bioinformatics, 38:2645-2647.
 
 <div class="section">
 
-### All vignettes
+### Vignettes
 
 <div class="section-desc">
 
