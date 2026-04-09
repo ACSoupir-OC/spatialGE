@@ -115,6 +115,11 @@ STclust_hierarchical = function(weighted_dists, ws, ks, linkage, deepSplit, verb
 #' Supports two clustering modes:
 #' - DTC (DynamicTreeCut): Adaptive cluster detection
 #' - Fixed k: User-specified number of clusters
+#' 
+#' \strong{Note:} This function was refactored in version 2.0.0 to use a modular architecture
+#' with 5 helper functions (\code{STclust_select_genes}, \code{STclust_calculate_distances}, etc.).
+#' The original monolithic implementation is available as \code{STclust_legacy()} for reproducibility
+#' with version 1.x results.
 #'
 #' @param x an STlist with normalized expression data
 #' @param samples a vector with strings or integers indicating samples to cluster

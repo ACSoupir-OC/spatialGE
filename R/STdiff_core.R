@@ -420,7 +420,13 @@ STdiff_fit_spatial = function(x=NULL, prep=NULL, sp_topgenes=0.2, cores=NULL, ve
 ##
 #' @title STdiff: Differential expression analysis (modular wrapper)
 #' @description Public wrapper function that calls the modular STdiff functions
-#' @details Maintains the original API while using the new modular implementation
+#' @details
+#' Maintains the original API while using the new modular implementation.
+#' 
+#' \strong{Note:} This function was refactored in version 2.0.0 to use a modular architecture
+#' (\code{STdiff_select_genes}, \code{STdiff_fit_spatial_models}, \code{STdiff_compile_results}).
+#' The original implementation is available as \code{STdiff_legacy()} for reproducibility with
+#' version 1.x results.
 #' @inheritParams STdiff
 #' @export
 STdiff = function(x=NULL, samples=NULL, annot=NULL, w=NULL, k=NULL, deepSplit=NULL,

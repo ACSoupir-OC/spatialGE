@@ -10,6 +10,9 @@
 #' package `spdep`. The calculated statistics are stored in the STlist, which can
 #' be accessed with the `get_gene_meta` function. For visual comparative analysis,
 #' the function `compare_SThet` can be used afterwards.
+#' 
+#' \strong{Note:} The original implementation is available as \code{SThet_legacy()} for
+#' reproducibility with version 1.x results.
 #'
 #' @param x an STlist
 #' @param genes a vector of gene names to compute statistics
